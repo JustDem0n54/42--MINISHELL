@@ -6,5 +6,9 @@
 # include <fcntl.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
 
 #endif
