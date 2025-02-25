@@ -1,19 +1,14 @@
 #include "minishell.h"
 
-char	*ft_read(char *argv)
+int	main(void)
 {
 	char	*line;
 
-	line = readline(argv);
-	return (line);
-}
-
-int main(int argc, char **argv)
-{
-	(void)	argc;
-	(void)	argv;
-	
-	if (argc > 1)
-		printf("argv 1 =%s\n", ft_read(argv[1]));
+	while (1)
+	{
+		line = readline("minishell>");
+		if (ft_strncmp(line, "fin", 3) == 0)
+			exit(0);
+	}
 	return (0);
 }
