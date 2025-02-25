@@ -73,6 +73,9 @@ void	ft_pwd(void)
 	}
 }
 
+
+
+
 void	ft_cd(char **tab)
 {
 	
