@@ -6,30 +6,30 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 17:31:14 by nrontard          #+#    #+#             */
-/*   Updated: 2024/11/20 17:54:14 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:49:20 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putnbr_fd(int n, int fd)
+int	ft_putnbr_fdi(int n, int fd)
 {
 	long	nb;
 
 	nb = n;
 	if (n < 0)
 	{
-		ft_putchar('-');
+		ft_putchari('-');
 		nb = -nb;
 	}
 	if (nb > 9)
 	{
-		ft_putnbr_fd(nb / 10, fd);
-		ft_putnbr_fd(nb % 10, fd);
+		ft_putnbr_fdi(nb / 10, fd);
+		ft_putnbr_fdi(nb % 10, fd);
 	}
 	else
 	{
-		ft_putchar(nb + '0');
+		ft_putchari(nb + '0');
 	}
 	return (ft_len_nbr(n));
 }
@@ -41,23 +41,23 @@ int	ft_putnbr_u(unsigned long n, int fd)
 	nb = n;
 	if (nb > 9)
 	{
-		ft_putnbr_fd(nb / 10, fd);
-		ft_putnbr_fd(nb % 10, fd);
+		ft_putnbr_fdi(nb / 10, fd);
+		ft_putnbr_fdi(nb % 10, fd);
 	}
 	else
 	{
-		ft_putchar(nb + '0');
+		ft_putchari(nb + '0');
 	}
 	return (ft_len_nbru(n));
 }
 
-int	ft_putstr_fd(char *s, int fd)
+int	ft_putstr_fdi(char *s, int fd)
 {
 	int	i;
 
 	i = 0;
 	if (s == NULL)
-		return (ft_putstr_fd("(null)", 1));
+		return (ft_putstr_fdi("(null)", 1));
 	while (s[i])
 	{
 		write(fd, &s[i], 1);
@@ -77,8 +77,8 @@ int	ft_puthexanbr_fd(size_t n, int fd, char c)
 		ft_puthexanbr_fd(nb % 16, fd, c);
 	}
 	else if (c == 'x' || c == 'p')
-		ft_putchar(BASE16[nb]);
+		ft_putchari(BASE16[nb]);
 	else if (c == 'X')
-		ft_putchar(BASE16M[nb]);
+		ft_putchari(BASE16M[nb]);
 	return (ft_len_hexa(n));
 }

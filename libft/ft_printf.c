@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 14:58:31 by nrontard          #+#    #+#             */
-/*   Updated: 2025/02/13 15:02:12 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:48:20 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int	use_format(char c, va_list args)
 		return (1);
 	}
 	if (c == 'c')
-		return (ft_putchar(va_arg(args, int)));
+		return (ft_putchari(va_arg(args, int)));
 	if (c == 's')
-		return (ft_putstr_fd(va_arg(args, char *), 1));
+		return (ft_putstr_fdi(va_arg(args, char *), 1));
 	if (c == 'p')
 		return (hexa_p(va_arg(args, void *)));
 	if (c == 'd' || c == 'i')
-		return (ft_putnbr_fd(va_arg(args, int), 1));
+		return (ft_putnbr_fdi(va_arg(args, int), 1));
 	if (c == 'u')
 		return (ft_putnbr_u(va_arg(args, unsigned int), 1));
 	if (c == 'x' || c == 'X')
@@ -37,9 +37,9 @@ int	use_format(char c, va_list args)
 int	hexa_p(void *n)
 {
 	if (n == 0)
-		return (ft_putstr_fd("(nil)", 1));
-	ft_putchar('0');
-	ft_putchar('x');
+		return (ft_putstr_fdi("(nil)", 1));
+	ft_putchari('0');
+	ft_putchari('x');
 	return (ft_puthexanbr_fd((unsigned long)n, 1, 'p') + 2);
 }
 
@@ -58,7 +58,7 @@ int	detect_format(char c)
 	return (0);
 }
 
-int	ft_putchar(char c)
+int	ft_putchari(char c)
 {
 	write(1, &c, 1);
 	return (1);
