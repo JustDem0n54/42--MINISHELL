@@ -8,7 +8,7 @@ LIBC	= \
 		ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c ft_strmapi.c ft_striteri.c \
 		ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_strnjoin.c \
 		get_next_line_bonus.c get_next_line_utils_bonus.c free_split.c ft_printf.c \
-		ft_len.c ft_utilities.c \
+		ft_len.c ft_utilities.c ft_strcmp.c \
 
 BONUS	= \
 		ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstsize_bonus.c \

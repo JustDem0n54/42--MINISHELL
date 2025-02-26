@@ -32,7 +32,8 @@ void	ft_echo(char **tab)
 
 	i = 1;/*car tab 0 = commande echo*/
 	check = 0; 
-	// tab = ft_quote --> pour enlver les quotes a enlever
+	// tab = ft_quote --> pour enlver les quotes a enlever 
+	// voir pour check option
 	if (ft_strcmp(tab[i], "-n") == 0)
 	{
 		check = 1;
@@ -53,6 +54,7 @@ void	ft_pwd(t_var *var, char **tab)
 	int	i;
 
 	i = 1;
+	// printf("prev dans pwd avant %s", (char *)var->previous_cd->content);
 	if (getcwd(path, i * sizeof(path)) == 0)
 	{
 		while (sizeof(path) <= 4096)
@@ -63,26 +65,45 @@ void	ft_pwd(t_var *var, char **tab)
 				i++;
 		}
 	}
-	if (getcwd(path, i * sizeof(path)) != 0 && ft_strcmp(tab[0], "pwd") == 0)
-		printf("%s\n", path);
+	if (getcwd(path, i * sizeof(path)) != 0)
+	{	
+		if (var->previous_cd)
+		{
+			printf("dans != null");
+			// ft_lstclear(&var->previous_cd, free); /*PB DE FREE"
+		}
+		var->previous_cd = ft_lstnew(path);
+		if (ft_strcmp(tab[0], "pwd") == 0)
+			printf("%s\n", path);
+	}
 	else if (getcwd(path, i * sizeof(path)) == 0)
 		perror("getcwd");/*voir pour le debut du message d erreur i/o getcwd*/
-	var->previous_cd = path;
+	// ne pas oublier de free var->previous_cd a la fin 
 }
 
 void	ft_cd(t_var *var, char **tab)
 {
-
 	(void) var;
-	// var->previous_cd = ;
-	if (chdir(tab[1]) == 0)
-		ft_pwd(); /*pour check chemin, voir comment y aller dans le terminal*/
-	else
+
+	ft_pwd(var, tab);
+	// printf("prev dans cd = %s\n", (char *)var->previous_cd->content);
+	if (tab[2])
+	{
+		// perror(tab[0]);
+		ft_putstr_fd(tab[0], 2);
+		ft_putstr_fd(": too many arguments\n", 2);
+		return;
+	}
+	if (ft_strcmp(tab[1], "~") == 0)
+		tab[1] = ft_strdup((char *)var->previous_cd->content);
+	// ft_pwd(var, tab); /*pour check*/
+	if (chdir(tab[1]) != 0)
 	{
 		ft_putstr_fd(tab[0], 2);
 		ft_putstr_fd(": ", 2);
 		perror(tab[1]);
 	}
+	ft_pwd(var, tab); /*pour check*/
 }
 
 t_list	*init_env(char **env) 
@@ -113,8 +134,6 @@ void	ft_env(t_var *var)
 	// }
 }
 
-
-
 t_var	*init_struct(t_var *var, char **env)
 {
 	var = malloc(sizeof(t_list));
@@ -133,14 +152,14 @@ int	main(int argc, char **argv, char **env)
 	(void) argv;
 	(void) env;
 
-	// char	*tab[]={"cd", "."};
+	char	*tab[]={"pwd", "bonjour", "aure", NULL};
 	t_var	*var;
 
 	var = NULL;
 	var = init_struct(var, env);
 
-	ft_pwd();
-	// ft_cd(var, tab);
+	ft_pwd(var, tab);
+	ft_cd(var, tab);
 	// ft_env(var);
 	
 
