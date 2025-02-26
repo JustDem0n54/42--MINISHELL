@@ -1,29 +1,42 @@
 #include "minishell.h"
 
-char	*ft_seperate(int start, int end, char *str)
+int gest_quote(char *str, int i, int j, t_list **line)
 {
-	char	*new;
-	int i;
-
-	new = malloc(sizeof(char) * (end - start + 1));
-	i = 0;
-	while (start < end)
+	char	quote;
+	char	*temp;
+	
+	if (str[i - 1] != ' ' && i > 0)
 	{
-		new[i] = str[start];
-		i++;
-		start++;
+		temp = ft_substr(str, j, i - j);
+		ft_lstadd_back(line, ft_lstnew(temp));
+		j = i;
 	}
-	new[i] = '\0';
-	return(new);
+	quote = str[i];
+	i++;
+	while(str[i] != quote && str[i])
+		i++;
+	temp = ft_substr(str, j, i - j + 1);
+	ft_lstadd_back(line, ft_lstnew(temp));
+	i++;
+	return (i);
 }
 
-int	check_token(char *str, int i)
+int gest_token(char *str, int i, int j, t_list **line)
 {
-	if ((str[i] == '>' && str[i + 1] == '>') || (str[i] == '<' && str[i + 1] == '<'))
-		return (2);
-	else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
-		return (1);
-	return (0);
+	char	*temp;
+
+	if (str[i - 1] != ' ' && str[i - 1] != str[i] && i > 0)
+	{
+		temp = ft_substr(str, j, i - j);
+		ft_lstadd_back(line, ft_lstnew(temp));
+		j = i;
+	}
+	if (ft_strchr("<>", str[i + 1]) && ft_strchr("<>", str[i]))
+		i++;
+	temp = ft_substr(str, j, i - j + 1);
+	ft_lstadd_back(line, ft_lstnew(temp));
+	i++;
+	return (i);
 }
 
 t_list	*parsing_line(char *str)
@@ -38,46 +51,33 @@ t_list	*parsing_line(char *str)
 	line = NULL;
 	while (str[i])
 	{
-		if (str[i] == ' ' && str[i - 1] != ' ')
+		while (str[i] == ' ' && str[i])
+			i++;
+		j = i;
+		while (ft_strchr("<>|\'\" 	", str[i]) == NULL && str[i])
+			i++;
+		if (str[i] == ' ' || (str[i] == 0 && str[i - 1] != ' '))
 		{
-			temp = ft_seperate(j, i, str);
+			temp = ft_substr(str, j, i - j);
 			ft_lstadd_back(&line, ft_lstnew(temp));
 			i++;
-			j = i;
 		}
-		else if (str[i + 1] == '\0')
-		{
-			temp = ft_seperate(j, i + 1, str);
-			ft_lstadd_back(&line, ft_lstnew(temp));
-			i++;
-			j = i;
-		}
-		else if (check_token(str, i) == 1)
-		{
-			temp = ft_seperate(j, i, str);
-			ft_lstadd_back(&line, ft_lstnew(temp));
-			ft_lstadd_back(&line, ft_lstnew("|"));
-			i++;
-			j = i;
-		}
-		else if (check_token(str, i) == 2)
-		{
-			temp = ft_seperate(j, i, str);
-			ft_lstadd_back(&line, ft_lstnew(temp));
-			j = i;
-			i++;
-		}
-		i++;
+		else if (str[i] && ft_strchr("\'\"", str[i]))
+			i = gest_quote(str, i, j, &line);
+		else if (str[i] && ft_strchr("<|>", str[i]))
+			i = gest_token(str, i, j, &line);
+		j = i;
 	}
 	return (line);
 }
 
-char	*check_path(char **env, char *cmd)
+char	*check_cmd(char **env, char *cmd)
 {
 	int		i;
 	char	**path;
 	char	*temp;
-
+	
+	/*check builtins*/
 	if (ft_strchr(cmd, '/') != NULL)
 	{
 		if (access(cmd, F_OK) == 0)
