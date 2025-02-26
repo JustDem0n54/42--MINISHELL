@@ -11,4 +11,11 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
+
+typedef	struct s_var
+{
+	t_list	*lst_env;
+	t_list	*previous_cd;
+}	t_var;
+
 #endif
