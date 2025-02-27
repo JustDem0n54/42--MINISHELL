@@ -15,7 +15,6 @@
 typedef	struct s_var
 {
 	t_list	*lst_env;
-	t_list	*previous_cd;
 	t_list	*parse;
 }	t_var;
 
