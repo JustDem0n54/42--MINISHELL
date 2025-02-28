@@ -1,5 +1,0 @@
-*.o
-minishell
-README.md
-obj
-obj/*.o
