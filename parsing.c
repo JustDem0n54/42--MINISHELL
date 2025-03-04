@@ -68,31 +68,116 @@ t_list	*parsing_line(char *str)
 	return (line);
 }
 
-char	*check_cmd(char **env, char *cmd)
+char	*check_export(char *str, int size)
 {
-	int		i;
-	char	**path;
-	char	*temp;
-	
-	/*check builtins*/
-	if (ft_strchr(cmd, '/') != NULL)
-	{
-		if (access(cmd, F_OK) == 0)
-			return (cmd);
-	}
-	i = 0;
-	while (ft_strncmp(env[i], "PATH", 4) != 0)
-		i++;
-	path = ft_split(env[i] + 5, ':');
-	i = 0;
-	while (path[i] != NULL)
-	{
-		temp = ft_strnjoin(2, (char *[]){path[i], cmd}, "/");
-		if (access(temp, F_OK) == 0)
-			return (free_split(path), temp);
-		free(temp);
-		i++;
-	}
-	return (free_split(path), NULL);
+	char	*test;
+
+	test = ft_strdup("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+	if (str[size])
+		size++;
+	return (test);
 }
+
+char	*check_dollars(char *str, int i, int y)
+{
+	char	*temp;
+	char	*cpy;
+	int 	start;
+	int j = 0;
+
+	cpy = malloc(sizeof(char) * ft_strlen(str) + 1);
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			i++;
+			if (str[i] < '9' && str[i] >= '0')
+				i++;
+			else if ((str[i] >= 'a' && str[i] <= 'z')
+				|| (str[i] >= 'A' && str[i] <= 'Z') || str[i] == '_')
+			{
+				start = i;
+				while (((str[i] >= 'a' && str[i] <= 'z') || (str[i] < '9' && str[i] >= '0')
+					|| (str[i] >= 'A' && str[i] <= 'Z') || str[i] == '_') && str[i])
+					i++;
+				temp = check_export(str + start, i - start);
+				while (temp[j])
+					cpy[y++] = temp[j++];
+			}
+		}
+		cpy[y++] = str[i++];
+	}
+	cpy[y] = 0;
+	return (cpy);
+}
+
+char	*check_quote(char *str, int i, int y)
+{
+	char quote;
+	char *cpy;
+
+	cpy = malloc(sizeof(char) * ft_strlen(str) + 1);
+	while (str[i])
+	{
+		if (ft_strchr("\'\"", str[i]) != NULL && str[i])
+		{
+			quote = str[i];
+			i++;
+			while (str[i] != quote && str[i])
+				cpy[y++] = str[i++];
+			i++;
+		}
+		cpy[y++] = str[i++];
+	}
+	cpy[y] = 0;
+	return (cpy);
+}
+
+char	**convert_parse(t_list *lst)
+{
+	char *temp;
+	char **sortie;
+	int i;
+
+	i = 0;
+	sortie = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
+	while (lst)
+	{
+		temp = lst->content;
+		temp = check_dollars(temp, 0, 0);
+		sortie[i] = check_quote(temp, 0, 0);
+		i++;
+		lst = lst->next;
+	}
+	sortie[i] = NULL;
+	return(sortie);
+}
+
+// char	*check_cmd(char **env, char *cmd)
+// {
+// 	int		i;
+// 	char	**path;
+// 	char	*temp;
+	
+// 	/*check builtins*/
+// 	if (ft_strchr(cmd, '/') != NULL)
+// 	{
+// 		if (access(cmd, F_OK) == 0)
+// 			return (cmd);
+// 	}
+// 	i = 0;
+// 	while (ft_strncmp(env[i], "PATH", 4) != 0)
+// 		i++;
+// 	path = ft_split(env[i] + 5, ':');
+// 	i = 0;
+// 	while (path[i] != NULL)
+// 	{
+// 		temp = ft_strnjoin(2, (char *[]){path[i], cmd}, "/");
+// 		if (access(temp, F_OK) == 0)
+// 			return (free_split(path), temp);
+// 		free(temp);
+// 		i++;
+// 	}
+// 	return (free_split(path), NULL);
+// }
 
