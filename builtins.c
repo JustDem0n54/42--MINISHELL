@@ -91,15 +91,47 @@
 
 // a completer avec les conditions stdin / stdout / return value 
 
+
+
+t_list	*init_env(char **env)
+{
+	int		i;
+	t_list	*lst_env;
+
+	i = 0;
+	lst_env = NULL;
+	while (env[i])
+	{
+		ft_lstadd_back(&lst_env, ft_lstnew(env[i]));
+		i++;
+	}
+	return (lst_env);
+}
+
+t_var	*init_struct(t_var *var, char **env)
+{
+	var = malloc(sizeof(t_var));
+	if (!var)
+		return (NULL);
+	var->init_env = init_env(env);
+	var->updt_env = var->init_env;
+	var->export = NULL;
+	var->check_export = 0;
+	return (var);
+	// ne pas oublier de free var->updt_env et var
+}
+
+
+
+
 void	ft_echo(char **tab)
 {
 	int	i;
 	int	check;
 
 	i = 1;
-	check = 0;  
-	// voir pour check option et -n-n-n
-	if (ft_strcmp(tab[i], "-n") == 0)
+	check = 0;
+	while (tab[i] && ft_strcmp(tab[i], "-n") == 0)
 	{
 		check = 1;
 		i++;
@@ -107,16 +139,18 @@ void	ft_echo(char **tab)
 	while (tab[i])
 	{
 		printf("%s", tab[i]);
+		if (tab[i + 1])
+			printf(" ");
 		i++;
 	}
 	if (check != 1)
 		printf("\n");
 }
 
-void	ft_pwd()
+void	ft_pwd(void)
 {
 	char	path[1024];
-	int	i;
+	int		i;
 
 	i = 1;
 	if (getcwd(path, i * sizeof(path)) == 0)
@@ -189,42 +223,16 @@ int	ft_cd(char **tab)
 	return (0);
 }
 
-t_list	*init_env(char **env) 
-{
-	int		i;
-	t_list	*lst_env;
-
-	i = 0;
-	lst_env = NULL;
-	while (env[i])
-	{
-		ft_lstadd_back(&lst_env, ft_lstnew(env[i]));
-		i++;
-	}
-	return (lst_env);
-}
-
 void	ft_env(t_var *var)
 {
-	t_list	*new_env;
+	t_list	*temp;
 
-	new_env = var->lst_env;
-	
-	// while (new_env)
-	// {
-	// 	printf("%s\n", (char *)new_env->content);
-	// 	new_env = new_env->next;
-	// }
-}
-
-t_var	*init_struct(t_var *var, char **env)
-{
-	var = malloc(sizeof(t_list));
-	if (!var)
-		return NULL;
-	var->lst_env = init_env(env);
-	return (var);
-	// ne pas oublier de free var->lst_env et var
+	temp = var->updt_env;
+	while (temp)
+	{
+		printf("%s\n", (char *)temp->content);
+		temp = temp->next;
+	}
 }
 
 void	ft_lstadd_next(t_list *lst, t_list *new)
@@ -243,65 +251,136 @@ void	ft_lstadd_next(t_list *lst, t_list *new)
 	new->next = temp;
 }
 
-t_list	*ft_export(t_var *var)
+t_list	*add_begin_export(t_var *var, t_list *temp)
 {
-	t_list	*lst_export;
-	t_list	*temp;
-	int		check;
-
-	check = 0;
-	lst_export = ft_lstnew(var->lst_env->content);
-	var->lst_env = var->lst_env->next;	
-	temp = lst_export;
-	while (var->lst_env)
+	if (ft_strcmp((char *)var->updt_env->content, 
+		(char *)var->export->content) < 0)
 	{
-		if (ft_strcmp((char *)var->lst_env->content, (char *)lst_export->content) < 0)
-		{
-			ft_lstadd_front(&lst_export, ft_lstnew(var->lst_env->content));
-			temp = lst_export;
-			check = 1;
-		}
-		if (check != 1)
-		{
-			while (lst_export->next->next && ft_strcmp((char *)var->lst_env->content, (char *)lst_export->next->content) > 0)
-				lst_export = lst_export->next;
-			if (ft_strcmp((char *)var->lst_env->content, (char *)lst_export->next->content) < 0)
-				ft_lstadd_next(lst_export, ft_lstnew(var->lst_env->content));
-			else
-				ft_lstadd_back(&lst_export, ft_lstnew(var->lst_env->content));
-			lst_export = temp;
-		}
-		var->lst_env = var->lst_env->next;
-		check = 0;
+		ft_lstadd_front(&var->export, ft_lstnew(var->updt_env->content));
+		temp = var->export;
+		var->check_export = 1;
 	}
-	while (lst_export)
-	{
-		printf("declare -x %s\n", (char *)lst_export->content);
-		lst_export = lst_export->next;
-	}
-	return (lst_export);
+	return (temp);
 }
 
-void	add_var_env(char **tab)
+
+
+void	print_declare_x(t_var *var)
 {
+	while (var->export)
+	{
+		printf("declare -x %s\n", (char *)var->export->content);
+		var->export = var->export->next;
+	}
+}
+
+t_list	*print_export(t_var *var)
+{
+	t_list	*temp;
+
+	var->export = ft_lstnew(var->updt_env->content);
+	var->updt_env = var->updt_env->next;
+	temp = var->export;
+	while (var->updt_env)
+	{
+		temp = add_begin_export(var, temp);
+		if (var->check_export != 1)
+		{
+			while (var->export->next->next && 
+				ft_strcmp((char *)var->updt_env->content,
+			(char *)var->export->next->content)	> 0)
+				var->export = var->export->next;
+			if (ft_strcmp((char *)var->updt_env->content,
+					(char *)var->export->next->content) < 0)
+				ft_lstadd_next(var->export, ft_lstnew(var->updt_env->content));
+			else
+				ft_lstadd_back(&var->export, ft_lstnew(var->updt_env->content));
+			var->export = temp;
+		}
+		var->updt_env = var->updt_env->next;
+		var->check_export = 0;
+	}
+	return (print_declare_x(var), var->export);
+}
+
+void	ft_error_var_env(char **tab)
+{
+	ft_putstr_fd(tab[0], 2);
+	ft_putstr_fd(": `", 2);
+	ft_putstr_fd(tab[1], 2);
+	return (ft_putstr_fd("': not a valid identifier\n", 2));
+}
+
+
+void	add_var_env(t_var *var, char **tab)
+{
+	int	i;
+
+	i = 1;
 	// pour l instant que : export test3=3
 	//  a voir par la suite si on dot gerer : test2=2 puis export test2
 
 	// export newtest="new"  si je fais ensuite export $newtest=bonjour :
 	// 	declare -x new="bonjour"
 	// declare -x newtest="new"
-	if (!(tab[1][0] >= 'A' && tab[1][0] <= 'Z') && !(tab[1][0] >= 'a' && tab[1][0] <= 'z') && tab[1][0] != '_' )
-	{
-		ft_putstr_fd(tab[0], 2);
-		ft_putstr_fd(": `", 2);
-		ft_putstr_fd(tab[1], 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-		// return (perror(tab[1]));
-	}
+	if (ft_isalpha(tab[1][0] == 0) && tab[1][0] != '_')
+		ft_error_var_env(tab);
+	while (tab[1] && tab[1][i] != '=' && (ft_isalnum(tab[1][i]) == 1 || tab[1][i] == '_'))
+		i++;
+	if (tab[1][i] != '=')
+		ft_error_var_env(tab);
+	else
+		ft_lstadd_back(&var->updt_env, ft_lstnew(tab[1]));
 }
 
+void	ft_export(t_var *var, char **tab)
+{
+	if (!tab[1])
+		print_export(var);
+	else
+		add_var_env(var, tab);
+}
 
-// =word / variable d environnement ne peux pas commencer pas un chiffre ? sinon aue lettres / chiffres et _
+// void	ft_cmd(t_var *var, char **tab)
+// {
+// 	if (ft_strcmp(tab[0], "echo") == 0)
+// 		return (ft_echo(tab));
+// 	if (ft_strcmp(tab[0], "pwd") == 0)
+// 		return (ft_pwd());
+// 	if (ft_strcmp(tab[0], "cd") == 0)
+// 		return (ft_cd(tab));
+// 	if (ft_strcmp(tab[0], "export") == 0)
+// 		return (ft_export(var, tab));
+// 	if (ft_strcmp(tab[0], "env") == 0)
+// 		return (ft_env(var));
+// 	// if (ft_strcmp(tab[0], "exit") == 0)
+// 	// 	return (ft_exit());
+// 	// if (ft_strcmp(tab[0], "unset") == 0)
+// 	// 	return (ft_unset());
+// 	else
+// 		return (ft_exe());
+// }
+
+void	ft_cmd(t_var *var, char **tab)
+{
+	if (ft_strcmp(tab[0], "echo") == 0)
+		ft_echo(tab);
+	else if (ft_strcmp(tab[0], "pwd") == 0)
+		ft_pwd();
+	else if (ft_strcmp(tab[0], "cd") == 0)
+		ft_cd(tab);
+	else if (ft_strcmp(tab[0], "export") == 0)
+		ft_export(var, tab);
+	else if (ft_strcmp(tab[0], "env") == 0)
+		ft_env(var);
+	// if (ft_strcmp(tab[0], "exit") == 0)
+	// 	return (ft_exit());
+	// if (ft_strcmp(tab[0], "unset") == 0)
+	// 	return (ft_unset());
+	else
+		ft_exe(var, tab);
+	return ;
+}
 
 int	main(int argc, char **argv, char **env)
 {
@@ -310,22 +389,23 @@ int	main(int argc, char **argv, char **env)
 	// t_list	*export;
 
 
-	// char	*tab[]={"cd", "bonjour", NULL};
+	char	*tab[]={"ls", NULL};
 	// char	str[]={"'-n'"};
-	char	*tab1[]={"export", "8=8", NULL};
-	// char	*tab2[]={"cd", "-", NULL};
 	t_var	*var;
 
 	var = NULL;
 	var = init_struct(var, env);
 
+	// printf("dans main %s\n", (char *)var->updt_env->content);
 	// ft_putstr_fd(str, 1);
-	// ft_pwd();
+	// ft_env(var);
 	// ft_cd(tab);
 	// ft_cd(tab1);
 	// ft_cd(tab2);
 	// export = ft_export(var);
-	add_var_env(tab1);
+	// add_var_env(var, tab1);
+	// printf("%d\n", ft_strcmp("-n", "-n"));
+	ft_cmd(var, tab);
 
 	// while (export)
 	// {
