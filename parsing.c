@@ -9,7 +9,7 @@ int	gest_quote(char *str, int i, int j, t_list **line)
 	i++;
 	while (str[i] != quote && str[i])
 		i++;
-	while (str[i+1] != ' ' && ft_strchr("<>|\"\'", str[i+1]) == NULL && str[i])
+	while (str[i + 1] != ' ' && ft_strchr("<>|", str[i + 1]) == NULL && str[i])
 		i++;
 	temp = ft_substr(str, j, i - j + 1);
 	ft_lstadd_back(line, ft_lstnew(temp));
@@ -107,7 +107,6 @@ char	*check_dollars(char *str, int i, int y)
 	char	*temp3;
 	char	*cpy;
 
-	y = 1;
 	cpy = NULL;
 	temp = NULL;
 	temp2 = NULL;
@@ -119,10 +118,13 @@ char	*check_dollars(char *str, int i, int y)
 	if (str[i] == '$')
 	{
 		if (i > 0)
-			temp = ft_strncpy(str, i);
+			temp = ft_substr(str, y, i - y);
 		if (ft_isdigit(str[i + 1]) == 1)
+		{
 			i += 2;
-		if (ft_isalpha(str[i + 1]) == 1 || str[i + 1] == '_')
+			cpy = temp;
+		}
+		else if (ft_isalpha(str[i + 1]) == 1 || str[i + 1] == '_')
 		{
 			i++;
 			y = i;
@@ -141,7 +143,7 @@ char	*check_dollars(char *str, int i, int y)
 			y = i;
 			while (str[i])
 				i++;
-			temp3 = ft_strncpy(str + y, i - y);
+			temp3 = ft_substr(str, y, i - y);
 			cpy = ft_strnjoin(2, (char *[]){cpy, temp3}, "");
 		}
 	}
@@ -154,7 +156,7 @@ char	*check_quote(char *str, int i, int y)
 	char *cpy;
 
 	cpy = malloc(sizeof(char) * ft_strlen(str) + 1);
-	while (str[i] && (size_t)i < ft_strlen(str))
+	while (str[i])
 	{
 		if (ft_strchr("\'\"", str[i]) != NULL && str[i])
 		{
@@ -164,7 +166,8 @@ char	*check_quote(char *str, int i, int y)
 				cpy[y++] = str[i++];
 			i++;
 		}
-		cpy[y++] = str[i++];
+		else
+			cpy[y++] = str[i++];
 	}
 	cpy[y] = 0;
 	if (cpy[0] == 0)

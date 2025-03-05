@@ -1,0 +1,6 @@
+*.o
+minishell
+README.md
+obj
+obj/*.o
+libft/libft.a
