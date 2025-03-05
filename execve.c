@@ -76,7 +76,7 @@ char	*ft_check_cmd(char **path, char **tab)
 
 char	**ft_check_opt(char *path_cmd, char **tab)
 {
-	free (tab[0]);
+	// free (tab[0]); /*ajouter free quand fusion ds codes*/
 	tab[0] = ft_strdup(path_cmd);
 	return (tab);
 }
@@ -86,7 +86,7 @@ void	ft_exe(t_var *var, char **tab)
 	char	**path;
 	char	*path_cmd;
 	char	**path_opt;
-
+	
 	if (ft_first_check(&tab[0]) == 0)
 	{
 		if (execve(tab[0], tab, NULL) == -1)
