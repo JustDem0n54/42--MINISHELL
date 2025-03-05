@@ -7,6 +7,7 @@ RESET = \033[0m
 FILE = main.c \
 		builtins.c \
 		parsing.c \
+		execve.c \
 	
 LIBFT = libft/libft.a
 RM = rm -f
