@@ -18,10 +18,13 @@ typedef	struct s_var
 	t_list	*updt_env;
 	t_list	*export;
 	t_list	*parse;
+	char	**data;
 	int		check_export;
 	
 }	t_var;
 
+// parsing
+char	**convert_parse(t_list *lst);
 t_list	*parsing_line(char *str);
 
 
