@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int gest_quote(char *str, int i, int j, t_list **line)
+int	gest_quote(char *str, int i, int j, t_list **line)
 {
 	char	quote;
 	char	*temp;
@@ -17,7 +17,7 @@ int gest_quote(char *str, int i, int j, t_list **line)
 	return (i);
 }
 
-int gest_token(char *str, int i, int j, t_list **line)
+int	gest_token(char *str, int i, int j, t_list **line)
 {
 	char	*temp;
 
