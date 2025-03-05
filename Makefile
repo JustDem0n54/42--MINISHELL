@@ -11,8 +11,6 @@ FILE = main.c \
 		execve.c \
 		init.c \
 		utils2.c \
-		utils.c \
-
 	
 LIBFT = libft/libft.a
 RM = rm -f

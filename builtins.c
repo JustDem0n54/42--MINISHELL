@@ -137,69 +137,74 @@ void	ft_pwd(void)
 	}
 	else if (getcwd(path, i * sizeof(path)) == 0)
 		perror("getcwd");/*voir pour le debut du message d erreur i/o getcwd*/
-
-	// ne pas oublier de free var->pwd_history a la fin 
+	return (path); 
 }
 
 int	cd_specific_arg(char **tab)
 {
-	int	to_free;
-
-	to_free = 0;
 	if (ft_strcmp(tab[1], "-") == 0)
-	{
 		tab[1] = ft_strdup(getenv("OLDPWD")); /*pour le moment old pwd ne change pas, a voir si dans minishell ca change*/
-		to_free = 1;
-	}
 	else if (ft_strcmp(tab[1], "~") == 0)
-	{
 		tab[1] = ft_strdup(getenv("HOME")); /*voir si home change ou !home*/
-		to_free = 1;
-	}
-	return (to_free);
+	if (tab[1] == NULL)
+		return (-1);
+	return (0);
 }
 
-int	ft_cd(char **tab)
-{
-	int	check;
 
-	check = 0;
+// void	update_env(t_var *var)
+// {
+// 	t_list	*temp;
+
+// 	temp = var->updt_env;
+// 	while (var->updt_env)
+// 	{
+// 		if (ft_strncmp((char *)var->updt_env->content, "PWD", 3) == 0)
+// 			var->updt_env->content = ft_strdup(ft_pwd)
+// 	}
+// }
+
+// void	update_pwd_env(t_var *var)
+// {
+// 	t_list	*temp;
+
+// 	temp = var->updt_env;
+// 	while (var->updt_env)
+// 	{
+// 		if (ft_strncmp((char *)var->updt_env->content, "PWD", 3) == 0)
+// 			var->updt_env->content = ft_strdup(getenv)
+// 	}
+// }
+
+int	ft_cd(t_var *var, char **tab)
+{
+
 	if (tab[2])
-	{
-		ft_putstr_fd(tab[0], 2);
-		ft_putstr_fd(": too many arguments\n", 2);
-		return (1);
-	}
+		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": too many arguments\n", 2), 1);
 	if (!tab[1])
 	{		
 		if (chdir(getenv("HOME")) != 0) /*voir si !home ou si home est renomme*/
 			perror(tab[0]); /*perror ok ? man = STDERR The standard error shall be used only for diagnostic messages.*/
 	}
-	else if (cd_specific_arg(tab) == 1)
-		check = 1;
+	else if (cd_specific_arg(tab) == -1)
+		return (1);
 	// ft_pwd(var, tab); /*pour check*/
 	if (chdir(tab[1]) != 0)
-	{
-		ft_putstr_fd(tab[0], 2);
-		ft_putstr_fd(": ", 2);
-		return (perror(tab[1]), 1);
-	}
-	if (check == 1)
-		free(tab[1]);
+		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": ", 2), perror(tab[1]), 1);
 	// ft_pwd(); /*pour check*/
 	return (0);
 }
 
-// int	main(int argc, char **argv, char **env)
-// {
-// 	(void)	argc;
-// 	(void)	argv;
-// 	char	*tab[]={"ls", NULL};
-// 	t_var	*var;
+int	main(int argc, char **argv, char **env)
+{
+	(void)	argc;
+	(void)	argv;
+	// char	*tab[]={"env", NULL};
+	t_var	var;
 
-	// var = NULL;
-	// var = init_struct(var, env);
-	// ft_cmd(var, tab);	
-// 	return (0);
-// }
+	init_struct(&var, env);
+	// ft_cmd(var, tab);
+	ft_lstclear(&var.init_env, free);
+	return (0);
+}
 
