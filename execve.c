@@ -10,7 +10,7 @@ int	ft_first_check(char **tab)
 			ft_putstr_fd(tab[0], 2);
 			ft_putstr_fd("\n", 2);
 			// free_split(tab);
-			return (exit (1), -1);
+			return (-1);
 		}
 		else
 			return (0);
@@ -69,7 +69,7 @@ char	*ft_check_cmd(char **path, char **tab)
 		ft_putstr_fd("\n", 2);
 		free(path_cmd);
 		// free_split(tab);
-		return (exit (1), NULL);
+		return (NULL);
 	}
 	return (path_cmd);
 }
@@ -90,19 +90,21 @@ void	ft_exe(t_var *var, char **tab)
 	if (ft_first_check(&tab[0]) == 0)
 	{
 		if (execve(tab[0], tab, NULL) == -1)
-			return (perror("error first check cmd"), exit (1));
+			return (perror("error first check cmd"));
 		// free_split(tab);
 	}
 	else
 	{
 		path = ft_find_path(var);
 		path_cmd = ft_check_cmd(path, tab);
+		if (path_cmd == NULL)
+			return ;
 		path_opt = ft_check_opt(path_cmd, tab);
 		if (execve(path_cmd, path_opt, NULL) == -1)
 		{
 			free(path_cmd);
 			free_split(path_opt);
-			return (perror("error execve"), exit (1));
+			return (perror("error execve"));
 		}
 	}
 }

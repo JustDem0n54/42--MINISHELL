@@ -24,6 +24,7 @@ t_var	*init_struct(t_var *var, char **env)
 	var->updt_env = var->init_env;
 	var->export = NULL;
 	var->check_export = 0;
+	var->data = NULL;
 	return (var);
 	// ne pas oublier de free var->updt_env et var
 }

@@ -184,8 +184,6 @@ int	ft_cd(char **tab)
 		ft_putstr_fd(": ", 2);
 		return (perror(tab[1]), 1);
 	}
-	if (check == 1)
-		free(tab[1]);
 	// ft_pwd(); /*pour check*/
 	return (0);
 }

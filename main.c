@@ -8,28 +8,24 @@ int	main(int argc, char **argv, char **env)
 
 	(void) argc;
 	(void) argv;
-	(void) env;
-	var = malloc(sizeof(t_var));
+	var = NULL;
 	while (1)
 	{
-		line = readline("minishell>");
+		line = readline("\033[1;33mBrioShell>\033[0m");
+		if (ft_strncmp(line, "exit", 3) == 0)
+		{
+			// ft_lstclear(&(var->parse), free);
+			// free(var);
+			// rl_clear_history();
+			return (0);
+		}
 		add_history(line);
+		var = init_struct(var, env);
 		var->parse = parsing_line(line);
 		var->data = convert_parse(var->parse);
-		while (var->data[i] != NULL)
-		{
-			printf("%s=\n", var->data[i]);
-			i++;
-		}
+		ft_cmd(var, var->data);
 		free_split(var->data);
 		i = 0;
-		if (ft_strncmp(line, "fin", 3) == 0)
-		{
-			ft_lstclear(&(var->parse), free);
-			free(var);
-			rl_clear_history();
-			exit(0);
-		}
 	}
 	return (0);
 }
