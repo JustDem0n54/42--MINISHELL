@@ -27,7 +27,6 @@ int	main(int argc, char **argv, char **env)
 				rl_clear_history();
 				return (0);
 			}
-			
 			add_history(line);
 			var->parse = parsing_line(line);
 			var->data = convert_parse(var->parse);
