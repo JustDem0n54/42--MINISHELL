@@ -19,8 +19,6 @@ int	main(int argc, char **argv, char **env)
 			{
 				if (var->updt_env != NULL)
 					ft_lstclear(&(var->updt_env), free);
-				if (var->export != NULL)
-					ft_lstclear(&(var->export), free);
 				if (var->parse != NULL)
 					ft_lstclear(&(var->parse), free);
 				free(var);

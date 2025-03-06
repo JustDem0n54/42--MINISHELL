@@ -42,7 +42,7 @@ char	**check_command(char **tab, t_var *var);
 void	exec_pid(t_var *var, char **tab);
 
 // utils2
-void	ft_lstadd_next(t_list *lst, t_list *new);
+void	ft_lstadd_next(t_list **lst, t_list *new);
 void	print_lst(t_list *lst);
 
 // utils
