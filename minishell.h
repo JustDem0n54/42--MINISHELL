@@ -20,6 +20,8 @@ typedef	struct s_var
 	t_list	*parse;
 	char	**data;
 	int		check_export;
+	int		cmd_count;
+	int		nbcmd;
 	
 }	t_var;
 
@@ -36,6 +38,8 @@ void	ft_cmd(t_var *var, char **tab);
 
 // execve
 void	ft_exe(t_var *var, char **tab);
+char	**check_command(char **tab, t_var *var);
+void	exec_pid(t_var *var, char **tab);
 
 // utils2
 void	ft_lstadd_next(t_list *lst, t_list *new);
