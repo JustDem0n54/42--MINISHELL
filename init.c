@@ -15,11 +15,11 @@ t_list	*init_env(char **env)
 	return (lst_env);
 }
 
-void	init_struct(t_var *var, char **env)
+t_var	*init_struct(t_var *var, char **env)
 {
 	var = malloc(sizeof(t_var));
 	ft_bzero(var, sizeof(t_var));
 	var->updt_env = init_env(env);
 	var->check_export = 0; /*a supp car bzero*/
-	return ;
+	return (var);
 }

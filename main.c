@@ -14,9 +14,11 @@ int	main(int argc, char **argv, char **env)
 		line = readline("\033[1;33mBrioShell>\033[0m");
 		if (ft_strncmp(line, "exit", 3) == 0)
 		{
-			// ft_lstclear(&(var->parse), free);
-			// free(var);
-			// rl_clear_history();
+			ft_lstclear(&(var->updt_env), free);
+			ft_lstclear(&(var->export), free);
+			ft_lstclear(&(var->parse), free);
+			free(var);
+			rl_clear_history();
 			return (0);
 		}
 		add_history(line);

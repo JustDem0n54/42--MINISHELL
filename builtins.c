@@ -194,17 +194,4 @@ int	ft_cd(char **tab)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **env)
-{
-	(void)	argc;
-	(void)	argv;
-	char	*tab[]={"export", NULL};
-	t_var	var;
-
-	init_struct(&var, env);
-	ft_cmd(&var, tab);
-	ft_lstclear(&var.updt_env, free);
-	ft_lstclear(&var.export, free);
-	return (0);
-}
 

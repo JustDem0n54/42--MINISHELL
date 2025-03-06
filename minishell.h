@@ -29,7 +29,7 @@ t_list	*parsing_line(char *str);
 
 
 // init
-void	init_struct(t_var *var, char **env);
+t_var	*init_struct(t_var *var, char **env);
 
 // builtins 2
 void	ft_cmd(t_var *var, char **tab);
