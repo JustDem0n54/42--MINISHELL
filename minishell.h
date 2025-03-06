@@ -48,6 +48,6 @@ char	*ft_strncpy(char *str, int size);
 // builtins 
 void	ft_echo(char **tab);
 void	ft_pwd(void);
-int		ft_cd(t_var *var, char **tab);
+int		ft_cd(char **tab);
 
 #endif

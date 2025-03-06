@@ -137,7 +137,6 @@ void	ft_pwd(void)
 	}
 	else if (getcwd(path, i * sizeof(path)) == 0)
 		perror("getcwd");/*voir pour le debut du message d erreur i/o getcwd*/
-	return (path); 
 }
 
 int	cd_specific_arg(char **tab)
@@ -176,7 +175,7 @@ int	cd_specific_arg(char **tab)
 // 	}
 // }
 
-int	ft_cd(t_var *var, char **tab)
+int	ft_cd(char **tab)
 {
 
 	if (tab[2])
@@ -199,12 +198,13 @@ int	main(int argc, char **argv, char **env)
 {
 	(void)	argc;
 	(void)	argv;
-	// char	*tab[]={"env", NULL};
+	char	*tab[]={"export", NULL};
 	t_var	var;
 
 	init_struct(&var, env);
-	// ft_cmd(var, tab);
-	ft_lstclear(&var.init_env, free);
+	ft_cmd(&var, tab);
+	ft_lstclear(&var.updt_env, free);
+	ft_lstclear(&var.export, free);
 	return (0);
 }
 
