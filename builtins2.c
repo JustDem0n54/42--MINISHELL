@@ -12,65 +12,64 @@ void	ft_env(t_var *var)
 	}
 }
 
-t_list	*add_begin_export(t_var *var, t_list *temp)
-{
-	if (ft_strcmp((char *)var->updt_env->content,
-		(char *)var->export->content) < 0)
-	{
-		ft_lstadd_front(&var->export, ft_lstnew(ft_strdup(var->updt_env->content)));
-		temp = var->export;
-		var->check_export = 1;
-	}
-	return (temp);
-}
-
 void	print_declare_x(t_var *var)
 {
 	char	*stock;
+	t_list	*temp;
 	int		i;
 
 	i = -1;
 	while (var->export)
 	{
+		temp = var->export->next;
 		stock = ft_strdup((char *)var->export->content);
 		printf("declare -x ");
 		while (stock[++i] != '=')
 			printf("%c", stock[i]);
 		printf("=\"%s\"\n", ft_strchr(stock + i, '=') + 1);
-		i = 0;
+		i = -1;
 		free (stock);
 		stock = NULL;
-		var->export = var->export->next;
+		free(var->export->content);
+		free (var->export);
+		var->export = temp;
+	}
+
+}
+
+void	sort_export(t_list	**lst, char *env)
+{
+	t_list	*temp;
+
+	temp = *lst;
+	if (ft_strcmp(env, (char *)(*lst)->content) < 0)
+		ft_lstadd_front(lst, ft_lstnew(ft_strdup(env)));
+	else
+	{
+		while (temp->next && temp->next->next && 
+				ft_strcmp(env,(char *)temp->next->content) > 0)
+			temp = temp->next;
+		if (temp->next && ft_strcmp(env,
+				(char *)temp->next->content) < 0)
+			ft_lstadd_next(&temp, ft_lstnew(ft_strdup(env)));
+		else
+			ft_lstadd_back(&temp, ft_lstnew(ft_strdup(env)));
 	}
 }
 
 t_list	*print_export(t_var *var)
 {
-	t_list	*temp;
+	t_list	*temp1;
 
-	var->export = ft_lstnew(ft_strdup(var->updt_env->content));
+	temp1 = var->updt_env;
+	var->export = ft_lstnew(ft_strdup((char *)var->updt_env->content));
 	var->updt_env = var->updt_env->next;
-	temp = var->export;
 	while (var->updt_env)
 	{
-		temp = add_begin_export(var, temp);
-		if (var->check_export != 1)
-		{
-			// printf("%s\n", var->export->next->next)
-			while (var->export->next->next && 
-				ft_strcmp((char *)var->updt_env->content,
-			(char *)var->export->next->content)	> 0)
-				var->export = var->export->next;
-			if (ft_strcmp((char *)var->updt_env->content,
-					(char *)var->export->next->content) < 0)
-				ft_lstadd_next(var->export, ft_lstnew(ft_strdup(var->updt_env->content)));
-			else
-				ft_lstadd_back(&var->export, ft_lstnew(ft_strdup(var->updt_env->content)));
-			var->export = temp;
-		}
+		sort_export(&var->export, var->updt_env->content);
 		var->updt_env = var->updt_env->next;
-		var->check_export = 0;
 	}
+	var->updt_env = temp1;
 	return (print_declare_x(var), var->export);
 }
 
@@ -101,7 +100,7 @@ void	add_var_env(t_var *var, char **tab)
 	if (tab[1][i] != '=')
 		ft_error_var_env(tab);
 	else
-		ft_lstadd_back(&var->updt_env, ft_lstnew(tab[1]));
+		ft_lstadd_back(&var->updt_env, ft_lstnew(ft_strdup(tab[1])));
 }
 
 void	ft_export(t_var *var, char **tab)
@@ -116,20 +115,20 @@ void	ft_cmd(t_var *var, char **tab)
 {
 	if (ft_strcmp(tab[0], "echo") == 0)
 		ft_echo(tab);
-	// else if (ft_strcmp(tab[0], "pwd") == 0)
-	// 	ft_pwd();
+	else if (ft_strcmp(tab[0], "pwd") == 0)
+		ft_pwd();
 	else if (ft_strcmp(tab[0], "cd") == 0)
 		ft_cd(tab);
 	else if (ft_strcmp(tab[0], "export") == 0)
 		ft_export(var, tab);
 	else if (ft_strcmp(tab[0], "env") == 0)
 		ft_env(var);
-	// if (ft_strcmp(tab[0], "exit") == 0)
-	// 	return (ft_exit());
-	// if (ft_strcmp(tab[0], "unset") == 0)
-	// 	return (ft_unset());
+	if (ft_strcmp(tab[0], "exit") == 0)
+		return (ft_exit());
+	if (ft_strcmp(tab[0], "unset") == 0)
+		return (ft_unset());
 	else
-		ft_exe(var, tab);
+		exec_pid(var, tab);
 	return ;
 }
 
