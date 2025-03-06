@@ -26,9 +26,19 @@ t_list	*add_begin_export(t_var *var, t_list *temp)
 
 void	print_declare_x(t_var *var)
 {
+	char	*stock;
+	int		i;
+
+	i = -1;
 	while (var->export)
 	{
-		printf("declare -x %s\n", (char *)var->export->content);
+		stock = ft_strdup((char *)var->export->content);
+		printf("declare -x ");
+		while (stock[++i] != '=')
+			printf("%c", stock[i]);
+		printf("=\"%s\"\n", ft_strchr(stock + i, '=') + 1);
+		i = 0;
+		free (stock);
 		var->export = var->export->next;
 	}
 }
@@ -104,10 +114,10 @@ void	ft_cmd(t_var *var, char **tab)
 {
 	if (ft_strcmp(tab[0], "echo") == 0)
 		ft_echo(tab);
-	else if (ft_strcmp(tab[0], "pwd") == 0)
-		ft_pwd();
+	// else if (ft_strcmp(tab[0], "pwd") == 0)
+	// 	ft_pwd();
 	else if (ft_strcmp(tab[0], "cd") == 0)
-		ft_cd(tab);
+		ft_cd(var, tab);
 	else if (ft_strcmp(tab[0], "export") == 0)
 		ft_export(var, tab);
 	else if (ft_strcmp(tab[0], "env") == 0)
@@ -121,6 +131,17 @@ void	ft_cmd(t_var *var, char **tab)
 	return ;
 }
 
+// void	update_env(t_var *var)
+// {
+// 	t_list	*temp;
+
+// 	temp = var->updt_env;
+// 	while (var->updt_env)
+// 	{
+// 		if (ft_strncmp((char *)var->updt_env->content, "PWD", 3) == 0)
+// 			var->updt_env->content = ft_strdup(ft_pwd)
+// 	}
+// }
 
 // void	ft_cmd(t_var *var, char **tab)
 // {

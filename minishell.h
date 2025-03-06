@@ -29,7 +29,7 @@ t_list	*parsing_line(char *str);
 
 
 // init
-t_var	*init_struct(t_var *var, char **env);
+void	init_struct(t_var *var, char **env);
 
 // builtins 2
 void	ft_cmd(t_var *var, char **tab);
@@ -39,6 +39,7 @@ void	ft_exe(t_var *var, char **tab);
 
 // utils2
 void	ft_lstadd_next(t_list *lst, t_list *new);
+void	print_lst(t_list *lst);
 
 // utils
 char	*ft_strncpy(char *str, int size);
@@ -47,6 +48,6 @@ char	*ft_strncpy(char *str, int size);
 // builtins 
 void	ft_echo(char **tab);
 void	ft_pwd(void);
-int		ft_cd(char **tab);
+int		ft_cd(t_var *var, char **tab);
 
 #endif
