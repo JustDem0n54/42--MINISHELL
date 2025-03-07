@@ -28,8 +28,7 @@ int	main(int argc, char **argv, char **env)
 			add_history(line);
 			var->parse = parsing_line(line);
 			var->data = convert_parse(var->parse);
-			ft_cmd(var, var->data);
-
+			execution(var, var->data);
 			free_split(var->data);
 		}
 		free(line);

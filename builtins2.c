@@ -1,9 +1,10 @@
 #include "minishell.h"
 
-void	ft_env(t_var *var)
+void	ft_env(t_var *var, char **tab)
 {
 	t_list	*temp;
 
+	(void)tab;
 	temp = var->env;
 	while (temp)
 	{
@@ -110,56 +111,3 @@ void	ft_export(t_var *var, char **tab)
 	else
 		add_var_env(var, tab);
 }
-
-void	ft_cmd(t_var *var, char **tab)
-{
-	if (ft_strcmp(tab[0], "echo") == 0)
-		ft_echo(tab);
-	else if (ft_strcmp(tab[0], "pwd") == 0)
-		ft_pwd(tab);
-	else if (ft_strcmp(tab[0], "cd") == 0)
-		ft_cd(tab);
-	else if (ft_strcmp(tab[0], "export") == 0)
-		ft_export(var, tab);
-	else if (ft_strcmp(tab[0], "env") == 0)
-		ft_env(var);
-	// if (ft_strcmp(tab[0], "exit") == 0)
-	// 	return (ft_exit());
-	// if (ft_strcmp(tab[0], "unset") == 0)
-	// 	return (ft_unset());
-	// else
-	// 	exec_pid(var, tab);
-	return ;
-}
-
-// void	update_env(t_var *var)
-// {
-// 	t_list	*temp;
-
-// 	temp = var->env;
-// 	while (var->env)
-// 	{
-// 		if (ft_strncmp((char *)var->env->content, "PWD", 3) == 0)
-// 			var->env->content = ft_strdup(ft_pwd)
-// 	}
-// }
-
-// void	ft_cmd(t_var *var, char **tab)
-// {
-// 	if (ft_strcmp(tab[0], "echo") == 0)
-// 		return (ft_echo(tab));
-// 	if (ft_strcmp(tab[0], "pwd") == 0)
-// 		return (ft_pwd());
-// 	if (ft_strcmp(tab[0], "cd") == 0)
-// 		return (ft_cd(tab));
-// 	if (ft_strcmp(tab[0], "export") == 0)
-// 		return (ft_export(var, tab));
-// 	if (ft_strcmp(tab[0], "env") == 0)
-// 		return (ft_env(var));
-// 	// if (ft_strcmp(tab[0], "exit") == 0)
-// 	// 	return (ft_exit());
-// 	// if (ft_strcmp(tab[0], "unset") == 0)
-// 	// 	return (ft_unset());
-// 	else
-// 		return (ft_exe());
-// }

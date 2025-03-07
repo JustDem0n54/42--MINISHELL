@@ -9,7 +9,6 @@ int	ft_first_check(char **tab)
 			ft_putstr_fd("no such file or directory: ", 2);
 			ft_putstr_fd(tab[0], 2);
 			ft_putstr_fd("\n", 2);
-			// free_split(tab);
 			return (-1);
 		}
 		else
@@ -17,62 +16,6 @@ int	ft_first_check(char **tab)
 	}
 	return (-1);
 }
-
-// char	**ft_find_path(t_var *var)
-// {
-// 	t_list	*temp;
-// 	char	**chk_path;
-// 	char	**path;
-// 	int		i;
-
-// 	temp = var->updt_env;
-// 	while (temp)
-// 	{
-// 		if (strncmp((char *)temp->content, "PATH=", 5) == 0)
-// 			break ;
-// 		temp = temp->next;
-// 	}
-// 	chk_path = ft_split((char *)temp->content + 5, ':');
-// 	i = 0; /*a revoir*/
-// 	while (chk_path[i])
-// 		i++;
-// 	path = ft_calloc(i + 1, sizeof(char **));
-// 	i = 0;
-// 	while (chk_path[i])
-// 	{
-// 		path[i] = ft_strjoin(chk_path[i], "/");
-// 		free (chk_path[i]);
-// 		i++;
-// 	}
-// 	free (chk_path);
-// 	return (path);
-// }
-
-// char	*ft_check_cmd(char **path, char **tab)
-// {
-// 	char	*path_cmd;
-// 	int		j;
-
-// 	j = 0;
-// 	path_cmd = ft_strjoin(path[j], tab[0]);
-// 	while (path[j + 1] && access(path_cmd, X_OK) != 0)
-// 	{
-// 		free(path_cmd);
-// 		j++;
-// 		path_cmd = ft_strjoin(path[j], tab[0]);
-// 	}
-// 	free_split(path);
-// 	if (access(path_cmd, X_OK) != 0)
-// 	{
-// 		ft_putstr_fd("command not found: ", 2);
-// 		ft_putstr_fd(tab[0], 2);
-// 		ft_putstr_fd("\n", 2);
-// 		free(path_cmd);
-// 		// free_split(tab);
-// 		return (NULL);
-// 	}
-// 	return (path_cmd);
-// }
 
 char	*check_path(char **env, char *cmd)
 {
@@ -99,13 +42,6 @@ char	*check_path(char **env, char *cmd)
 		i++;
 	}
 	return (free_split(path), NULL);
-}
-
-char	**ft_check_opt(char *path_cmd, char **tab)
-{
-	// free (tab[0]); /*ajouter free quand fusion ds codes*/
-	tab[0] = ft_strdup(path_cmd);
-	return (tab);
 }
 
 char	**check_command(char **tab, t_var *var)
@@ -162,49 +98,112 @@ char	**do_env(t_list *env)
 	return (nenv);
 }
 
-void	exec_pid(t_var *var, char **tab)
+void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
+{
+	if (ft_strcmp(cmd[0], "echo") == 0)
+		return (ft_echo);
+	// else if (ft_strcmp(cmd[0], "pwd") == 0)
+	// 	return (ft_pwd);
+	// else if (ft_strcmp(cmd[0], "cd") == 0)
+	// 	return (ft_cd);
+	else if (ft_strcmp(cmd[0], "export") == 0)
+		return (ft_export);
+	else if (ft_strcmp(cmd[0], "env") == 0)
+		return (ft_env);
+	// else if (ft_strcmp(tab[0], "exit") == 0)
+	// 	return (ft_exit());
+	// else if (ft_strcmp(tab[0], "unset") == 0)
+	// 	return (ft_unset());
+	return (NULL);
+}
+
+void	setup_pid(t_var *var, char **tab)
+{
+	int		pipefd[2];
+	pid_t	pid;
+	int i;
+	char	**env;
+	char	*path;
+	char	**cmd;
+
+	i = 1;
+	env = do_env(var->env);
+	var->entry = 0;
+	var->output = 1;
+	while (i <= var->nbcmd)
+	{
+		if (pipe(pipefd) == -1)
+			return (ft_putstr_fd("Error pipe.", 2));
+		var->output = pipefd[1];
+		if (i == var->nbcmd)
+			var->output = STDOUT_FILENO;
+		if (var->entry != -1 && var->output != -1)
+			pid = fork();
+		ft_putnbr_fd(var->output, 1);
+		if (pid == 0)
+		{
+			if (i > 1)
+			{
+				if (dup2(var->entry, STDIN_FILENO) == -1)
+					return (ft_putstr_fd("Error dup2.", 2), exit(1));
+			}
+			if (i < var->nbcmd)
+			{
+				if (dup2(var->output, STDOUT_FILENO) == -1)
+					return (ft_putstr_fd("Error dup2.", 2), exit(1));
+			}
+			close(var->entry);
+			close(pipefd[0]);
+			close(pipefd[1]);
+			cmd = check_command(tab, var);
+			path = check_path(env, cmd[0]);
+			execve(path, cmd, env);
+			exit(EXIT_FAILURE);
+		}
+		close(var->entry);
+		close(var->output);
+		var->entry = pipefd[0];
+		i++;
+		wait(NULL);
+	}
+	return ;
+}
+
+void	exec_one(t_var *var, char **cmd)
+{
+	char	*path;
+	char	**env;
+	pid_t	pid;
+
+	env = do_env(var->env);
+	path = check_path(env, cmd[0]);
+	pid = -1;
+	pid = fork();
+	if (pid == 0)
+		execve(path, cmd, env);
+	wait(NULL);
+}
+
+void	execution(t_var *var, char **tab)
 {
 	char **cmd;
 	int i;
-	// int	*pipefd;
-	pid_t	pid;
-	char **env;
-	char *path_cmd;
+	void	(*exec)(t_var *, char **);
+	int	*pipefd;
 
 	var->cmd_count = 0;
 	var->nbcmd = count_command(tab);
-	i = 0;
-	// pipefd = 0;
-	env = do_env(var->env);
-	while (i < var->nbcmd)
+	i = 1;
+	pipefd = 0;
+	if (var->nbcmd == 1)
 	{
 		cmd = check_command(tab, var);
-		// if (pipe(pipefd) == -1)
-		// 	return ;
-		pid = fork();
-		if (pid == 0)
-		{
-			if (ft_first_check(&cmd[0]) == 0)
-			{
-				if (execve(tab[0], tab, NULL) == -1)
-					return (perror("error first check cmd"));
-				free_split(cmd);
-			}
-			else
-			{
-				path_cmd = check_path(env, cmd[0]);
-				if (path_cmd == NULL)
-					return ;
-				if (execve(path_cmd, cmd, NULL) == -1)
-				{
-					free(path_cmd);
-					free_split(cmd);
-					return (perror("error execve"));
-				}
-			}
-		}
-		i++;
-		waitpid(pid, 0, 0);
+		exec = ft_cmd(cmd);
+		if (exec == NULL)
+			return (exec_one(var, cmd));
+		exec(var, cmd);
+		return ;
 	}
-	
+	else
+		setup_pid(var, tab);
 }

@@ -91,11 +91,12 @@
 
 // a completer avec les conditions stdin / stdout / return value 
 
-void	ft_echo(char **tab)
+void	ft_echo(t_var *var, char **tab)
 {
 	int	i;
 	int	check;
 
+	(void)var;
 	i = 1;
 	check = 0;
 	while (tab[i] && ft_strcmp(tab[i], "-n") == 0)
@@ -149,28 +150,8 @@ int	cd_specific_arg(char **tab)
 	return (0);
 }
 
-
-// void	update_pwd_env(t_var *var)
-// {
-// 	t_list	*temp;
-
-// 	temp = var->updt_env;
-// 	while (var->updt_env)
-// 	{
-// 		if (ft_strncmp((char *)var->updt_env->content, "PWD", 3) == 0)
-// 			var->updt_env->content = ft_strdup(getenv)
-// 	}
-// }
-
 int	ft_cd(char **tab)
 {
-	// char	*stock_path;
-	// printf("home = %s\n",getenv("HOME"));
-	// printf("old = %s\n",getenv("OLDPWD"));
-	// printf("pwd = %s\n",getenv("PWD"));
-	// ft_pwd();
-	// printf("\n\n");
-	
 	if (tab[2])
 		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": too many arguments\n", 2), 1);
 	if (!tab[1])
@@ -183,12 +164,6 @@ int	ft_cd(char **tab)
 	// ft_pwd(var, tab); /*pour check*/
 	if (chdir(tab[1]) != 0)
 		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": ", 2), perror(tab[1]), 1);
-	// printf("home = %s\n", getenv("HOME"));
-	// printf("old = %s\n", getenv("OLDPWD"));
-	// printf("pwd = %s\n", getenv("PWD"));
-	// ft_pwd();
-	// printf("\n");
-	// ft_pwd(); /*pour check*/
 	return (0);
 }
 
