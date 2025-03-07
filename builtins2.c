@@ -87,12 +87,6 @@ void	add_var_env(t_var *var, char **tab)
 	int	i;
 
 	i = 1;
-	// pour l instant que : export test3=3
-	//  a voir par la suite si on dot gerer : test2=2 puis export test2
-
-	// export newtest="new"  si je fais ensuite export $newtest=bonjour :
-	// 	declare -x new="bonjour"
-	// declare -x newtest="new"
 	if (ft_isalpha(tab[1][0] == 0) && tab[1][0] != '_')
 		ft_error_var_env(tab);
 	while (tab[1] && tab[1][i] != '=' && (ft_isalnum(tab[1][i]) == 1 || tab[1][i] == '_'))
@@ -116,9 +110,9 @@ void	ft_cmd(t_var *var, char **tab)
 	if (ft_strcmp(tab[0], "echo") == 0)
 		ft_echo(tab);
 	else if (ft_strcmp(tab[0], "pwd") == 0)
-		ft_pwd(tab);
+		ft_pwd(var, tab);
 	else if (ft_strcmp(tab[0], "cd") == 0)
-		ft_cd(tab);
+		ft_cd(var, tab);
 	else if (ft_strcmp(tab[0], "export") == 0)
 		ft_export(var, tab);
 	else if (ft_strcmp(tab[0], "env") == 0)
@@ -127,39 +121,7 @@ void	ft_cmd(t_var *var, char **tab)
 	// 	return (ft_exit());
 	// if (ft_strcmp(tab[0], "unset") == 0)
 	// 	return (ft_unset());
-	// else
-	// 	exec_pid(var, tab);
+	else
+		exec_pid(var, tab);
 	return ;
 }
-
-// void	update_env(t_var *var)
-// {
-// 	t_list	*temp;
-
-// 	temp = var->env;
-// 	while (var->env)
-// 	{
-// 		if (ft_strncmp((char *)var->env->content, "PWD", 3) == 0)
-// 			var->env->content = ft_strdup(ft_pwd)
-// 	}
-// }
-
-// void	ft_cmd(t_var *var, char **tab)
-// {
-// 	if (ft_strcmp(tab[0], "echo") == 0)
-// 		return (ft_echo(tab));
-// 	if (ft_strcmp(tab[0], "pwd") == 0)
-// 		return (ft_pwd());
-// 	if (ft_strcmp(tab[0], "cd") == 0)
-// 		return (ft_cd(tab));
-// 	if (ft_strcmp(tab[0], "export") == 0)
-// 		return (ft_export(var, tab));
-// 	if (ft_strcmp(tab[0], "env") == 0)
-// 		return (ft_env(var));
-// 	// if (ft_strcmp(tab[0], "exit") == 0)
-// 	// 	return (ft_exit());
-// 	// if (ft_strcmp(tab[0], "unset") == 0)
-// 	// 	return (ft_unset());
-// 	else
-// 		return (ft_exe());
-// }
