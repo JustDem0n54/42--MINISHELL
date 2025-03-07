@@ -18,7 +18,8 @@ typedef	struct s_var
 	t_list	*export;
 	t_list	*parse;
 	char	**data;
-	char	*stock_env;
+	char	*pwd;
+	char	*oldpwd;
 	int		cmd_count;
 	int		nbcmd;
 	int		entry;
@@ -36,9 +37,6 @@ t_var	*init_struct(t_var *var, char **env);
 
 // builtins 2
 void	ft_env(t_var *var, char **tab);
-int		ft_cd(char **tab);
-char	*ft_pwd(char **tab);
-void	ft_echo(t_var *var, char **tab);
 void	ft_export(t_var *var, char **tab);
 
 // execve
@@ -57,7 +55,8 @@ char	*ft_strncpy(char *str, int size);
 
 
 // builtins 
-char	*ft_pwd(char **tab);
-int		ft_cd(char **tab);
+void	ft_echo(t_var *var, char **tab);
+void	ft_pwd(t_var *var, char **tab);
+int		ft_cd(t_var *var, char **tab);
 
 #endif

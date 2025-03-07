@@ -88,12 +88,6 @@ void	add_var_env(t_var *var, char **tab)
 	int	i;
 
 	i = 1;
-	// pour l instant que : export test3=3
-	//  a voir par la suite si on dot gerer : test2=2 puis export test2
-
-	// export newtest="new"  si je fais ensuite export $newtest=bonjour :
-	// 	declare -x new="bonjour"
-	// declare -x newtest="new"
 	if (ft_isalpha(tab[1][0] == 0) && tab[1][0] != '_')
 		ft_error_var_env(tab);
 	while (tab[1] && tab[1][i] != '=' && (ft_isalnum(tab[1][i]) == 1 || tab[1][i] == '_'))

@@ -21,6 +21,10 @@ int	main(int argc, char **argv, char **env)
 					ft_lstclear(&(var->env), free);
 				if (var->parse != NULL)
 					ft_lstclear(&(var->parse), free);
+				if (var->pwd != NULL)
+					free (var->pwd);
+				if (var->oldpwd != NULL)
+					free (var->oldpwd);
 				free(var);
 				rl_clear_history();
 				return (0);
