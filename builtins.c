@@ -166,8 +166,6 @@ void	ft_echo(t_var *var, char **tab)
 
 
 // HOME 
-// OLDPWD
-// PWD
 // SHLVL
 // 	}
 

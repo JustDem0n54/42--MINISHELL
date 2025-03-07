@@ -11,10 +11,7 @@ t_list	*init_env(t_var *var, char **env)
 	{
 		ft_lstadd_back(&lst_env, ft_lstnew(ft_strdup(env[i])));
 		if (ft_strncmp(env[i], "PWD", 3) == 0)
-		{
 			var->pwd = ft_strdup(env[i]);
-			printf("%s\n", var->pwd);
-		}
 		if (ft_strncmp(env[i], "OLDPWD", 6) == 0)
 			var->oldpwd = ft_strdup(env[i]);
 		i++;
