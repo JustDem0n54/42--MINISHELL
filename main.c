@@ -17,8 +17,8 @@ int	main(int argc, char **argv, char **env)
 		{
 			if (ft_strncmp(line, "exit", 3) == 0)
 			{
-				if (var->updt_env != NULL)
-					ft_lstclear(&(var->updt_env), free);
+				if (var->env != NULL)
+					ft_lstclear(&(var->env), free);
 				if (var->parse != NULL)
 					ft_lstclear(&(var->parse), free);
 				free(var);
@@ -29,6 +29,7 @@ int	main(int argc, char **argv, char **env)
 			var->parse = parsing_line(line);
 			var->data = convert_parse(var->parse);
 			ft_cmd(var, var->data);
+
 			free_split(var->data);
 		}
 		free(line);

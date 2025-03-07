@@ -114,29 +114,28 @@ void	ft_echo(char **tab)
 		printf("\n");
 }
 
-void	ft_pwd(void)
+char	*ft_pwd(char **tab)
 {
 	char	path[1024];
+	char	*stock_path;
 	int		i;
 
 	i = 1;
-	if (getcwd(path, i * sizeof(path)) == 0)
+	stock_path = NULL;
+	while (sizeof(path) <= 4096 && getcwd(path, i * sizeof(path)) == 0)
 	{
-		while (sizeof(path) <= 4096)
-		{
-			if (getcwd(path, i * sizeof(path)) != 0)
-				break ;
-			else
-				i++;
-		}
+		if (getcwd(path, i * sizeof(path)) != 0)
+			break ;
+		else
+			i++;
 	}
-	if (getcwd(path, i * sizeof(path)) != 0)
-	{
-		ft_putstr_fd(path, 1);
-		ft_putstr_fd("\n", 1);
-	}
+	if (ft_strcmp(tab[0], "pwd") == 0 && getcwd(path, i * sizeof(path)) != 0)
+		printf("%s\n", path);
 	else if (getcwd(path, i * sizeof(path)) == 0)
-		perror("getcwd");/*voir pour le debut du message d erreur i/o getcwd*/
+		perror("pwd");/*voir pour le debut du message d erreur*/
+	if (ft_strcmp(tab[0], "cd") == 0)
+		stock_path = ft_strdup(path);
+	return(stock_path);
 }
 
 int	cd_specific_arg(char **tab)
@@ -150,18 +149,6 @@ int	cd_specific_arg(char **tab)
 	return (0);
 }
 
-
-// void	update_env(t_var *var)
-// {
-// 	t_list	*temp;
-
-// 	temp = var->updt_env;
-// 	while (var->updt_env)
-// 	{
-// 		if (ft_strncmp((char *)var->updt_env->content, "PWD", 3) == 0)
-// 			var->updt_env->content = ft_strdup(ft_pwd)
-// 	}
-// }
 
 // void	update_pwd_env(t_var *var)
 // {
@@ -177,7 +164,13 @@ int	cd_specific_arg(char **tab)
 
 int	ft_cd(char **tab)
 {
-
+	// char	*stock_path;
+	// printf("home = %s\n",getenv("HOME"));
+	// printf("old = %s\n",getenv("OLDPWD"));
+	// printf("pwd = %s\n",getenv("PWD"));
+	// ft_pwd();
+	// printf("\n\n");
+	
 	if (tab[2])
 		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": too many arguments\n", 2), 1);
 	if (!tab[1])
@@ -190,6 +183,11 @@ int	ft_cd(char **tab)
 	// ft_pwd(var, tab); /*pour check*/
 	if (chdir(tab[1]) != 0)
 		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": ", 2), perror(tab[1]), 1);
+	// printf("home = %s\n", getenv("HOME"));
+	// printf("old = %s\n", getenv("OLDPWD"));
+	// printf("pwd = %s\n", getenv("PWD"));
+	// ft_pwd();
+	// printf("\n");
 	// ft_pwd(); /*pour check*/
 	return (0);
 }

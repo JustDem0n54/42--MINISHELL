@@ -14,12 +14,11 @@
 
 typedef	struct s_var
 {
-	t_list	*init_env;
-	t_list	*updt_env;
+	t_list	*env;
 	t_list	*export;
 	t_list	*parse;
 	char	**data;
-	int		check_export;
+	char	*stock_env;
 	int		cmd_count;
 	int		nbcmd;
 	
@@ -51,7 +50,7 @@ char	*ft_strncpy(char *str, int size);
 
 // builtins 
 void	ft_echo(char **tab);
-void	ft_pwd(void);
+char	*ft_pwd(char **tab);
 int		ft_cd(char **tab);
 
 #endif

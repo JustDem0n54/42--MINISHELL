@@ -19,7 +19,6 @@ t_var	*init_struct(t_var *var, char **env)
 {
 	var = malloc(sizeof(t_var));
 	ft_bzero(var, sizeof(t_var));
-	var->updt_env = init_env(env);
-	var->check_export = 0; /*a supp car bzero*/
+	var->env = init_env(env);
 	return (var);
 }

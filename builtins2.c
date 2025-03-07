@@ -4,7 +4,7 @@ void	ft_env(t_var *var)
 {
 	t_list	*temp;
 
-	temp = var->updt_env;
+	temp = var->env;
 	while (temp)
 	{
 		printf("%s\n", (char *)temp->content);
@@ -61,15 +61,15 @@ t_list	*print_export(t_var *var)
 {
 	t_list	*temp1;
 
-	temp1 = var->updt_env;
-	var->export = ft_lstnew(ft_strdup((char *)var->updt_env->content));
-	var->updt_env = var->updt_env->next;
-	while (var->updt_env)
+	temp1 = var->env;
+	var->export = ft_lstnew(ft_strdup((char *)var->env->content));
+	var->env = var->env->next;
+	while (var->env)
 	{
-		sort_export(&var->export, var->updt_env->content);
-		var->updt_env = var->updt_env->next;
+		sort_export(&var->export, var->env->content);
+		var->env = var->env->next;
 	}
-	var->updt_env = temp1;
+	var->env = temp1;
 	return (print_declare_x(var), var->export);
 }
 
@@ -100,7 +100,7 @@ void	add_var_env(t_var *var, char **tab)
 	if (tab[1][i] != '=')
 		ft_error_var_env(tab);
 	else
-		ft_lstadd_back(&var->updt_env, ft_lstnew(ft_strdup(tab[1])));
+		ft_lstadd_back(&var->env, ft_lstnew(ft_strdup(tab[1])));
 }
 
 void	ft_export(t_var *var, char **tab)
@@ -116,19 +116,19 @@ void	ft_cmd(t_var *var, char **tab)
 	if (ft_strcmp(tab[0], "echo") == 0)
 		ft_echo(tab);
 	else if (ft_strcmp(tab[0], "pwd") == 0)
-		ft_pwd();
+		ft_pwd(tab);
 	else if (ft_strcmp(tab[0], "cd") == 0)
 		ft_cd(tab);
 	else if (ft_strcmp(tab[0], "export") == 0)
 		ft_export(var, tab);
 	else if (ft_strcmp(tab[0], "env") == 0)
 		ft_env(var);
-	if (ft_strcmp(tab[0], "exit") == 0)
-		return (ft_exit());
-	if (ft_strcmp(tab[0], "unset") == 0)
-		return (ft_unset());
-	else
-		exec_pid(var, tab);
+	// if (ft_strcmp(tab[0], "exit") == 0)
+	// 	return (ft_exit());
+	// if (ft_strcmp(tab[0], "unset") == 0)
+	// 	return (ft_unset());
+	// else
+	// 	exec_pid(var, tab);
 	return ;
 }
 
@@ -136,11 +136,11 @@ void	ft_cmd(t_var *var, char **tab)
 // {
 // 	t_list	*temp;
 
-// 	temp = var->updt_env;
-// 	while (var->updt_env)
+// 	temp = var->env;
+// 	while (var->env)
 // 	{
-// 		if (ft_strncmp((char *)var->updt_env->content, "PWD", 3) == 0)
-// 			var->updt_env->content = ft_strdup(ft_pwd)
+// 		if (ft_strncmp((char *)var->env->content, "PWD", 3) == 0)
+// 			var->env->content = ft_strdup(ft_pwd)
 // 	}
 // }
 

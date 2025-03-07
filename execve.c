@@ -175,7 +175,7 @@ void	exec_pid(t_var *var, char **tab)
 	var->nbcmd = count_command(tab);
 	i = 0;
 	// pipefd = 0;
-	env = do_env(var->updt_env);
+	env = do_env(var->env);
 	while (i < var->nbcmd)
 	{
 		cmd = check_command(tab, var);
