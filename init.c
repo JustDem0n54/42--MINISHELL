@@ -14,6 +14,8 @@ t_list	*init_env(t_var *var, char **env)
 			var->pwd = ft_strdup(env[i]);
 		if (ft_strncmp(env[i], "OLDPWD", 6) == 0)
 			var->oldpwd = ft_strdup(env[i]);
+		if (ft_strncmp(env[i], "HOME", 4) == 0)
+			var->home = ft_strdup(env[i]);
 		i++;
 	}
 	return (lst_env);

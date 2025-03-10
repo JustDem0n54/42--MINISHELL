@@ -61,6 +61,7 @@ char	**check_command(char **tab, t_var *var)
 		i++;
 		j++;
 	}
+	cmd[i] = NULL;
 	var->cmd_count++;
 	return (cmd);
 }
@@ -102,10 +103,10 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 {
 	if (ft_strcmp(cmd[0], "echo") == 0)
 		return (ft_echo);
-	// else if (ft_strcmp(cmd[0], "pwd") == 0)
-	// 	return (ft_pwd);
-	// else if (ft_strcmp(cmd[0], "cd") == 0)
-	// 	return (ft_cd);
+	else if (ft_strcmp(cmd[0], "pwd") == 0)
+		return (ft_pwd);
+	else if (ft_strcmp(cmd[0], "cd") == 0)
+		return (ft_cd);
 	else if (ft_strcmp(cmd[0], "export") == 0)
 		return (ft_export);
 	else if (ft_strcmp(cmd[0], "env") == 0)
@@ -114,6 +115,8 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 	// 	return (ft_exit());
 	// else if (ft_strcmp(tab[0], "unset") == 0)
 	// 	return (ft_unset());
+	else if (ft_strcmp(cmd[0], "./minishell") == 0)
+		return (increase_shlvl);
 	return (NULL);
 }
 
