@@ -8,6 +8,7 @@ RESET = \033[0m
 FILE = main.c \
 		builtins.c \
 		builtins2.c \
+		builtins3.c \
 		parsing.c \
 		execve.c \
 		init.c \

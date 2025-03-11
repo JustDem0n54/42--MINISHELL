@@ -46,8 +46,8 @@ void	sort_export(t_list	**lst, char *env)
 		ft_lstadd_front(lst, ft_lstnew(ft_strdup(env)));
 	else
 	{
-		while (temp->next && temp->next->next && 
-				ft_strcmp(env,(char *)temp->next->content) > 0)
+		while (temp->next && temp->next->next
+			&& ft_strcmp(env, (char *)temp->next->content) > 0)
 			temp = temp->next;
 		if (temp->next && ft_strcmp(env,
 				(char *)temp->next->content) < 0)
@@ -71,43 +71,6 @@ t_list	*print_export(t_var *var)
 	}
 	var->env = temp1;
 	return (print_declare_x(var), var->export);
-}
-
-void	ft_error_var_env(char **tab, int i)
-{
-	ft_putstr_fd(tab[i], 2);
-	ft_putstr_fd(": `", 2);
-	ft_putstr_fd(tab[i], 2);
-	return (ft_putstr_fd("': not a valid identifier\n", 2));
-}
-
-// void	check_var_env_added(char *tab)
-// {
-// 	if ()
-// ne pas check pwd et olpwd car modif pas d incidence 
-// }
-
-void	add_var_env(t_var *var, char **tab)
-{
-	int	i;
-	int	j;
-
-	i = 1;
-	j = 1;
-	while (tab[i])
-	{
-		if (ft_isalpha(tab[i][0] == 0) && tab[i][0] != '_')
-			ft_error_var_env(tab, i);
-		while (tab[i] && tab[i][j] != '=' && (ft_isalnum(tab[i][j]) == 1 || tab[i][j] == '_'))
-			j++;
-		if (tab[i][j] != '=')
-			ft_error_var_env(tab, i);
-		else
-			ft_lstadd_back(&var->env, ft_lstnew(ft_strdup(tab[i])));
-		check_var_env(var, tab[i]);
-		j = 0;
-		i++;
-	}
 }
 
 void	ft_export(t_var *var, char **tab)
