@@ -196,7 +196,7 @@ char	**convert_parse(t_list *lst)
 		}
 		lst = lst->next;
 	}
-	sortie[i] = NULL;
+	sortie[i] = 0;
 	return(sortie);
 }
 

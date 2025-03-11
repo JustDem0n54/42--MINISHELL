@@ -23,6 +23,8 @@ char	*check_path(char **env, char *cmd)
 	char	**path;
 	char	*temp;
 
+	if (cmd == NULL)
+		return (NULL);
 	if (ft_strchr(cmd, '/') != NULL)
 	{
 		if (access(cmd, F_OK) == 0)
@@ -50,6 +52,8 @@ char	**check_command(char **tab, t_var *var)
 	int		j;
 	int 	i;
 
+	if (tab[0] == NULL)
+		return (NULL);
 	j = var->cmd_count;
 	i = 0;
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
@@ -61,6 +65,7 @@ char	**check_command(char **tab, t_var *var)
 		i++;
 		j++;
 	}
+	cmd[i] = NULL;
 	var->cmd_count++;
 	return (cmd);
 }
@@ -100,6 +105,8 @@ char	**do_env(t_list *env)
 
 void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 {
+	if (cmd[0] == NULL)
+		return (NULL);
 	if (ft_strcmp(cmd[0], "echo") == 0)
 		return (ft_echo);
 	// else if (ft_strcmp(cmd[0], "pwd") == 0)
@@ -117,11 +124,38 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 	return (NULL);
 }
 
+void	exec_all(char **cmd, t_var *var, int output, char **env, char *path)
+{
+	pid_t	pid;
+	void	(*exec)(t_var *, char **);
+
+	pid = fork();
+	if (pid == 0)
+	{
+		if (var->entry != 0)
+		{
+			dup2(var->entry, STDIN_FILENO);
+			close (var->entry);
+		}
+		if (output != 1)
+		{
+			dup2(output, STDOUT_FILENO);
+			close (output);
+		}
+		exec = ft_cmd(cmd);
+		if (exec == NULL)
+			execve(path, cmd, env);
+		else
+			exec(var, cmd);
+		exit(0);
+	}
+	
+}
+
 void	setup_pid(t_var *var, char **tab)
 {
 	int		pipefd[2];
-	pid_t	pid;
-	int i;
+	int		i;
 	char	**env;
 	char	*path;
 	char	**cmd;
@@ -129,43 +163,19 @@ void	setup_pid(t_var *var, char **tab)
 	i = 1;
 	env = do_env(var->env);
 	var->entry = 0;
-	var->output = 1;
-	while (i <= var->nbcmd)
+	while (i < var->nbcmd)
 	{
 		if (pipe(pipefd) == -1)
 			return (ft_putstr_fd("Error pipe.", 2));
-		var->output = pipefd[1];
-		if (i == var->nbcmd)
-			var->output = STDOUT_FILENO;
-		if (var->entry != -1 && var->output != -1)
-			pid = fork();
-		ft_putnbr_fd(var->output, 1);
-		if (pid == 0)
-		{
-			if (i > 1)
-			{
-				if (dup2(var->entry, STDIN_FILENO) == -1)
-					return (ft_putstr_fd("Error dup2.", 2), exit(1));
-			}
-			if (i < var->nbcmd)
-			{
-				if (dup2(var->output, STDOUT_FILENO) == -1)
-					return (ft_putstr_fd("Error dup2.", 2), exit(1));
-			}
-			close(var->entry);
-			close(pipefd[0]);
-			close(pipefd[1]);
-			cmd = check_command(tab, var);
-			path = check_path(env, cmd[0]);
-			execve(path, cmd, env);
-			exit(EXIT_FAILURE);
-		}
-		close(var->entry);
-		close(var->output);
+		cmd = check_command(tab, var);
+		path = check_path(env, cmd[0]);
+		exec_all(cmd, var, pipefd[1], env, path);
+		write(1, "test", 4);
+		close(pipefd[1]);
 		var->entry = pipefd[0];
 		i++;
-		wait(NULL);
 	}
+	exec_all(cmd, var, 1, env, path);
 	return ;
 }
 
