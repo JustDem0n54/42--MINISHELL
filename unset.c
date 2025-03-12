@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-int	var_name_length(char *tab)
+size_t	var_name_length(char *tab)
 {
-	int	j;
+	size_t	j;
 
 	j = 0;
 	while (tab && tab[j] != '='
@@ -56,6 +56,8 @@ void	ft_unset(t_var *var, char **tab)
 	{
 		len = var_name_length(tab[i]) + 1;
 		temp = var->env;
+		if (var_name_length(tab[i]) != ft_strlen(tab[i]))
+			return ; 
 		if (unset_first(var, tab[i], temp, len) == 1)
 		{ 
 			while (var->env && var->env->next)

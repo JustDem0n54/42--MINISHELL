@@ -38,8 +38,8 @@ int	check_var_env_added(t_var *var, char *tab, int i)
 
 void	add_var_env(t_var *var, char **tab)
 {
-	int	i;
-	int	j;
+	int		i;
+	size_t	j;
 
 	i = 1;
 	j = 0;
@@ -47,9 +47,6 @@ void	add_var_env(t_var *var, char **tab)
 	{
 		if (ft_isalpha(tab[i][0]) == 0 && tab[i][0] != '_')
 			ft_error_var_env(tab, i);
-		// while (tab[i] && tab[i][j] != '='
-		// 	&& (ft_isalnum(tab[i][j]) == 1 || tab[i][j] == '_'))
-		// 	j++;
 		j = var_name_length(tab[i]);
 		if (tab[i][j] != '=')
 			return (ft_error_var_env(tab, i));
@@ -60,12 +57,11 @@ void	add_var_env(t_var *var, char **tab)
 	}
 }
 
-void	increase_shlvl(t_var *var, char **tab)
+void	increase_shlvl(t_var *var)
 {
 	t_list	*temp;
 	char	*temp2;
 
-	(void) tab;
 	temp = var->env;
 	while (var->env)
 	{

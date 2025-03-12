@@ -39,7 +39,7 @@ t_var	*init_struct(t_var *var, char **env);
 // builtins 2
 void	ft_env(t_var *var, char **tab);
 void	ft_export(t_var *var, char **tab);
-void	increase_shlvl(t_var *var, char **tab);
+void	increase_shlvl(t_var *var);
 
 // builtins 3
 void	add_var_env(t_var *var, char **tab);
@@ -66,6 +66,10 @@ void	ft_pwd(t_var *var, char **tab);
 void	ft_cd(t_var *var, char **tab);
 
 // unset
-int	var_name_length(char *tab);
+size_t	var_name_length(char *tab);
+
+// exit
+
+void	ft_exit(t_var *var, char **tab);
 
 #endif

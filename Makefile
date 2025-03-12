@@ -10,6 +10,7 @@ FILE = main.c \
 		builtins2.c \
 		builtins3.c \
 		unset.c \
+		exit.c \
 		parsing.c \
 		execve.c \
 		init.c \

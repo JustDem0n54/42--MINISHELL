@@ -8,7 +8,8 @@ void	ft_env(t_var *var, char **tab)
 	temp = var->env;
 	while (temp)
 	{
-		printf("%s\n", (char *)temp->content);
+		if (ft_strlen(ft_strchr((char *)temp->content, '=')) != 1)
+			printf("%s\n", (char *)temp->content);
 		temp = temp->next;
 	}
 }

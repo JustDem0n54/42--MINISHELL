@@ -67,6 +67,13 @@
 
 // a completer avec les conditions stdin / stdout / return value 
 
+void	print_echo(char **tab, int i)
+{
+	printf("%s", tab[i]);
+	if (tab[i + 1])
+		printf(" ");
+}
+
 void	ft_echo(t_var *var, char **tab)
 {
 	int	i;
@@ -80,16 +87,14 @@ void	ft_echo(t_var *var, char **tab)
 	while (tab[++i])
 	{
 		if (tab[i][0] == '-' && tab[i][1] == 'n')
-			check = 1;
-		while (tab[i][j] && tab[i][j++] == 'n')
+			j = 1;
+		while (tab[i][j] && tab[i][j] == 'n')
 			j++;
+		if (tab[i][j] == 0)
+			check = 1;
 		if (tab[i] && tab[i][j])
-		{
-			printf("%s", tab[i]);
-			if (tab[i + 1])
-				printf(" ");
-			j = 0;
-		}
+			print_echo(tab, i);
+		j = 0;
 	}
 	if (check != 1)
 		printf("\n");
