@@ -29,3 +29,4 @@ void	print_lst(t_list *lst)
 	printf("\nfin de la liste\n");
 	return ;
 }
+

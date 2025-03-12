@@ -48,9 +48,9 @@ char	*check_path(char **env, char *cmd)
 
 char	**check_command(char **tab, t_var *var)
 {
-	char	**cmd;
 	int		j;
 	int 	i;
+	char	**cmd;
 
 	if (tab[0] == NULL)
 		return (NULL);
@@ -126,60 +126,60 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 	return (NULL);
 }
 
-void	exec_all(char **cmd, t_var *var, int output, char **env, char *path)
-{
-	pid_t	pid;
-	void	(*exec)(t_var *, char **);
+// void	exec_all(char **cmd, t_var *var, int output, char **env, char *path)
+// {
+// 	pid_t	pid;
+// 	void	(*exec)(t_var *, char **);
 
-	pid = fork();
-	if (pid == 0)
-	{
-		if (var->entry != 0)
-		{
-			dup2(var->entry, STDIN_FILENO);
-			close (var->entry);
-		}
-		if (output != 1)
-		{
-			dup2(output, STDOUT_FILENO);
-			close (output);
-		}
-		exec = ft_cmd(cmd);
-		if (exec == NULL)
-			execve(path, cmd, env);
-		else
-			exec(var, cmd);
-		exit(0);
-	}
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		if (var->entry != 0)
+// 		{
+// 			dup2(var->entry, STDIN_FILENO);
+// 			close (var->entry);
+// 		}
+// 		if (output != 1)
+// 		{
+// 			dup2(output, STDOUT_FILENO);
+// 			close (output);
+// 		}
+// 		exec = ft_cmd(cmd);
+// 		if (exec == NULL)
+// 			execve(path, cmd, env);
+// 		else
+// 			exec(var, cmd);
+// 		exit(0);
+// 	}
 	
-}
+// }
 
-void	setup_pid(t_var *var, char **tab)
-{
-	int		pipefd[2];
-	int		i;
-	char	**env;
-	char	*path;
-	char	**cmd;
+// void	setup_pid(t_var *var, char **tab)
+// {
+// 	int		pipefd[2];
+// 	int		i;
+// 	char	**env;
+// 	char	*path;
+// 	char	**cmd;
 
-	i = 1;
-	env = do_env(var->env);
-	var->entry = 0;
-	while (i < var->nbcmd)
-	{
-		if (pipe(pipefd) == -1)
-			return (ft_putstr_fd("Error pipe.", 2));
-		cmd = check_command(tab, var);
-		path = check_path(env, cmd[0]);
-		exec_all(cmd, var, pipefd[1], env, path);
-		write(1, "test", 4);
-		close(pipefd[1]);
-		var->entry = pipefd[0];
-		i++;
-	}
-	exec_all(cmd, var, 1, env, path);
-	return ;
-}
+// 	i = 1;
+// 	env = do_env(var->env);
+// 	var->entry = 0;
+// 	while (i < var->nbcmd)
+// 	{
+// 		if (pipe(pipefd) == -1)
+// 			return (ft_putstr_fd("Error pipe.", 2));
+// 		cmd = check_command(tab, var);
+// 		path = check_path(env, cmd[0]);
+// 		exec_all(cmd, var, pipefd[1], env, path);
+// 		write(1, "test", 4);
+// 		close(pipefd[1]);
+// 		var->entry = pipefd[0];
+// 		i++;
+// 	}
+// 	exec_all(cmd, var, 1, env, path);
+// 	return ;
+// }
 
 void	exec_one(t_var *var, char **cmd)
 {
@@ -196,26 +196,71 @@ void	exec_one(t_var *var, char **cmd)
 	wait(NULL);
 }
 
+t_exec	*ft_execnew(void)
+{
+	t_exec	*new;
+
+	new = malloc(sizeof(t_exec));
+	if (new == NULL)
+		return (NULL);
+	new->cmd = NULL;
+	new->input = 0;
+	new->output = 1;
+	new->path = NULL;
+	new->next = NULL;
+	return (new);
+}
+
+t_exec	*exec_last(t_exec *exec)
+{
+	if (exec == NULL)
+		return (NULL);
+	while (exec && exec->next)
+		exec = exec->next;
+	return (exec);
+}
+
+void	exec_add_back(t_exec **exec, t_exec *new)
+{
+	t_exec	*temp;
+
+	if (exec == NULL || new == NULL)
+		return ;
+	if (*exec == NULL)
+	{
+		*exec = new;
+		return ;
+	}
+	temp = exec_last(*exec);
+	temp->next = new;
+}
+
 void	execution(t_var *var, char **tab)
 {
-	char **cmd;
-	int i;
-	void	(*exec)(t_var *, char **);
-	int	*pipefd;
+	int		i;
+	char	**env;
+	t_exec	*exec;
+	t_exec	*temp;
 
 	var->cmd_count = 0;
 	var->nbcmd = count_command(tab);
-	i = 1;
-	pipefd = 0;
-	if (var->nbcmd == 1)
+	i = 0;
+	env = do_env(var->env);
+	while (i < var->nbcmd)
+		exec_add_back(&exec, ft_execnew());
+	temp = exec;
+	while (temp)
 	{
-		cmd = check_command(tab, var);
-		exec = ft_cmd(cmd);
-		if (exec == NULL)
-			return (exec_one(var, cmd));
-		exec(var, cmd);
-		return ;
+		temp->cmd = check_command(tab, var);
+		temp->path = check_path(env, temp->cmd[0]);
+		temp->input = 0;
+		temp->output = 1;
+		temp = temp->next;
 	}
-	else
-		setup_pid(var, tab);
+	while (exec)
+	{
+		printf("%s\n", exec->cmd[0]);
+		exec = exec->next;
+	}
+	return;
 }

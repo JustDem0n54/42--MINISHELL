@@ -12,20 +12,27 @@
 # include "libft/libft.h"
 
 
+typedef struct s_exec
+{
+	char			**cmd;
+	char			*path;
+	int				input;
+	int				output;
+	struct s_exec	*next;
+}	t_exec;
+
 typedef	struct s_var
 {
 	t_list	*env;
 	t_list	*export;
 	t_list	*parse;
+	t_exec	*exec;
 	char	**data;
 	char	*pwd;
 	char	*oldpwd;
 	char	*home;
 	int		cmd_count;
 	int		nbcmd;
-	int		entry;
-	int 	output;
-	char	*cmd;
 }	t_var;
 
 // parsing
