@@ -117,10 +117,10 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 		return (ft_export);
 	else if (ft_strcmp(cmd[0], "env") == 0)
 		return (ft_env);
-	// else if (ft_strcmp(tab[0], "exit") == 0)
-	// 	return (ft_exit());
-	// else if (ft_strcmp(tab[0], "unset") == 0)
-	// 	return (ft_unset());
+	// else if (ft_strcmp(cmd[0], "exit") == 0)
+	// 	return (ft_exit);
+	else if (ft_strcmp(cmd[0], "unset") == 0)
+		return (ft_unset);
 	else if (ft_strcmp(cmd[0], "./minishell") == 0)
 		return (increase_shlvl);
 	return (NULL);

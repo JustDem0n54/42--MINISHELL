@@ -43,6 +43,7 @@ void	increase_shlvl(t_var *var, char **tab);
 
 // builtins 3
 void	add_var_env(t_var *var, char **tab);
+void	ft_unset(t_var *var, char **tab);
 
 // execve
 void	(*ft_cmd(char **cmd))(t_var *var, char **tab);
@@ -62,6 +63,9 @@ char	*ft_strncpy(char *str, int size);
 // builtins 
 void	ft_echo(t_var *var, char **tab);
 void	ft_pwd(t_var *var, char **tab);
-void		ft_cd(t_var *var, char **tab);
+void	ft_cd(t_var *var, char **tab);
+
+// unset
+int	var_name_length(char *tab);
 
 #endif
