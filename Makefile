@@ -9,6 +9,7 @@ FILE = main.c \
 		builtins.c \
 		builtins2.c \
 		builtins3.c \
+		unset.c \
 		parsing.c \
 		execve.c \
 		init.c \
