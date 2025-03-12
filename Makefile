@@ -6,16 +6,19 @@ RED = \033[0;31m
 RESET = \033[0m
 
 FILE = main.c \
-		builtins.c \
-		builtins2.c \
-		builtins3.c \
-		unset.c \
-		exit.c \
 		parsing.c \
 		execve.c \
 		init.c \
 		utils2.c \
-	
+		# cd.c \
+		# echo.c \
+		# env.c \
+		# export.c \
+		# export_add.c \
+		# pwd.c \
+		# unset.c \
+		# exit.c \
+
 LIBFT = libft/libft.a
 RM = rm -f
 CC = cc
@@ -24,8 +27,10 @@ LDFLAGS = -lreadline -lhistory -lncurses
 AR	= ar rc
 OBJDIR = obj
 
-SRCS = ${FILE}
-OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
+SRC_DIR = src/builtins src/execution
+
+SRC = $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c))
+OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJDIR)/%.o)
 
 all:	${NAME} 
 	@echo "${GREEN}Compilation OK !${RESET}"

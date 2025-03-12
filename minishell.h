@@ -53,8 +53,11 @@ void	exec_pid(t_var *var, char **tab);
 void	execution(t_var *var, char **tab);
 
 // utils2
-void	ft_lstadd_next(t_list **lst, t_list *new);
-void	print_lst(t_list *lst);
+void		ft_lstadd_next(t_list **lst, t_list *new);
+void		print_lst(t_list *lst);
+long int	ft_atol(char *str);
+size_t		ft_strlenlongint(long n);
+char		*ft_litoa(long int nb);
 
 // utils
 char	*ft_strncpy(char *str, int size);
@@ -71,5 +74,8 @@ size_t	var_name_length(char *tab);
 // exit
 
 void	ft_exit(t_var *var, char **tab);
+
+// env
+void	update_env_pwd_and_old_(t_var *var);
 
 #endif
