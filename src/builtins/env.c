@@ -37,4 +37,3 @@ void	ft_env(t_var *var, char **tab)
 		temp = temp->next;
 	}
 }
-

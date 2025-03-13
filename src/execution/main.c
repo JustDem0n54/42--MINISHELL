@@ -11,7 +11,6 @@ int	main(int argc, char **argv, char **env)
 	var = NULL;
 	var = init_struct(var, env);
 	increase_shlvl(var);
-	
 	while (1)
 	{
 		line = readline("\033[1;33mBrioShell>\033[0m");

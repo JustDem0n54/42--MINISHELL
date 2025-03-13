@@ -32,3 +32,5 @@ void	ft_echo(t_var *var, char **tab)
 	if (check != 1)
 		printf("\n");
 }
+
+// REFAIRE DES TEST AVEC LES "" 
