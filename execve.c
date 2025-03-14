@@ -23,7 +23,7 @@ char	*check_path(char **env, char *cmd)
 	char	**path;
 	char	*temp;
 
-	if (cmd == NULL)
+	if (cmd == NULL || env == NULL)
 		return (NULL);
 	if (ft_strchr(cmd, '/') != NULL)
 	{
@@ -31,7 +31,7 @@ char	*check_path(char **env, char *cmd)
 			return (cmd);
 	}
 	i = 0;
-	while (ft_strncmp(env[i], "PATH", 4) != 0)
+	while (ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
 	path = ft_split(env[i] + 5, ':');
 	i = 0;
@@ -52,20 +52,24 @@ char	**check_command(char **tab, t_var *var)
 	int 	i;
 	char	**cmd;
 
-	if (tab[0] == NULL)
-		return (NULL);
-	j = var->cmd_count;
+	
 	i = 0;
+	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") == 0)
+		var->cmd_count++;
+	j = var->cmd_count;
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
 		var->cmd_count++;
 	cmd = malloc(sizeof(char *) * (var->cmd_count - j + 1));
 	while (j < var->cmd_count)
 	{
+		
 		cmd[i] = ft_strdup(tab[j]);
+		// printf("dans check %s\n", cmd[i]);
 		i++;
 		j++;
 	}
 	cmd[i] = NULL;
+	// printf("dans check %s\n", cmd[i]);
 	var->cmd_count++;
 	return (cmd);
 }
@@ -79,8 +83,10 @@ int	count_command(char **tab)
 	count = 0;
 	while (tab[i])
 	{
-		if (ft_strcmp(tab[i], "|") == 0)
+		if (ft_strcmp(tab[i], "|") == 0 && ft_strcmp(tab[i - 1], "|") != 0)
 			count++;
+		if (ft_strcmp(tab[i], "|") == 0 && tab[i + 1] == NULL)
+			return (count);
 		i++;
 	}
 	return (count + 1);
@@ -89,15 +95,17 @@ int	count_command(char **tab)
 char	**do_env(t_list *env)
 {
 	char	**nenv;
+	t_list	*temp;
 	int		i;
 
 	i = 0;
 	nenv = malloc(sizeof(char *) * (ft_lstsize(env) + 1));
-	while (env)
+	temp = env;
+	while (temp)
 	{
-		nenv[i] = env->content;
+		nenv[i] = ft_strdup((char *)temp->content);
 		i++;
-		env = env->next;
+		temp = temp->next;
 	}
 	nenv[i] = 0;
 	return (nenv);
@@ -121,146 +129,138 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 	// 	return (ft_exit);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
 		return (ft_unset);
-	else if (ft_strcmp(cmd[0], "./minishell") == 0)
-		return (increase_shlvl);
 	return (NULL);
 }
 
-// void	exec_all(char **cmd, t_var *var, int output, char **env, char *path)
-// {
-// 	pid_t	pid;
-// 	void	(*exec)(t_var *, char **);
-
-// 	pid = fork();
-// 	if (pid == 0)
-// 	{
-// 		if (var->entry != 0)
-// 		{
-// 			dup2(var->entry, STDIN_FILENO);
-// 			close (var->entry);
-// 		}
-// 		if (output != 1)
-// 		{
-// 			dup2(output, STDOUT_FILENO);
-// 			close (output);
-// 		}
-// 		exec = ft_cmd(cmd);
-// 		if (exec == NULL)
-// 			execve(path, cmd, env);
-// 		else
-// 			exec(var, cmd);
-// 		exit(0);
-// 	}
+void	exec_all(t_var *var, t_exec *exec, char **env)
+{
+	void	(*builtins)(t_var *, char **);
 	
-// }
-
-// void	setup_pid(t_var *var, char **tab)
-// {
-// 	int		pipefd[2];
-// 	int		i;
-// 	char	**env;
-// 	char	*path;
-// 	char	**cmd;
-
-// 	i = 1;
-// 	env = do_env(var->env);
-// 	var->entry = 0;
-// 	while (i < var->nbcmd)
-// 	{
-// 		if (pipe(pipefd) == -1)
-// 			return (ft_putstr_fd("Error pipe.", 2));
-// 		cmd = check_command(tab, var);
-// 		path = check_path(env, cmd[0]);
-// 		exec_all(cmd, var, pipefd[1], env, path);
-// 		write(1, "test", 4);
-// 		close(pipefd[1]);
-// 		var->entry = pipefd[0];
-// 		i++;
-// 	}
-// 	exec_all(cmd, var, 1, env, path);
-// 	return ;
-// }
-
-void	exec_one(t_var *var, char **cmd)
-{
-	char	*path;
-	char	**env;
-	pid_t	pid;
-
-	env = do_env(var->env);
-	path = check_path(env, cmd[0]);
-	pid = -1;
-	pid = fork();
-	if (pid == 0)
-		execve(path, cmd, env);
-	wait(NULL);
+	// putstr("cmd[0] %s\n", exec->cmd[0]);
+	builtins = ft_cmd(exec->cmd);
+	if (builtins == NULL)
+		execve(exec->path, exec->cmd, env);
+	else
+		builtins(var, exec->cmd);
+	exit(0);
 }
 
-t_exec	*ft_execnew(void)
+void	setup_dup2_and_close(t_exec *exec, int *fd)
 {
-	t_exec	*new;
-
-	new = malloc(sizeof(t_exec));
-	if (new == NULL)
-		return (NULL);
-	new->cmd = NULL;
-	new->input = 0;
-	new->output = 1;
-	new->path = NULL;
-	new->next = NULL;
-	return (new);
-}
-
-t_exec	*exec_last(t_exec *exec)
-{
-	if (exec == NULL)
-		return (NULL);
-	while (exec && exec->next)
-		exec = exec->next;
-	return (exec);
-}
-
-void	exec_add_back(t_exec **exec, t_exec *new)
-{
-	t_exec	*temp;
-
-	if (exec == NULL || new == NULL)
-		return ;
-	if (*exec == NULL)
+	if (exec->input != 0)
 	{
-		*exec = new;
-		return ;
+		dup2(exec->input, STDIN_FILENO);
+		close(exec->input);
 	}
-	temp = exec_last(*exec);
-	temp->next = new;
+	if (exec->output != 1)
+	{
+		dup2(exec->output, STDOUT_FILENO);
+		close(exec->output);
+	}
+	close(fd[0]);
 }
 
-void	execution(t_var *var, char **tab)
+void	wait_all_pid(t_var *var, pid_t *pids)
 {
-	int		i;
-	char	**env;
-	t_exec	*exec;
-	t_exec	*temp;
-
-	var->cmd_count = 0;
-	var->nbcmd = count_command(tab);
+	int i;
+	
 	i = 0;
-	env = do_env(var->env);
 	while (i < var->nbcmd)
-		exec_add_back(&exec, ft_execnew());
-	temp = exec;
-	while (temp)
 	{
-		temp->cmd = check_command(tab, var);
-		temp->path = check_path(env, temp->cmd[0]);
-		temp->input = 0;
-		temp->output = 1;
-		temp = temp->next;
+		waitpid(pids[i], &var->status, 0);
+		i++;
 	}
-	while (exec)
+}
+
+void	select_input(t_exec *exec, int i, int *prevfd)
+{
+	if (i == 0 && exec->input == -1)
+		exec->input = 0;
+	else if (i > 0 && exec->input == -1)
+		exec->input = *prevfd;
+}
+
+void	select_output(int *fd, t_exec *exec, int i, t_var *var)
+{
+	if (i == var->nbcmd - 1 && exec->output == -1)
+		exec->output = 1;
+	else if (i != var->nbcmd - 1 && exec->output == -1)
+		exec->output = fd[1];
+}
+
+void	setup_exec(t_var *var, t_exec *exec)
+{
+	pid_t	*pids;
+	int		fd[2];
+	int		i;
+	int		prevfd;
+	char	**env;
+
+	env = do_env(var->env);
+	i = 0;
+	prevfd = -1;
+	pids = ft_calloc(var->nbcmd, sizeof(pids));
+	while (i < var->nbcmd)
 	{
-		printf("%s\n", exec->cmd[0]);
+		if (i != var->nbcmd - 1)
+			pipe(fd);
+		select_input(exec, i, &prevfd);
+		select_output(fd, exec, i, var);
+		pids[i] = fork();
+		if (pids[i] == 0)
+		{
+			setup_dup2_and_close(exec, fd);
+			exec_all(var, exec, env);
+		}
+		if (prevfd != -1)
+			close(prevfd);
+		close(fd[1]);
+		prevfd = fd[0];
 		exec = exec->next;
+		i++;
 	}
-	return;
+	close(prevfd);
+	close(fd[0]);
+	close(fd[1]);
+	wait_all_pid(var, pids);
+	free(env);
+}
+
+void	exec_one(t_var *var, t_exec *exec)
+{
+	pid_t	pid;
+	char	**env;
+
+	env = do_env(var->env);
+	pid = fork();
+	exec->input = 0;
+	exec->output = 1;
+	if (pid == 0)
+	{
+		execve(exec->path, exec->cmd, env);
+		exit(1);
+	}
+	waitpid(pid, &var->status, 0);
+	free(env);
+	return ;
+}
+
+void	execution(t_var *var, t_exec *exec)
+{
+	void	(*builtins)(t_var *, char **);
+	int		i;
+	
+	i = 0;
+	// printf("cmd %s\n", exec->cmd[0]);
+	// printf("cmd %s\n", exec->cmd[1]);
+	if (var->nbcmd == 1)
+	{
+		builtins = ft_cmd(exec->cmd);
+		if (builtins == NULL)
+			exec_one(var, exec);
+		else
+			builtins(var, exec->cmd);
+		return ;
+	}
+	setup_exec(var, exec);
 }

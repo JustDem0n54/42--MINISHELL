@@ -13,6 +13,8 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		line = readline("\033[1;33mBrioShell>\033[0m");
+		if (line == NULL)
+			return (1);
 		if (line != NULL && ft_strcmp(line, "") != 0)
 		{
 			if (ft_strncmp(line, "exit", 3) == 0)
@@ -34,8 +36,12 @@ int	main(int argc, char **argv, char **env)
 			add_history(line);
 			var->parse = parsing_line(line);
 			var->data = convert_parse(var->parse);
-			execution(var, var->data);
-			free_split(var->data);
+			var->exec = init_exec(var, var->data);
+			execution(var, var->exec);
+			free_split(var->exec->cmd);
+			free(var->exec->path);
+			free(var->exec);
+			// free_split(var->data);
 		}
 		free(line);
 		i = 0;

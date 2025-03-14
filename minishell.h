@@ -33,6 +33,7 @@ typedef	struct s_var
 	char	*home;
 	int		cmd_count;
 	int		nbcmd;
+	int		status;
 }	t_var;
 
 // parsing
@@ -57,7 +58,16 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab);
 void	ft_exe(t_var *var, char **tab);
 char	**check_command(char **tab, t_var *var);
 void	exec_pid(t_var *var, char **tab);
-void	execution(t_var *var, char **tab);
+char	**do_env(t_list *env);
+int		count_command(char **tab);
+char	*check_path(char **env, char *cmd);
+void	execution(t_var *var, t_exec *exec);
+
+// init_exec
+t_exec	*init_exec(t_var *var, char **tab);
+void	exec_add_back(t_exec **exec, t_exec *new);
+t_exec	*exec_last(t_exec *exec);
+t_exec	*ft_execnew(void);
 
 // utils2
 void	ft_lstadd_next(t_list **lst, t_list *new);

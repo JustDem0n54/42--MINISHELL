@@ -46,25 +46,45 @@ t_list	*parsing_line(char *str)
 	i = 0;
 	j = 0;
 	line = NULL;
+	// print_lst(line);
+	printf("%s$\n", str);
+	printf("0 =%d$\n", i);
 	while (str[i])
 	{
+		// printf("1 =%c$\n", str[i]);
 		while (str[i] == ' ' && str[i])
+		{
 			i++;
+			// printf("2 =%c$\n", str[i]);
+		}
 		j = i;
-		while (ft_strchr("<>|\'\" 	", str[i]) == NULL && str[i])
+		printf("1 =%d$\n", i);
+		// printf("0 =%d$\n", str);
+		while (str[i] && ft_strchr("<>|\'\" 	", str[i]) == NULL)
+		{
 			i++;
+			// printf("3 =%c$\n", str[i]);
+		}
+		// printf("4 before =%c$\n", str[i + 1]);
 		if (str[i] == ' ' || (str[i] == 0 && str[i - 1] != ' '))
 		{
 			temp = ft_substr(str, j, i - j);
 			ft_lstadd_back(&line, ft_lstnew(temp));
 			i++;
+			printf("2 =%d$\n", i);
 		}
 		else if (str[i] && ft_strchr("\'\"", str[i]))
+		{
 			i = gest_quote(str, i, j, &line);
+			// printf("5 =%c$\n", str[i]);
+		}
 		else if (str[i] && ft_strchr("<|>", str[i]))
 			i = gest_token(str, i, j, &line);
+		// printf("6 =%c$\n", str[i]);
 		j = i;
+		printf("3 =%d$\n", i);
 	}
+	// print_lst(line);
 	return (line);
 }
 
@@ -189,11 +209,13 @@ char	**convert_parse(t_list *lst)
 		temp = check_dollars(temp, 0, 0);
 		if (temp != NULL)
 			temp = check_quote(temp, 0, 0);
-		if (temp != NULL)
+		sortie[i] = temp;
+		if (sortie[i] == NULL)
 		{
-			sortie[i] = temp;
-			i++;
+			sortie[i] =	ft_strdup("");
+			free(temp);
 		}
+		i++;
 		lst = lst->next;
 	}
 	sortie[i] = 0;
