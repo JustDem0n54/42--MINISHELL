@@ -49,7 +49,7 @@ t_list	*parsing_line(char *str)
 	// print_lst(line);
 	printf("%s$\n", str);
 	printf("0 =%d$\n", i);
-	while (str[i])
+	while (i < (int)ft_strlen(str) && str[i])
 	{
 		// printf("1 =%c$\n", str[i]);
 		while (str[i] == ' ' && str[i])
@@ -68,6 +68,7 @@ t_list	*parsing_line(char *str)
 		// printf("4 before =%c$\n", str[i + 1]);
 		if (str[i] == ' ' || (str[i] == 0 && str[i - 1] != ' '))
 		{
+			printf("strlen = %zu\n", ft_strlen(str));
 			temp = ft_substr(str, j, i - j);
 			ft_lstadd_back(&line, ft_lstnew(temp));
 			i++;
@@ -82,7 +83,6 @@ t_list	*parsing_line(char *str)
 			i = gest_token(str, i, j, &line);
 		// printf("6 =%c$\n", str[i]);
 		j = i;
-		printf("3 =%d$\n", i);
 	}
 	// print_lst(line);
 	return (line);
