@@ -25,7 +25,9 @@ void	ft_echo(t_var *var, char **tab)
 			j++;
 		if (tab[i][j] == 0)
 			check = 1;
-		if (tab[i] && tab[i][j])
+		if (tab[i][j] == '~')
+			ft_putstr_fd(var->home +5, 1);
+		else if (tab[i] && tab[i][j])
 			print_echo(tab, i);
 		j = 0;
 	}

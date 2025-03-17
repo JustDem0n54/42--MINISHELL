@@ -193,7 +193,12 @@ void	exec_one(t_var *var, char **cmd)
 	pid = -1;
 	pid = fork();
 	if (pid == 0)
-		execve(path, cmd, env);
+		if (execve(path, cmd, env) == -1)
+		{
+			ft_putstr_fd(cmd[0], 1);
+			ft_putstr_fd(": command not found\n", 1);
+			return ;
+		}
 	wait(NULL);
 }
 
