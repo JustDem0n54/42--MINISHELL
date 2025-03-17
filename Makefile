@@ -5,22 +5,6 @@ YELLOW = \033[0;33m
 RED = \033[0;31m
 RESET = \033[0m
 
-FILE = main.c \
-		parsing.c \
-		execve.c \
-		init.c \
-		utils2.c \
-		# cd.c \
-		# echo.c \
-		# env.c \
-		# export.c \
-		# export_add.c \
-		# pwd.c \
-		# unset.c \
-		# exit.c \
-
-		init_exec.c \
-	
 LIBFT = libft/libft.a
 RM = rm -f
 CC = cc

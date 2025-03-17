@@ -46,45 +46,25 @@ t_list	*parsing_line(char *str)
 	i = 0;
 	j = 0;
 	line = NULL;
-	// print_lst(line);
-	printf("%s$\n", str);
-	printf("0 =%d$\n", i);
 	while (i < (int)ft_strlen(str) && str[i])
 	{
-		// printf("1 =%c$\n", str[i]);
 		while (str[i] == ' ' && str[i])
-		{
 			i++;
-			// printf("2 =%c$\n", str[i]);
-		}
 		j = i;
-		printf("1 =%d$\n", i);
-		// printf("0 =%d$\n", str);
 		while (str[i] && ft_strchr("<>|\'\" 	", str[i]) == NULL)
-		{
 			i++;
-			// printf("3 =%c$\n", str[i]);
-		}
-		// printf("4 before =%c$\n", str[i + 1]);
 		if (str[i] == ' ' || (str[i] == 0 && str[i - 1] != ' '))
 		{
-			printf("strlen = %zu\n", ft_strlen(str));
 			temp = ft_substr(str, j, i - j);
 			ft_lstadd_back(&line, ft_lstnew(temp));
 			i++;
-			printf("2 =%d$\n", i);
 		}
 		else if (str[i] && ft_strchr("\'\"", str[i]))
-		{
 			i = gest_quote(str, i, j, &line);
-			// printf("5 =%c$\n", str[i]);
-		}
 		else if (str[i] && ft_strchr("<|>", str[i]))
 			i = gest_token(str, i, j, &line);
-		// printf("6 =%c$\n", str[i]);
 		j = i;
 	}
-	// print_lst(line);
 	return (line);
 }
 
