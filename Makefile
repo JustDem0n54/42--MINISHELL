@@ -19,6 +19,8 @@ FILE = main.c \
 		# unset.c \
 		# exit.c \
 
+		init_exec.c \
+	
 LIBFT = libft/libft.a
 RM = rm -f
 CC = cc

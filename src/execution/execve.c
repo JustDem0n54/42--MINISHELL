@@ -1,4 +1,4 @@
-#include "../../minishell.h"
+#include "minishell.h"
 
 int	ft_first_check(char **tab)
 {
@@ -117,13 +117,12 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 		return (ft_export);
 	else if (ft_strcmp(cmd[0], "env") == 0)
 		return (ft_env);
-	else if (ft_strcmp(cmd[0], "exit") == 0)
-		return (ft_exit);
+	// else if (ft_strcmp(cmd[0], "exit") == 0)
+	// 	return (ft_exit);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
 		return (ft_unset);
-	// else if (ft_strcmp(cmd[0], "./minishell") == 0)
-	// {
-		// return (increase_shlvl);
+	else if (ft_strcmp(cmd[0], "./minishell") == 0)
+		return (increase_shlvl);
 	return (NULL);
 }
 
@@ -193,12 +192,7 @@ void	exec_one(t_var *var, char **cmd)
 	pid = -1;
 	pid = fork();
 	if (pid == 0)
-		if (execve(path, cmd, env) == -1)
-		{
-			ft_putstr_fd(cmd[0], 1);
-			ft_putstr_fd(": command not found\n", 1);
-			return ;
-		}
+		execve(path, cmd, env);
 	wait(NULL);
 }
 
