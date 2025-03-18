@@ -15,27 +15,33 @@ void	ft_free_exec(t_exec *exec)
 			free_split(exec->cmd);
 		free(exec);
 		exec = temp;
+		exec->cmd = NULL;
 	}
 	free (temp);
-	exec = NULL;
+	// exec = NULL;
 }
 
 void	ft_free_all(t_var *var)
 {
+	
+	// if (check_shlv(var) != 1)
 	ft_free_exec(var->exec);
-
-	if (var->env != NULL)
-		ft_lstclear(&(var->env), free);
 	if (var->parse != NULL)
 		ft_lstclear(&(var->parse), free);
+	if (var->data != NULL)
+		free_split(var->data);
+	// }
+	if (var->env != NULL)
+		ft_lstclear(&(var->env), free);
 	if (var->pwd != NULL)
 		free (var->pwd);
 	if (var->oldpwd != NULL)
 		free (var->oldpwd);
 	if (var->home != NULL)
 		free (var->home);
-	if (var->data != NULL)
-		free_split(var->data);
+	// var->parse = NULL;
+	// var->data = NULL;
+	// var->exec = NULL;
 	free(var);
 	rl_clear_history();
 }
@@ -74,7 +80,6 @@ void	ft_exit(t_var *var, char **tab)
 		else
 		{
 			// ft_free_exec(var);
-
 			ft_free_all(var);
 			exit(EXIT_SUCCESS);
 		}
