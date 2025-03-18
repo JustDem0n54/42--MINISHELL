@@ -5,7 +5,7 @@ size_t	var_name_length(char *tab)
 	size_t	j;
 
 	j = 0;
-	while (tab && tab[j] != '='
+	while (tab && tab[j + 1] != '='
 		&& (ft_isalnum(tab[j]) == 1 || tab[j] == '_'))
 		j++;
 	return (j);
