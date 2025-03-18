@@ -15,12 +15,12 @@ int	check_var_env_added(t_var *var, char *tab, int i)
 	temp = var->env;
 	while (var->env)
 	{
-		if (strncmp(tab, "PWD=", 4) == 0
-			|| strncmp(tab, "OLDPWD=", 7) == 0)
+		if (ft_strncmp(tab, "PWD=", 4) == 0
+			|| ft_strncmp(tab, "OLDPWD=", 7) == 0 || ft_strncmp(tab, "_=", 2) == 0)
 			return (var->env = temp, 1);
-		else if (strncmp(var->env->content, tab, i) == 0)
+		else if (ft_strncmp(var->env->content, tab, i) == 0)
 		{
-			if (strncmp(tab, "HOME=", 5) == 0)
+			if (ft_strncmp(tab, "HOME=", 5) == 0)
 			{
 				free(var->home);
 				var->home = ft_strdup(tab);
@@ -45,12 +45,12 @@ void	add_var_env(t_var *var, char **tab)
 	j = 0;
 	while (tab[i])
 	{
+		if (i == 2)
+			ft_error_var_env(tab, i);
 		if (ft_isalpha(tab[i][0]) == 0 && tab[i][0] != '_')
 			ft_error_var_env(tab, i);
 		j = var_name_length(tab[i]);
-		if (tab[i][j] != '=')
-			return (ft_error_var_env(tab, i));
-		else if (check_var_env_added(var, tab[i], j) == 0)
+		if (check_var_env_added(var, tab[i], j) == 0)
 			ft_lstadd_back(&var->env, ft_lstnew(ft_strdup(tab[i])));
 		j = 0;
 		i++;

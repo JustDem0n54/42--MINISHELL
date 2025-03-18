@@ -182,33 +182,6 @@ char	*check_quote(char *str, int i, int y)
 	return (cpy);
 }
 
-// char	**convert_parse(t_list *lst)
-// {
-// 	char *temp;
-// 	char **sortie;
-// 	int i;
-
-// 	i = 0;
-// 	sortie = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
-// 	while (lst)
-// 	{
-// 		temp = lst->content;
-// 		temp = check_dollars(temp, 0, 0);
-// 		if (temp != NULL)
-// 			temp = check_quote(temp, 0, 0);
-// 		sortie[i] = temp;
-// 		if (sortie[i] == NULL)
-// 		{
-// 			sortie[i] =	ft_strdup("");
-// 			free(temp);
-// 		}
-// 		i++;
-// 		lst = lst->next;
-// 	}
-// 	sortie[i] = 0;
-// 	return(sortie);
-// }
-
 char	**convert_parse(t_list *lst)
 {
 	char	*temp;
@@ -222,9 +195,7 @@ char	**convert_parse(t_list *lst)
 	while (lst)
 	{
 		temp = lst->content;
-		printf("%s\n", (char *)temp);
 		temp2 = check_dollars(temp, 0, 0);
-		// if (temp2 != NULL)
 		temp3 = check_quote(temp2, 0, 0);;
 		sortie[i] = temp3;
 		if (sortie[i] == NULL)
@@ -233,10 +204,9 @@ char	**convert_parse(t_list *lst)
 			free(temp3);
 		}
 		i++;
+		free(temp2);
 		lst = lst->next;
 	}
-	free(temp2);
-	temp2 = NULL;
 	sortie[i] = 0;
 	return(sortie);
 }
