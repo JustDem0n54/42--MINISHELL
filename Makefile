@@ -13,7 +13,7 @@ LDFLAGS = -lreadline -lhistory -lncurses
 AR	= ar rc
 OBJDIR = obj
 
-SRC_DIR = src/builtins src/execution
+SRC_DIR = src/builtins src/execution src/parsing
 
 SRC = $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c))
 OBJS = $(SRC:$(SRC_DIR)/%.c=$(OBJDIR)/%.o)
