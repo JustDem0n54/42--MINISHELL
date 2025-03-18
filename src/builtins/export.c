@@ -11,11 +11,16 @@ void	print_declare_x(t_var *var)
 	{
 		temp = var->export->next;
 		stock = ft_strdup((char *)var->export->content);
-		printf("declare -x ");
-		while (stock[++i] != '=')
-			printf("%c", stock[i]);
-		printf("\"%s\"\n", ft_strchr(stock + i, '='));
-		i = -1;
+		if (ft_strncmp((char *)var->export->content, "_=", 2) != 0)
+		{
+			printf("declare -x ");
+			while (stock[++i] && stock[i] != '=')
+				printf("%c", stock[i]);
+			if (stock[i])
+				printf("=\"%s\"", ft_strchr(stock + i, '=') + 1);
+			printf("\n");
+			i = -1;
+		}
 		free (stock);
 		stock = NULL;
 		free(var->export->content);
