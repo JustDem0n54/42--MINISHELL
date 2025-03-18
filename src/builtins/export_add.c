@@ -61,6 +61,7 @@ void	increase_shlvl(t_var *var)
 {
 	t_list	*temp;
 	char	*temp2;
+	char	*temp3;
 
 	temp = var->env;
 	while (var->env)
@@ -68,9 +69,12 @@ void	increase_shlvl(t_var *var)
 		if (strncmp(var->env->content, "SHLVL=", 6) == 0)
 		{
 			temp2 = ft_strdup((char *)var->env->content + 6);
+			temp3 = ft_itoa(ft_atoi(temp2) + 1);
 			free (var->env->content);
 			var->env->content = ft_strjoin("SH"
-					"LVL=", ft_itoa(ft_atoi(temp2) + 1));
+					"LVL=", temp3);
+			free (temp2);
+			free (temp3);
 			var->env = temp;
 			return ;
 		}

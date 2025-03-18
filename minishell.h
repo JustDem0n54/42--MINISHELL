@@ -91,6 +91,8 @@ size_t	var_name_length(char *tab);
 // exit
 
 void	ft_exit(t_var *var, char **tab);
+void	ft_free_all(t_var *var);
+void	ft_free_exec(t_exec *exec);
 
 // env
 void	update_env_pwd_and_old_(t_var *var);

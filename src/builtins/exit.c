@@ -1,7 +1,29 @@
 #include "../../minishell.h"
 
+void	ft_free_exec(t_exec *exec)
+{
+	t_exec	*temp;
+	
+	if (exec == NULL)
+		return ;
+	while (exec->next)
+	{
+		temp = exec->next;
+		if (exec->path)
+			free(exec->path);
+		if (exec->cmd)
+			free_split(exec->cmd);
+		free(exec);
+		exec = temp;
+	}
+	free (temp);
+	exec = NULL;
+}
+
 void	ft_free_all(t_var *var)
 {
+	ft_free_exec(var->exec);
+
 	if (var->env != NULL)
 		ft_lstclear(&(var->env), free);
 	if (var->parse != NULL)
@@ -28,6 +50,7 @@ void	ft_exit(t_var *var, char **tab)
 		ft_putstr_fd(tab[1], 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd("numeric argument required\n", 2);
+		// ft_free_exec(var);
 		ft_free_all(var);
 		exit(2);
 	}
@@ -41,10 +64,20 @@ void	ft_exit(t_var *var, char **tab)
 	}
 	else
 	{
-		ft_free_all(var);
+		
 		if (tab[1])
-			exit (ft_atol(tab[1]) % 256);
-		exit(EXIT_SUCCESS);
+		{
+			// ft_free_exec(var);
+			ft_free_all(var);
+			exit(ft_atol(tab[1]) % 256);
+		}
+		else
+		{
+			// ft_free_exec(var);
+
+			ft_free_all(var);
+			exit(EXIT_SUCCESS);
+		}
 	}
 }
 // exit 8 "" doit renvoyer too many argument 

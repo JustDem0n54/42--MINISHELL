@@ -14,7 +14,7 @@ void	print_declare_x(t_var *var)
 		printf("declare -x ");
 		while (stock[++i] != '=')
 			printf("%c", stock[i]);
-		printf("=\"%s\"\n", ft_strchr(stock + i, '=') + 1);
+		printf("\"%s\"\n", ft_strchr(stock + i, '='));
 		i = -1;
 		free (stock);
 		stock = NULL;

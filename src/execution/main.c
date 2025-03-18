@@ -10,6 +10,7 @@ int	main(int argc, char **argv, char **env)
 
 	var = NULL;
 	var = init_struct(var, env);
+	increase_shlvl(var);
 	while (1)
 	{
 		line = readline("\033[1;33mBrioShell>\033[0m");
@@ -17,33 +18,26 @@ int	main(int argc, char **argv, char **env)
 			return (1);
 		if (line != NULL && ft_strcmp(line, "") != 0)
 		{
-			if (ft_strncmp(line, "exit", 3) == 0)
-			{
-				if (var->env != NULL)
-					ft_lstclear(&(var->env), free);
-				if (var->parse != NULL)
-					ft_lstclear(&(var->parse), free);
-				if (var->pwd != NULL)
-					free (var->pwd);
-				if (var->oldpwd != NULL)
-					free (var->oldpwd);
-				if (var->home != NULL)
-					free (var->home);
-				free(var);
-				rl_clear_history();
-				return (0);
-			}
 			add_history(line);
 			var->parse = parsing_line(line);
 			var->data = convert_parse(var->parse);
+			// if (var->parse != NULL)
+			// 	ft_lstclear(&(var->parse), free);
 			var->exec = init_exec(var, var->data);
+			// if (var->data != NULL)
+			// 	free_split(var->data);
 			execution(var, var->exec);
-			free_split(var->exec->cmd);
-			free(var->exec->path);
-			free(var->exec);
-			// free_split(var->data);
+		
+			// free_split(exec->cmd);	
+			// free(exec->path);
 		}
 		free(line);
+		if (var->exec != NULL)
+			ft_free_exec(var->exec);
+		if (var->parse != NULL)
+			ft_lstclear(&(var->parse), free);
+		if (var->data != NULL)
+			free_split(var->data);
 		i = 0;
 	}
 	return (0);

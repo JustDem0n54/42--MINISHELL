@@ -23,10 +23,10 @@ void	print_lst(t_list *lst)
 	temp = lst;
 	while (temp)
 	{
-		printf("%s\n", (char *)temp->content);
+		printf("%s$\n", (char *)temp->content);
 		temp = temp->next;
 	}
-	printf("\nfin de la liste\n");
+	printf("fin de la liste\n");
 	return ;
 }
 

@@ -17,6 +17,7 @@ int	ft_first_check(char **tab)
 	return (-1);
 }
 
+
 char	*check_path(char **env, char *cmd)
 {
 	int		i;
@@ -66,6 +67,7 @@ char	**check_command(char **tab, t_var *var)
 		i++;
 		j++;
 	}
+	// free_split(tab);
 	cmd[i] = NULL;
 	var->cmd_count++;
 	return (cmd);
@@ -122,8 +124,8 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 		return (ft_export);
 	else if (ft_strcmp(cmd[0], "env") == 0)
 		return (ft_env);
-	// else if (ft_strcmp(cmd[0], "exit") == 0)
-	// 	return (ft_exit);
+	else if (ft_strcmp(cmd[0], "exit") == 0)
+		return (ft_exit);
 	else if (ft_strcmp(cmd[0], "unset") == 0)
 		return (ft_unset);
 	return (NULL);
@@ -135,7 +137,16 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 
 	builtins = ft_cmd(exec->cmd);
 	if (builtins == NULL)
-		execve(exec->path, exec->cmd, env);
+	{
+		if (exec->path == NULL)
+		{
+			ft_putstr_fd(exec->cmd[0], 1);
+			ft_putstr_fd(": command not found\n", 1);
+			exit(1);
+		}
+		if (execve(exec->path, exec->cmd, env) == -1)
+			return (perror("error execve"), exit (1));
+	}
 	else
 		builtins(var, exec->cmd);
 	exit(0);
@@ -233,11 +244,19 @@ void	exec_one(t_var *var, t_exec *exec)
 	exec->output = 1;
 	if (pid == 0)
 	{
-		execve(exec->path, exec->cmd, env);
-		exit(1);
+		if (exec->path == NULL)
+		{
+			ft_putstr_fd(exec->cmd[0], 1);
+			ft_putstr_fd(": command not found\n", 2);
+			free_split(env);
+			ft_free_all(var);
+			exit(1);
+		}
+		if (execve(exec->path, exec->cmd, env) == -1)
+			return (free_split(env), perror("error execve"), exit (1));
 	}
 	waitpid(pid, &var->status, 0);
-	free(env);
+	free_split(env);
 	return ;
 }
 

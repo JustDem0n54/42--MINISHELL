@@ -23,7 +23,6 @@ void	update_env_pwd_and_old_(t_var *var)
 	return ;
 }
 
-
 void	ft_env(t_var *var, char **tab)
 {
 	t_list	*temp;
