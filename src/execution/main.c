@@ -20,16 +20,10 @@ int	main(int argc, char **argv, char **env)
 		{
 			add_history(line);
 			var->parse = parsing_line(line);
+			check_error_parsed(var->parse);
 			var->data = convert_parse(var->parse);
-			// if (var->parse != NULL)
-			// 	ft_lstclear(&(var->parse), free);
 			var->exec = init_exec(var, var->data);
-			// if (var->data != NULL)
-			// 	free_split(var->data);
 			execution(var, var->exec);
-		
-			// free_split(exec->cmd);	
-			// free(exec->path);
 		}
 		free(line);
 		if (var->exec != NULL)
