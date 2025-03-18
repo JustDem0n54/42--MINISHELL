@@ -94,6 +94,8 @@ void	ft_exit(t_var *var, char **tab);
 void	ft_free_all(t_var *var);
 void	ft_free_exec(t_exec *exec);
 
+int	check_shlv(t_var *var);
+
 // env
 void	update_env_pwd_and_old_(t_var *var);
 

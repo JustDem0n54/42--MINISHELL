@@ -51,11 +51,11 @@ int	main(int argc, char **argv, char **env)
 			// free(exec->path);
 		}
 		free(line);
-		if (check_shlv(var) == 1)
-		{
-			if (var->exec != NULL)
-				ft_free_exec(var->exec);
-		}
+		// if (check_shlv(var) == 1)
+		// {
+		if (var->exec != NULL)
+			ft_free_exec(var->exec);
+		// }
 		if (var->parse != NULL)
 			ft_lstclear(&(var->parse), free);
 		if (var->data != NULL)
