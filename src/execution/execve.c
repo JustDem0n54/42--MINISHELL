@@ -142,13 +142,23 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 		{
 			ft_putstr_fd(exec->cmd[0], 1);
 			ft_putstr_fd(": command not found\n", 1);
+			free_split(env);
+			ft_free_all(var);
 			exit(1);
 		}
 		if (execve(exec->path, exec->cmd, env) == -1)
-			return (perror("error execve"), exit (1));
+			return (perror("error execve"), free_split(env), ft_free_all(var), exit (1));
 	}
 	else
+	{
 		builtins(var, exec->cmd);
+		free_split(env);
+		ft_free_all(var);
+		// if (var->parse != NULL)
+		// 	ft_lstclear(&(var->parse), free);
+		// if (var->data != NULL)
+		// 	free_split(var->data);
+	}
 	exit(0);
 }
 
@@ -206,7 +216,7 @@ void	setup_exec(t_var *var, t_exec *exec)
 	env = do_env(var->env);
 	i = 0;
 	prevfd = -1;
-	pids = ft_calloc(var->nbcmd, sizeof(pids));
+	pids = ft_calloc(var->nbcmd, sizeof(pid_t));
 	while (i < var->nbcmd)
 	{
 		if (i != var->nbcmd - 1)
@@ -218,7 +228,15 @@ void	setup_exec(t_var *var, t_exec *exec)
 		{
 			setup_dup2_and_close(exec, fd);
 			exec_all(var, exec, env);
+			free(pids);
 		}
+		// if (var->exec != NULL)
+		// 	ft_free_exec(var->exec);
+		// if (var->parse != NULL)
+		// 	ft_lstclear(&(var->parse), free);
+		// if (var->data != NULL)
+		// ft_free_all(var);
+		// 	free_split(var->data);
 		if (prevfd != -1)
 			close(prevfd);
 		close(fd[1]);
@@ -230,7 +248,8 @@ void	setup_exec(t_var *var, t_exec *exec)
 	close(fd[0]);
 	close(fd[1]);
 	wait_all_pid(var, pids);
-	free(env);
+	free(pids);
+	free_split(env);
 }
 
 void	exec_one(t_var *var, t_exec *exec)
@@ -253,7 +272,8 @@ void	exec_one(t_var *var, t_exec *exec)
 			exit(1);
 		}
 		if (execve(exec->path, exec->cmd, env) == -1)
-			return (free_split(env), perror("error execve"), exit (1));
+			return (free_split(env), perror(exec->cmd[0]),
+				ft_free_all(var), exit (1));
 	}
 	waitpid(pid, &var->status, 0);
 	free_split(env);

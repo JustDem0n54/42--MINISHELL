@@ -1,28 +1,28 @@
 #include "../../minishell.h"
 
-void	error_unset(char **tab)
+void	error_unset(t_var *var, char **tab)
 {
-	ft_putstr_fd(tab[0], 2);
-	if (!tab[1])
+	if ( tab[1] && ft_strcmp(tab[1], "-") == 0)
+		return(ft_putstr_fd(": OLDPWD not set\n", 2));
+	else if (!var->home)
+	{
+		ft_putstr_fd(tab[0], 2);
+		if (tab[1])
+		{
+			ft_putstr_fd(": ", 2);
+			ft_putstr_fd(tab[1], 2);
+		}
 		ft_putstr_fd(": HOME not set\n", 2);
-	else if (ft_strcmp(tab[1], "-") == 0)
-		ft_putstr_fd(": OLDPWD not set\n", 2);
+	}
 	return ;
 }
 
-int	cd_specific_arg(t_var *var, char **tab)
+void	cd_home(t_var *var, char **tab)
 {
-	if (ft_strcmp(tab[1], "-") == 0)
-	{
-		if (!var->oldpwd)
-			return (error_unset(tab), -1);
-		tab[1] = ft_strdup(var->oldpwd + 7);
-	}
-	else if (ft_strcmp(tab[1], "~") == 0)
-		tab[1] = ft_strdup(var->home + 5);
-	if (tab[1] == NULL)
-		return (-1);
-	return (0);
+	if (!var->home)
+		return (error_unset(var, tab));
+	if (chdir(var->home + 5) != 0)
+		return (perror(tab[0]), perror(tab[1])); /*perror ok ? man = STDERR The standard error shall be used only for diagnostic messages.*/
 }
 
 void	ft_cd(t_var *var, char **tab)
@@ -30,16 +30,14 @@ void	ft_cd(t_var *var, char **tab)
 	if (tab[1] && tab[2])
 		return (ft_putstr_fd(tab[0], 2),
 			ft_putstr_fd(": too many arguments\n", 2));
-	if (!tab[1])
+	if (!tab[1] || ft_strcmp(tab[1], "~") == 0)
+		return (cd_home(var, tab));
+	else if (ft_strcmp(tab[1], "-") == 0)
 	{
-		if (!var->home)
-			return (error_unset(tab));
-		if (chdir(var->home + 5) != 0)
-			return (perror(tab[0])); /*perror ok ? man = STDERR The standard error shall be used only for diagnostic messages.*/
-		return ;
+		if (!var->oldpwd)
+			return (error_unset(var, tab));
+		tab[1] = ft_strdup(var->oldpwd + 7);
 	}
-	else if (cd_specific_arg(var, tab) == -1)
-		return ;/*voir si return error*/
 	if (chdir(tab[1]) != 0)
 		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": ", 2), perror(tab[1]));
 	if (var->oldpwd != NULL)

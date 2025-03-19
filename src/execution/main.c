@@ -1,23 +1,23 @@
 #include "../../minishell.h"
 
-int	check_shlv(t_var *var)
-{
-	t_list	*temp;
+// int	check_shlv(t_var *var)
+// {
+// 	t_list	*temp;
 
-	temp = var->env;
-	while (temp)
-	{
-		if (ft_strncmp((char *)temp->content, "SHLVL=", 6) != 0)
-			temp = temp->next;
-		else
-			break;
-	}
-	if (ft_strcmp((char *)temp->content, "SHLVL=3") == 0)
-		return (1);
-	else
-		return (0);
+// 	temp = var->env;
+// 	while (temp)
+// 	{
+// 		if (ft_strncmp((char *)temp->content, "SHLVL=", 6) != 0)
+// 			temp = temp->next;
+// 		else
+// 			break;
+// 	}
+// 	if (ft_strcmp((char *)temp->content, "SHLVL=3") == 0)
+// 		return (1);
+// 	else
+// 		return (0);
 	
-}
+// }
 
 int	main(int argc, char **argv, char **env)
 {

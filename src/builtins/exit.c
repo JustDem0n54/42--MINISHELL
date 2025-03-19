@@ -9,10 +9,10 @@ void	ft_free_exec(t_exec *exec)
 	while (exec->next)
 	{
 		temp = exec->next;
-		if (exec->path)
-			free(exec->path);
 		if (exec->cmd)
 			free_split(exec->cmd);
+		// if (exec->path)
+		// 	free(exec->path);
 		free(exec);
 		exec = temp;
 		exec->cmd = NULL;

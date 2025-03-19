@@ -8,36 +8,39 @@ void	ft_error_var_env(char **tab, int i)
 	return (ft_putstr_fd("': not a valid identifier\n", 2));
 }
 
-int	first_check(char *tab)
+int	first_check(t_var *var, char *tab)
 {
 	if (ft_strncmp(tab, "PWD=", 4) == 0
 		|| ft_strncmp(tab, "OLDPWD=", 7) == 0
 	|| ft_strncmp(tab, "_=", 2) == 0)
 		return (0);
 	else
+	{
+		if (ft_strncmp(tab, "HOME=", 5) == 0)
+		{
+			free(var->home);
+			var->home = ft_strdup(tab);
+		}
+	}
 		return (1);	
 }
 
-int	check_var_env_added(t_var *var, char *tab, int i)
+int	check_var_env_added(t_var *var, char *s, size_t i)
 {
 	t_list	*temp;
 
 	temp = var->env;
 	while (var->env)
 	{
-		if (first_check(tab) == 0)
+		if (first_check(var, s) == 0)
 			return (var->env = temp, 1);
-		else if (ft_strncmp(var->env->content, tab, i) == 0)
+		if (var_name_len((char *)var->env->content) == i
+			&& ft_strncmp((char *)var->env->content, s, i) == 0)
 		{
-			if (ft_strncmp(tab, "HOME=", 5) == 0)
-			{
-				free(var->home);
-				var->home = ft_strdup(tab);
-			}
-			else if (ft_strncmp(var->env->content, tab, i + 1) != 0)
-				return(var->env = temp,1);
+			if (s[i] != '=')
+				return(var->env = temp, 1);
 			free (var->env->content);
-			var->env->content = ft_strdup(tab);
+			var->env->content = ft_strdup(s);
 			return (var->env = temp,1);
 		}
 		else
@@ -56,12 +59,10 @@ void	add_var_env(t_var *var, char **tab)
 	j = 0;
 	while (tab[i])
 	{
-		if (i == 2)
-			ft_error_var_env(tab, i);
 		if (ft_isalpha(tab[i][0]) == 0 && tab[i][0] != '_')
 			ft_error_var_env(tab, i);
-		j = var_name_length(tab[i]);
-		if (check_var_env_added(var, tab[i], j) == 0)
+		j = var_name_len(tab[i]) - 1;
+		if (check_var_env_added(var, tab[i], j + 1) == 0)
 			ft_lstadd_back(&var->env, ft_lstnew(ft_strdup(tab[i])));
 		j = 0;
 		i++;

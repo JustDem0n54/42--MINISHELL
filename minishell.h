@@ -9,6 +9,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include "libft/libft.h"
 
 
@@ -87,7 +88,7 @@ void	ft_pwd(t_var *var, char **tab);
 void	ft_cd(t_var *var, char **tab);
 
 // unset
-size_t	var_name_length(char *tab);
+size_t	var_name_len(char *tab);
 
 // exit
 
