@@ -31,7 +31,7 @@ void	ft_env(t_var *var, char **tab)
 	temp = var->env;
 	while (temp)
 	{
-		if (ft_strlen(ft_strchr((char *)temp->content, '=')) != 1)
+		if ((ft_strchr((char *)temp->content, '=')) != NULL)
 			printf("%s\n", (char *)temp->content);
 		temp = temp->next;
 	}

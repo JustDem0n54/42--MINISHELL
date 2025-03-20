@@ -29,7 +29,7 @@ char	*check_path(char **env, char *cmd)
 	if (ft_strchr(cmd, '/') != NULL)
 	{
 		if (access(cmd, F_OK) == 0)
-			return (cmd);
+			return (ft_strdup(cmd));
 	}
 	i = 0;
 	while (ft_strncmp(env[i], "PATH=", 5) != 0)
@@ -67,7 +67,6 @@ char	**check_command(char **tab, t_var *var)
 		i++;
 		j++;
 	}
-	// free_split(tab);
 	cmd[i] = NULL;
 	var->cmd_count++;
 	return (cmd);
@@ -142,13 +141,19 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 		{
 			ft_putstr_fd(exec->cmd[0], 1);
 			ft_putstr_fd(": command not found\n", 1);
+			free_split(env);
+			ft_free_all(var);
 			exit(1);
 		}
 		if (execve(exec->path, exec->cmd, env) == -1)
-			return (perror("error execve"), exit (1));
+			return (perror("error execve"), free_split(env), ft_free_all(var), exit (1));
 	}
 	else
+	{
 		builtins(var, exec->cmd);
+		free_split(env);
+		ft_free_all(var);
+	}
 	exit(0);
 }
 
@@ -206,7 +211,7 @@ void	setup_exec(t_var *var, t_exec *exec)
 	env = do_env(var->env);
 	i = 0;
 	prevfd = -1;
-	pids = ft_calloc(var->nbcmd, sizeof(pids));
+	pids = ft_calloc(var->nbcmd, sizeof(pid_t));
 	while (i < var->nbcmd)
 	{
 		if (i != var->nbcmd - 1)
@@ -217,7 +222,9 @@ void	setup_exec(t_var *var, t_exec *exec)
 		if (pids[i] == 0)
 		{
 			setup_dup2_and_close(exec, fd);
+			free(pids);
 			exec_all(var, exec, env);
+			
 		}
 		if (prevfd != -1)
 			close(prevfd);
@@ -230,7 +237,9 @@ void	setup_exec(t_var *var, t_exec *exec)
 	close(fd[0]);
 	close(fd[1]);
 	wait_all_pid(var, pids);
-	free(env);
+	free(pids);
+	free_split(env);
+
 }
 
 void	exec_one(t_var *var, t_exec *exec)
@@ -253,7 +262,8 @@ void	exec_one(t_var *var, t_exec *exec)
 			exit(1);
 		}
 		if (execve(exec->path, exec->cmd, env) == -1)
-			return (free_split(env), perror("error execve"), exit (1));
+			return (free_split(env), perror(exec->cmd[0]),
+				ft_free_all(var), exit (1));
 	}
 	waitpid(pid, &var->status, 0);
 	free_split(env);
