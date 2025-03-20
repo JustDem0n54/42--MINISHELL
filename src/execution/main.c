@@ -39,10 +39,12 @@ int	main(int argc, char **argv, char **env)
 		{
 			add_history(line);
 			var->parse = parsing_line(line);
-			check_error_parsed(var->parse);
-			var->data = convert_parse(var->parse);
-			var->exec = init_exec(var, var->data);
-			execution(var, var->exec);
+			if (check_error_parsed(var->parse) == 0)
+			{
+				var->data = convert_parse(var->parse);
+				var->exec = init_exec(var, var->data);
+				execution(var, var->exec);
+			}
 		}
 		free(line);
 		if (check_shlv(var) == 1)

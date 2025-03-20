@@ -59,7 +59,7 @@ t_exec	*init_exec(t_var *var, char **tab)
 		temp->cmd = check_command(tab, var);
 		if (ft_cmd(temp->cmd) == NULL)
 			temp->path = check_path(env, temp->cmd[0]);
-		temp->input = -1;
+		temp->input = check_input(temp->cmd);
 		temp->output = -1;
 		temp = temp->next;
 	}

@@ -39,7 +39,7 @@ typedef	struct s_var
 // parsing
 char	**convert_parse(t_list *lst);
 t_list	*parsing_line(char *str);
-void	check_error_parsed(t_list *check);
+int		check_error_parsed(t_list *check);
 
 
 // init
