@@ -39,7 +39,7 @@ typedef	struct s_var
 // parsing
 char	**convert_parse(t_list *lst);
 t_list	*parsing_line(char *str);
-void	check_error_parsed(t_list *check);
+int		check_error_parsed(t_list *check);
 
 
 // init
@@ -57,7 +57,7 @@ void	ft_unset(t_var *var, char **tab);
 // execve
 void	(*ft_cmd(char **cmd))(t_var *var, char **tab);
 void	ft_exe(t_var *var, char **tab);
-char	**check_command(char **tab, t_var *var);
+char	**check_command(char **tab, t_var *var, t_exec *exec);
 void	exec_pid(t_var *var, char **tab);
 char	**do_env(t_list *env);
 int		count_command(char **tab);
@@ -69,6 +69,8 @@ t_exec	*init_exec(t_var *var, char **tab);
 void	exec_add_back(t_exec **exec, t_exec *new);
 t_exec	*exec_last(t_exec *exec);
 t_exec	*ft_execnew(void);
+int		check_input(char **cmd, int i);
+int		check_output(char **cmd, int i);
 
 // utils2
 void		ft_lstadd_next(t_list **lst, t_list *new);
