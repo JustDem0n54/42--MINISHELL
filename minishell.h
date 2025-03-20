@@ -12,7 +12,6 @@
 # include <signal.h>
 # include "libft/libft.h"
 
-
 typedef struct s_exec
 {
 	char			**cmd;
@@ -101,4 +100,8 @@ int	check_shlv(t_var *var);
 // env
 void	update_env_pwd_and_old_(t_var *var);
 
+
+void	ft_ctrl_slash(int sig);
+void	ft_ctrl_c(int sig);
 #endif
+

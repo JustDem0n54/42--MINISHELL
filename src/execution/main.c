@@ -4,13 +4,14 @@ int	main(int argc, char **argv, char **env)
 {
 	char	*line;
 	t_var	*var;
-	int i = 0;
 	(void) argc;
 	(void) argv;
 
 	var = NULL;
 	var = init_struct(var, env);
 	increase_shlvl(var);
+	signal(SIGINT, ft_ctrl_c);
+	signal(SIGQUIT, ft_ctrl_slash);
 	while (1)
 	{
 		line = readline("\033[1;33mBrioShell>\033[0m");
@@ -23,17 +24,16 @@ int	main(int argc, char **argv, char **env)
 			check_error_parsed(var->parse);
 			var->data = convert_parse(var->parse);
 			var->exec = init_exec(var, var->data);
+
 			execution(var, var->exec);
+			if (var->exec != NULL)
+				ft_free_exec(var->exec);
+			free(line);
+			if (var->parse != NULL)
+				ft_lstclear(&(var->parse), free);
+			if (var->data != NULL)
+				free_split(var->data);
 		}
-		if (var->exec != NULL)
-			ft_free_exec(var->exec);
-		free(line);
-		if (var->parse != NULL)
-			ft_lstclear(&(var->parse), free);
-		if (var->data != NULL)
-			free_split(var->data);
-		i = 0;
 	}
 	return (0);
 }
-// && ft_strcmp(line, "./minishell") != 0
