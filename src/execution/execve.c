@@ -47,7 +47,7 @@ char	*check_path(char **env, char *cmd)
 	return (free_split(path), NULL);
 }
 
-char	**check_command(char **tab, t_var *var)
+char	**check_command(char **tab, t_var *var, t_exec *exec)
 {
 	int		j;
 	int 	i;
@@ -55,10 +55,10 @@ char	**check_command(char **tab, t_var *var)
 
 	
 	i = 0;
-	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") == 0)
-		var->cmd_count++;
 	j = var->cmd_count;
-	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
+	while (tab[var->cmd_count] && (ft_strcmp(tab[var->cmd_count], "|") != 0
+		&& ft_strcmp(tab[var->cmd_count], "<") != 0
+		&& ft_strcmp(tab[var->cmd_count], ">") != 0))
 		var->cmd_count++;
 	cmd = malloc(sizeof(char *) * (var->cmd_count - j + 1));
 	while (j < var->cmd_count)
@@ -68,6 +68,10 @@ char	**check_command(char **tab, t_var *var)
 		j++;
 	}
 	cmd[i] = NULL;
+	exec->input = check_input(tab, var->cmd_count);
+	exec->output = check_output(tab, var->cmd_count);
+	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
+		var->cmd_count++;
 	var->cmd_count++;
 	return (cmd);
 }
@@ -223,6 +227,8 @@ void	setup_exec(t_var *var, t_exec *exec)
 		{
 			setup_dup2_and_close(exec, fd);
 			free(pids);
+			if (exec->input == -2 || exec->output == -2)
+				exit(1);
 			exec_all(var, exec, env);
 			
 		}
@@ -242,6 +248,20 @@ void	setup_exec(t_var *var, t_exec *exec)
 
 }
 
+void	setup_dup2(t_exec *exec)
+{
+	if (exec->input != 0)
+	{
+		dup2(exec->input, STDIN_FILENO);
+		close(exec->input);
+	}
+	if (exec->output != 1)
+	{
+		dup2(exec->output, STDOUT_FILENO);
+		close(exec->output);
+	}
+}
+
 void	exec_one(t_var *var, t_exec *exec)
 {
 	pid_t	pid;
@@ -249,8 +269,6 @@ void	exec_one(t_var *var, t_exec *exec)
 
 	env = do_env(var->env);
 	pid = fork();
-	exec->input = 0;
-	exec->output = 1;
 	if (pid == 0)
 	{
 		if (exec->path == NULL)
@@ -261,6 +279,7 @@ void	exec_one(t_var *var, t_exec *exec)
 			ft_free_all(var);
 			exit(1);
 		}
+		setup_dup2(exec);
 		if (execve(exec->path, exec->cmd, env) == -1)
 			return (free_split(env), perror(exec->cmd[0]),
 				ft_free_all(var), exit (1));
