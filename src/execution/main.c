@@ -1,24 +1,5 @@
 #include "../../minishell.h"
 
-// int	check_shlv(t_var *var)
-// {
-// 	t_list	*temp;
-
-// 	temp = var->env;
-// 	while (temp)
-// 	{
-// 		if (ft_strncmp((char *)temp->content, "SHLVL=", 6) != 0)
-// 			temp = temp->next;
-// 		else
-// 			break;
-// 	}
-// 	if (ft_strcmp((char *)temp->content, "SHLVL=3") == 0)
-// 		return (1);
-// 	else
-// 		return (0);
-	
-// }
-
 int	main(int argc, char **argv, char **env)
 {
 	char	*line;
@@ -44,12 +25,9 @@ int	main(int argc, char **argv, char **env)
 			var->exec = init_exec(var, var->data);
 			execution(var, var->exec);
 		}
-		free(line);
-		// if (check_shlv(var) == 1)
-		// {
 		if (var->exec != NULL)
 			ft_free_exec(var->exec);
-		// }
+		free(line);
 		if (var->parse != NULL)
 			ft_lstclear(&(var->parse), free);
 		if (var->data != NULL)
@@ -58,3 +36,4 @@ int	main(int argc, char **argv, char **env)
 	}
 	return (0);
 }
+// && ft_strcmp(line, "./minishell") != 0

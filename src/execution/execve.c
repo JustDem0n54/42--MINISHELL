@@ -29,7 +29,7 @@ char	*check_path(char **env, char *cmd)
 	if (ft_strchr(cmd, '/') != NULL)
 	{
 		if (access(cmd, F_OK) == 0)
-			return (cmd);
+			return (ft_strdup(cmd));
 	}
 	i = 0;
 	while (ft_strncmp(env[i], "PATH=", 5) != 0)
@@ -67,7 +67,6 @@ char	**check_command(char **tab, t_var *var)
 		i++;
 		j++;
 	}
-	// free_split(tab);
 	cmd[i] = NULL;
 	var->cmd_count++;
 	return (cmd);
@@ -154,10 +153,6 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 		builtins(var, exec->cmd);
 		free_split(env);
 		ft_free_all(var);
-		// if (var->parse != NULL)
-		// 	ft_lstclear(&(var->parse), free);
-		// if (var->data != NULL)
-		// 	free_split(var->data);
 	}
 	exit(0);
 }
@@ -227,16 +222,10 @@ void	setup_exec(t_var *var, t_exec *exec)
 		if (pids[i] == 0)
 		{
 			setup_dup2_and_close(exec, fd);
-			exec_all(var, exec, env);
 			free(pids);
+			exec_all(var, exec, env);
+			
 		}
-		// if (var->exec != NULL)
-		// 	ft_free_exec(var->exec);
-		// if (var->parse != NULL)
-		// 	ft_lstclear(&(var->parse), free);
-		// if (var->data != NULL)
-		// ft_free_all(var);
-		// 	free_split(var->data);
 		if (prevfd != -1)
 			close(prevfd);
 		close(fd[1]);
@@ -250,6 +239,7 @@ void	setup_exec(t_var *var, t_exec *exec)
 	wait_all_pid(var, pids);
 	free(pids);
 	free_split(env);
+
 }
 
 void	exec_one(t_var *var, t_exec *exec)
