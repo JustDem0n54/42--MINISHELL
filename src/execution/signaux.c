@@ -14,18 +14,25 @@ void	ft_ctrl_c(int sig)
 	return;		
 }
 
-void	ft_ctrl_slash(int sig)
-{
-	if (sig == SIGQUIT)
-	{
-		printf("Quitttt(core dumped)\n");
-		// ft_free_all(var);
-		exit (0);
-		return;
-	}
-	else
-		return;		
-}
+// void	ft_ctrl_slash(int sig)
+// {
+// 	if (sig == SIGQUIT)
+// 	{
+// 		printf("Quitttt(core dumped)\n");
+// 		// ft_free_all(var);
+// 		exit (0);
+// 		return;
+// 	}
+// 	else
+// 		return;		
+// }
 
-
-	// signal(SIGINT, ft_signal);
+// int	ft_ctrl_d_heredoc(int sig)
+// {
+// 	if (line == NULL)
+// 	{
+// 		ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2)
+// 		ft_putstr_fd(delimiter);
+// 		ft_putstr_fd("')", 2);
+// 	}
+// }

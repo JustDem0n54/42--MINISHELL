@@ -10,9 +10,10 @@ void	ft_error_var_env(char **tab, int i)
 
 int	first_check(t_var *var, char *tab)
 {
-	if (ft_strncmp(tab, "PWD=", 4) == 0
-		|| ft_strncmp(tab, "OLDPWD=", 7) == 0
-	|| ft_strncmp(tab, "_=", 2) == 0)
+	// if (ft_strncmp(tab, "PWD=", 4) == 0
+	// 	|| ft_strncmp(tab, "OLDPWD=", 7) == 0
+	// || ft_strncmp(tab, "_=", 2) == 0)
+	if (ft_strncmp(tab, "_=", 2) == 0)
 		return (0);
 	else
 	{

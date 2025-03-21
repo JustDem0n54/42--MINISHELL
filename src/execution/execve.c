@@ -17,7 +17,6 @@ int	ft_first_check(char **tab)
 	return (-1);
 }
 
-
 char	*check_path(char **env, char *cmd)
 {
 	int		i;
@@ -297,6 +296,10 @@ void	execution(t_var *var, t_exec *exec)
 	i = 0;
 	if (var->nbcmd == 1)
 	{
+		if (exec->output == -1)
+			exec->output = 1;
+		if (exec->input == -1)
+			exec->input = 0;
 		builtins = ft_cmd(exec->cmd);
 		if (builtins == NULL)
 			exec_one(var, exec);

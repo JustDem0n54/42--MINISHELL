@@ -3,7 +3,7 @@
 void	error_unset(t_var *var, char **tab)
 {
 	if ( tab[1] && ft_strcmp(tab[1], "-") == 0)
-		return(ft_putstr_fd(": OLDPWD not set\n", 2));
+		return(ft_putstr_fd(tab[0], 2), ft_putstr_fd(": OLDPWD not set\n", 2));
 	else if (!var->home)
 	{
 		ft_putstr_fd(tab[0], 2);
@@ -17,12 +17,41 @@ void	error_unset(t_var *var, char **tab)
 	return ;
 }
 
+void	update_env_pwd_and_old_(t_var *var)
+{
+	t_list	*temp;
+
+	temp = var->env;
+	while (var->env)
+	{
+		if (ft_strncmp((char *)var->env->content, "PWD=", 4) == 0)
+		{
+			free (var->env->content);
+			var->env->content = ft_strdup((char *)var->pwd);
+		}
+		else if (ft_strncmp((char *)var->env->content, "OLDPWD=", 7) == 0)
+		{
+			free (var->env->content);
+			var->env->content = ft_strdup((char *)var->oldpwd);
+		}
+		var->env = var->env->next;
+	}
+	var->env = temp;
+	return ;
+}
+
 void	cd_home(t_var *var, char **tab)
 {
 	if (!var->home)
 		return (error_unset(var, tab));
 	if (chdir(var->home + 5) != 0)
-		return (perror(tab[0]), perror(tab[1])); /*perror ok ? man = STDERR The standard error shall be used only for diagnostic messages.*/
+	{
+		ft_putstr_fd(tab[0], 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(var->home + 5, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+	}
+		return ; /*perror ok ? man = STDERR The standard error shall be used only for diagnostic messages.*/
 }
 
 void	ft_cd(t_var *var, char **tab)

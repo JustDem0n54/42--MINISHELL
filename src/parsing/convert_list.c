@@ -1,14 +1,14 @@
 #include "../../minishell.h"
 
-char	*check_export(char *str, int size)
-{
-	char	*test;
+// char	*check_export(char *str, int size)
+// {
+// 	char	*test;
 
-	test = ft_strdup("4");
-	if (str[size])
-		size++;
-	return (test);
-}
+// 	test = ft_strdup("4");
+// 	if (str[size])
+// 		size++;
+// 	return (test);
+// }
 
 int	check_simple_quoke(char *str)
 {
@@ -32,11 +32,12 @@ int	check_simple_quoke(char *str)
 	return (1);
 }
 
-char	*check_dollars(char *str, int i, int y)
+char	*check_dollars(t_var *var, char *str, int i, int y)
 {
 	char	*temp;
 	char	*temp2;
 	char	*temp3;
+	char	*temp4;
 	char	*cpy;
 
 	cpy = NULL;
@@ -62,11 +63,15 @@ char	*check_dollars(char *str, int i, int y)
 			y = i;
 			while (ft_isalnum(str[i]) == 1 || str[i] == '_')
 				i++;
-			temp2 = check_export(str + y, i - y);
+			temp2 = check_export(var, str + y, i - y);
 			if (temp2 == NULL)
 				cpy = temp;
 			else if (temp != NULL)
+			{
 				cpy = ft_strnjoin(2, (char *[]){temp, temp2}, "");
+				free(temp);
+				free(temp2);
+			}
 			else
 				cpy = temp2;
 		}
@@ -76,7 +81,11 @@ char	*check_dollars(char *str, int i, int y)
 			while (str[i])
 				i++;
 			temp3 = ft_substr(str, y, i - y);
-			cpy = ft_strnjoin(2, (char *[]){cpy, temp3}, "");
+			temp4 = cpy;
+			// cpy = ft_strnjoin(2, (char *[]){cpy, temp3}, "");
+			cpy = ft_strjoin(temp4, temp3);
+			free(temp3);
+			free(temp4);
 		}
 		// if (temp)
 		// 	free(temp);
@@ -94,6 +103,8 @@ char	*check_quote(char *str, int i, int y)
 	char	quote;
 	char	*cpy;
 
+	if (str == NULL)
+		return (NULL);
 	cpy = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	while (i < (int)ft_strlen(str) && str[i])
 	{
@@ -114,7 +125,7 @@ char	*check_quote(char *str, int i, int y)
 	return (cpy);
 }
 
-char	**convert_parse(t_list *lst)
+char	**convert_parse(t_var *var, t_list *lst)
 {
 	char	*temp;
 	char	*temp2;
@@ -127,16 +138,16 @@ char	**convert_parse(t_list *lst)
 	while (lst)
 	{
 		temp = lst->content;
-		temp2 = check_dollars(temp, 0, 0);
+		temp2 = check_dollars(var, temp, 0, 0);
 		temp3 = check_quote(temp2, 0, 0);;
 		sortie[i] = temp3;
 		if (sortie[i] == NULL)
 		{
 			sortie[i] =	ft_strdup("");
-			free(temp3);
+			// free(temp3);
 		}
-		i++;
 		free(temp2);
+		i++;
 		lst = lst->next;
 	}
 	sortie[i] = 0;

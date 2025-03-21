@@ -12,6 +12,8 @@
 # include <signal.h>
 # include "libft/libft.h"
 
+// int	ctl;
+
 typedef struct s_exec
 {
 	char			**cmd;
@@ -37,7 +39,7 @@ typedef	struct s_var
 }	t_var;
 
 // parsing
-char	**convert_parse(t_list *lst);
+char	**convert_parse(t_var *var, t_list *lst);
 t_list	*parsing_line(char *str);
 int		check_error_parsed(t_list *check);
 
@@ -103,7 +105,8 @@ int	check_shlv(t_var *var);
 void	update_env_pwd_and_old_(t_var *var);
 
 
+
+char	*check_export(t_var *var, char *str, int size);
 void	ft_ctrl_slash(int sig);
 void	ft_ctrl_c(int sig);
 #endif
-
