@@ -46,34 +46,77 @@ char	*check_path(char **env, char *cmd)
 	return (free_split(path), NULL);
 }
 
+int	count_element(char **tab, int i)
+{
+	int count;
+
+	count = 0;
+	while (tab[i] && ft_strcmp(tab[i], "|") != 0)
+	{
+		if (ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0)
+			i += 2;
+		if (tab[i] && ft_strcmp(tab[i], "|") != 0)
+		{
+			count++;
+			i++;
+		}
+	}
+	return(count);
+}
+
 char	**check_command(char **tab, t_var *var, t_exec *exec)
 {
-	int		j;
-	int 	i;
 	char	**cmd;
+	int		i;
 
-	
 	i = 0;
-	j = var->cmd_count;
-	while (tab[var->cmd_count] && (ft_strcmp(tab[var->cmd_count], "|") != 0
-		&& ft_strcmp(tab[var->cmd_count], "<") != 0
-		&& ft_strcmp(tab[var->cmd_count], ">") != 0))
-		var->cmd_count++;
-	cmd = malloc(sizeof(char *) * (var->cmd_count - j + 1));
-	while (j < var->cmd_count)
-	{
-		cmd[i] = ft_strdup(tab[j]);
-		i++;
-		j++;
-	}
-	cmd[i] = NULL;
 	exec->input = check_input(tab, var->cmd_count);
 	exec->output = check_output(tab, var->cmd_count);
+	cmd = malloc(sizeof(char *) * (count_element(tab, var->cmd_count) + 1));
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
-		var->cmd_count++;
+	{
+		if (ft_strcmp(tab[var->cmd_count], "<") == 0
+			|| ft_strcmp(tab[var->cmd_count], ">") == 0)
+			var->cmd_count += 2;
+		if (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
+		{
+			cmd[i++] = ft_strdup(tab[var->cmd_count]);
+			var->cmd_count++;
+		}
+	}
+	cmd[i] = NULL;
 	var->cmd_count++;
 	return (cmd);
 }
+
+// char	**check_command(char **tab, t_var *var, t_exec *exec)
+// {
+// 	int		j;
+// 	int 	i;
+// 	char	**cmd;
+
+	
+// 	i = 0;
+// 	j = var->cmd_count;
+// 	while (tab[var->cmd_count] && (ft_strcmp(tab[var->cmd_count], "|") != 0
+// 		&& ft_strcmp(tab[var->cmd_count], "<") != 0
+// 		&& ft_strcmp(tab[var->cmd_count], ">") != 0))
+// 		var->cmd_count++;
+// 	exec->input = check_input(tab, var);
+// 	exec->output = check_output(tab, var);
+// 	cmd = malloc(sizeof(char *) * (var->cmd_count - j + 1));
+// 	while (j < var->cmd_count)
+// 	{
+// 		cmd[i] = ft_strdup(tab[j]);
+// 		i++;
+// 		j++;
+// 	}
+// 	cmd[i] = NULL;
+// 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
+// 		var->cmd_count++;
+// 	var->cmd_count++;	
+// 	return (cmd);
+// }
 
 int	count_command(char **tab)
 {
@@ -292,8 +335,10 @@ void	execution(t_var *var, t_exec *exec)
 {
 	void	(*builtins)(t_var *, char **);
 	int		i;
+	int		save;
 	
 	i = 0;
+	save = 0;
 	if (var->nbcmd == 1)
 	{
 		if (exec->output == -1)
@@ -304,7 +349,15 @@ void	execution(t_var *var, t_exec *exec)
 		if (builtins == NULL)
 			exec_one(var, exec);
 		else
+		{
+			if (exec->input != -1)
+				close(exec->input);
+			save = dup(1);
+			setup_dup2(exec);
 			builtins(var, exec->cmd);
+			dup2(save, 1);
+			close(save);
+		}
 		return ;
 	}
 	setup_exec(var, exec);
