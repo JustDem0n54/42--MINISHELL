@@ -350,8 +350,6 @@ void	execution(t_var *var, t_exec *exec)
 			exec_one(var, exec);
 		else
 		{
-			if (exec->input != -1)
-				close(exec->input);
 			save = dup(1);
 			setup_dup2(exec);
 			builtins(var, exec->cmd);
