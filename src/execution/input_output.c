@@ -18,7 +18,6 @@ int	check_input(char **cmd, int i)
 				ft_putstr_fd(cmd[i + 1], 2);
 				ft_putstr_fd("\n", 2);
 				fd = -2;
-				break ;
 			}
 		}
 		i++;
