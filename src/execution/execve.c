@@ -17,6 +17,23 @@ int	ft_first_check(char **tab)
 	return (-1);
 }
 
+char	*find_path(char **path, char *cmd)
+{
+	char	*temp;
+	int		i;
+
+	i = 0;
+	while (path[i] != NULL)
+	{
+		temp = ft_strnjoin(2, (char *[]){path[i], cmd}, "/");
+		if (access(temp, F_OK) == 0)
+			return (temp);
+		free(temp);
+		i++;
+	}
+	return (NULL);
+}
+
 char	*check_path(char **env, char *cmd)
 {
 	int		i;
@@ -31,19 +48,13 @@ char	*check_path(char **env, char *cmd)
 			return (ft_strdup(cmd));
 	}
 	i = 0;
-	while (ft_strncmp(env[i], "PATH=", 5) != 0)
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
+	if (!env[i])
+		return ("not found");
 	path = ft_split(env[i] + 5, ':');
-	i = 0;
-	while (path[i] != NULL)
-	{
-		temp = ft_strnjoin(2, (char *[]){path[i], cmd}, "/");
-		if (access(temp, F_OK) == 0)
-			return (free_split(path), temp);
-		free(temp);
-		i++;
-	}
-	return (free_split(path), NULL);
+	temp = find_path(path, cmd);
+	return (free_split(path), temp);
 }
 
 int	count_element(char **tab, int i)
@@ -176,6 +187,7 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 	return (NULL);
 }
 
+
 void	exec_all(t_var *var, t_exec *exec, char **env)
 {
 	void	(*builtins)(t_var *, char **);
@@ -272,7 +284,6 @@ void	setup_exec(t_var *var, t_exec *exec)
 			if (exec->input == -2 || exec->output == -2)
 				exit(1);
 			exec_all(var, exec, env);
-			
 		}
 		if (prevfd != -1)
 			close(prevfd);
@@ -312,9 +323,19 @@ void	exec_one(t_var *var, t_exec *exec)
 	env = do_env(var->env);
 	pid = fork();
 	if (pid == 0)
-	{
+	{	
+		// disable_ctrl_signals();	
+		signal(SIGQUIT, ft_ctrl_slash_child);
 		if (exec->path == NULL)
 		{
+			if (exec->unset_path == 1)
+			{
+				ft_putstr_fd(exec->cmd[0], 2);
+				ft_putstr_fd(": No such file or directory\n", 2);
+				free_split(env);
+				ft_free_all(var);
+				exit(1);
+			}
 			ft_putstr_fd(exec->cmd[0], 1);
 			ft_putstr_fd(": command not found\n", 2);
 			free_split(env);
@@ -350,9 +371,6 @@ void	execution(t_var *var, t_exec *exec)
 			exec_one(var, exec);
 		else
 		{
-			if (exec->input != -1)
-				close(exec->input);
-			exec->input = 0;
 			save = dup(1);
 			setup_dup2(exec);
 			builtins(var, exec->cmd);

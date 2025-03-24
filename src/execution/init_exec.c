@@ -12,6 +12,7 @@ t_exec	*ft_execnew(void)
 	new->output = 1;
 	new->path = NULL;
 	new->next = NULL;
+	new->unset_path = 0;
 	return (new);
 }
 
@@ -58,7 +59,14 @@ t_exec	*init_exec(t_var *var, char **tab)
 	{
 		temp->cmd = check_command(tab, var, temp);
 		if (ft_cmd(temp->cmd) == NULL)
+		{
 			temp->path = check_path(env, temp->cmd[0]);
+			if (temp->path && ft_strcmp(temp->path, "not found") == 0)
+			{
+				temp->path = NULL;
+				temp->unset_path = 1;
+			}
+		}
 		temp = temp->next;
 	}
 	return (free_split(env), exec);

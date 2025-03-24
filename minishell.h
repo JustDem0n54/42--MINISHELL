@@ -10,9 +10,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <termios.h>
 # include "libft/libft.h"
 
-// int	ctl;
+extern int	g_ctrl;
 
 typedef struct s_exec
 {
@@ -20,6 +21,7 @@ typedef struct s_exec
 	char			*path;
 	int				input;
 	int				output;
+	int				unset_path;
 	struct s_exec	*next;
 }	t_exec;
 
@@ -36,6 +38,7 @@ typedef	struct s_var
 	int		cmd_count;
 	int		nbcmd;
 	int		status;
+
 }	t_var;
 
 // parsing
@@ -107,6 +110,8 @@ void	update_env_pwd_and_old_(t_var *var);
 
 
 char	*check_export(t_var *var, char *str, int size);
-void	ft_ctrl_slash(int sig);
 void	ft_ctrl_c(int sig);
+void	ft_ctrl_slash_child(int sig);
+void	ft_ctrl_slash_parent(int sig);
+void	disable_ctrl_signals();
 #endif
