@@ -13,7 +13,13 @@
 # include <termios.h>
 # include "libft/libft.h"
 
-extern int	g_ctrl;
+typedef enum e_opt
+{
+	PARENT,
+	CHILD
+}	t_opt;
+
+extern int	g_sig;
 
 typedef struct s_exec
 {
@@ -110,8 +116,14 @@ void	update_env_pwd_and_old_(t_var *var);
 
 
 char	*check_export(t_var *var, char *str, int size);
-void	ft_ctrl_c(int sig);
-void	ft_ctrl_slash_child(int sig);
-void	ft_ctrl_slash_parent(int sig);
-void	disable_ctrl_signals();
+
+// void	signal_child(int sig);
+// void	signal_parent(int sig);
+void	ft_ctrl_c_parent(int sig);
+void	ft_ctrl_c_child(int sig);
+void	ft_ctrl_slash(int sig);
+void	manage_signal(int opt);
+// void	ft_ctrl_slash_parent(int sig);
+
+
 #endif
