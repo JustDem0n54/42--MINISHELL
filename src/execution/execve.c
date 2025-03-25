@@ -324,20 +324,14 @@ void	exec_one(t_var *var, t_exec *exec)
 	pid = fork();
 	if (pid == 0)
 	{	
-		// disable_ctrl_signals();	
-		signal(SIGQUIT, ft_ctrl_slash_child);
+		manage_signal(CHILD);
 		if (exec->path == NULL)
 		{
+			ft_putstr_fd(exec->cmd[0], 2);
 			if (exec->unset_path == 1)
-			{
-				ft_putstr_fd(exec->cmd[0], 2);
 				ft_putstr_fd(": No such file or directory\n", 2);
-				free_split(env);
-				ft_free_all(var);
-				exit(1);
-			}
-			ft_putstr_fd(exec->cmd[0], 1);
-			ft_putstr_fd(": command not found\n", 2);
+			else
+				ft_putstr_fd(": command not found\n", 2);
 			free_split(env);
 			ft_free_all(var);
 			exit(1);
@@ -347,6 +341,7 @@ void	exec_one(t_var *var, t_exec *exec)
 			return (free_split(env), perror(exec->cmd[0]),
 				ft_free_all(var), exit (1));
 	}
+	kill(pid, g_sig);
 	waitpid(pid, &var->status, 0);
 	free_split(env);
 	return ;

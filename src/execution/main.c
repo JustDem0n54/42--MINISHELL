@@ -1,6 +1,6 @@
 #include "../../minishell.h"
 
-int	g_ctrl;
+int	g_sig;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -14,11 +14,9 @@ int	main(int argc, char **argv, char **env)
 
 	var = init_struct(var, env);
 	increase_shlvl(var);
-	signal(SIGINT, ft_ctrl_c);
-	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		
+		manage_signal(PARENT);
 		line = readline("\033[1;33mBrioShell>\033[0m");
 		if (line == NULL)
 		{
@@ -34,7 +32,7 @@ int	main(int argc, char **argv, char **env)
 			{
 				var->data = convert_parse(var, var->parse);
 				var->exec = init_exec(var, var->data);
-					
+	
 			}
 			execution(var, var->exec);
 			if (var->exec != NULL)
@@ -47,7 +45,7 @@ int	main(int argc, char **argv, char **env)
 			var->exec = NULL;
 			var->parse = NULL;
 			var->data = NULL;
-			g_ctrl = 0;
+			g_sig = 0;
 		}
 	}
 	return (0);
