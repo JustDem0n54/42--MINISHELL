@@ -61,10 +61,10 @@ t_exec	*init_exec(t_var *var, char **tab)
 		if (ft_cmd(temp->cmd) == NULL)
 		{
 			temp->path = check_path(env, temp->cmd[0]);
-			if (temp->path && ft_strcmp(temp->path, "not found") == 0)
+			if (temp->path && (ft_strcmp(temp->path, "not found") == 0))
 			{
-				temp->path = NULL;
 				temp->unset_path = 1;
+				temp->path = NULL;
 			}
 		}
 		temp = temp->next;

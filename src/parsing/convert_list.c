@@ -44,6 +44,7 @@ char	*check_dollars(t_var *var, char *str, int i, int y)
 	temp = NULL;
 	temp2 = NULL;
 	temp3 = NULL;
+
 	while(str[i] != '$' && i < (int)ft_strlen(str) && str[i])
 		i++;
 	if (str[i] == 0 || check_simple_quoke(str) == 0)
@@ -56,6 +57,14 @@ char	*check_dollars(t_var *var, char *str, int i, int y)
 		{
 			i += 2;
 			cpy = temp;
+		}
+		else if (str[i + 1] == '?')
+		{
+			cpy = ft_itoa(var->status);
+			if (temp != NULL)
+				cpy = ft_strjoin(temp, cpy);
+			i += 2;
+
 		}
 		else if (ft_isalpha(str[i + 1]) == 1 || str[i + 1] == '_')
 		{
@@ -82,7 +91,7 @@ char	*check_dollars(t_var *var, char *str, int i, int y)
 				i++;
 			temp3 = ft_substr(str, y, i - y);
 			temp4 = cpy;
-			// cpy = ft_strnjoin(2, (char *[]){cpy, temp3}, "");
+			// cpy = ft_strnjoin(2, (char *[]){temp4, temp3}, "");
 			cpy = ft_strjoin(temp4, temp3);
 			free(temp3);
 			free(temp4);

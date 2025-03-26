@@ -12,4 +12,5 @@ void	ft_env(t_var *var, char **tab)
 			printf("%s\n", (char *)temp->content);
 		temp = temp->next;
 	}
+	var->status = 0;
 }

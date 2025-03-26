@@ -62,6 +62,7 @@ t_list	*print_export(t_var *var)
 		var->env = var->env->next;
 	}
 	var->env = temp1;
+	var->status = 0;
 	return (print_declare_x(var), var->export);
 }
 

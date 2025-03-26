@@ -79,7 +79,10 @@ void	ft_unset(t_var *var, char **tab)
 	while (tab[i])
 	{
 		if (var_name_len(tab[i]) != ft_strlen(tab[i]))
+		{
+			var->status = 0;
 			return ;
+		}
 		if (unset_first(var, tab[i], temp, var_name_len(tab[i])) == 1)
 		{
 			while (var->env && var->env->next)
@@ -93,5 +96,6 @@ void	ft_unset(t_var *var, char **tab)
 		var->env = temp;
 		i++;
 	}
+	var->status = 0;
 	var->env = temp;
 }

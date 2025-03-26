@@ -7,6 +7,8 @@ char	*check_export(t_var *var, char *str, int size)
 
 	newstr = NULL;
 	temp = var->env;
+	if (strcmp(str, "$?") == 0)
+		return(ft_itoa(var->status));
 	while (temp)
 	{
 		if (ft_strncmp((char *)temp->content, str, size) == 0)

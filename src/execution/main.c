@@ -16,7 +16,8 @@ int	main(int argc, char **argv, char **env)
 	increase_shlvl(var);
 	while (1)
 	{
-		manage_signal(PARENT);
+		manage_signal();
+		rl_catch_signals = 0;
 		line = readline("\033[1;33mBrioShell>\033[0m");
 		if (line == NULL)
 		{

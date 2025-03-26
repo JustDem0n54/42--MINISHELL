@@ -1,51 +1,48 @@
 #include "../../minishell.h"
 
-// void	(*signal (int sig, void(*ft_signal)(int)))(int);
-
-void	ft_ctrl_c_parent(int sig)
+void	ft_ctrl_c(int sig)
 {
 	g_sig = sig;
-	// if (waitpid(-1))
+	if (sig == SIGINT)
 	{
-		printf("\n");
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		if (waitpid(-1, NULL, WNOHANG) == -1)
+		{
+			ft_putstr_fd("^C\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
+		else
+			ft_putstr_fd("\n", 1);
 	}
-	return;		
-}
-
-void	ft_ctrl_c_child(int sig)
-{
-	g_sig = sig;
-	ft_putstr_fd("test\n", 1);
-	// if (sig == SIGINT)
-	// 	rl_replace_line("", 0);
+	return;
 }
 
 void	ft_ctrl_slash(int sig)
 {
-	// signal(SIGQUIT, SIG_DFL);
-	if (sig == SIGQUIT)
-		ft_putstr_fd("Quit (core dumped)\n", 1);
 	g_sig = sig;
-
+	if (waitpid(-1, NULL, WNOHANG) == -1)
+		return;
+	else
+		ft_putstr_fd("Quit (core dumped)\n", 1);
 }
 
-void	manage_signal(int opt)
+void	ft_void(int sig)
 {
-	if (opt == PARENT)
-	{
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, ft_ctrl_c_parent);
-	}
-	else if (opt == CHILD)
-	{
-		ft_putstr_fd("dans child", 1);
-		signal(SIGQUIT, ft_ctrl_slash);
-		signal(SIGINT, ft_ctrl_c_child);
-	}
+	(void) sig;
+	return;
 }
+
+void	manage_signal()
+{
+	if (SIGQUIT)
+		signal(SIGQUIT, ft_ctrl_slash);
+	if (SIGINT)
+		signal(SIGINT, ft_ctrl_c);
+	if (SIGPIPE)
+		signal(SIGPIPE, ft_ctrl_c);
+	}
+// }
 
 
 // int	ft_ctrl_d_heredoc(int sig)

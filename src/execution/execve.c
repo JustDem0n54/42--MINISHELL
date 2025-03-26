@@ -1,22 +1,5 @@
 #include "../../minishell.h"
 
-int	ft_first_check(char **tab)
-{
-	if (ft_strchr(tab[0], '/') != NULL)
-	{
-		if (access(tab[0], X_OK) != 0)
-		{
-			ft_putstr_fd("no such file or directory: ", 2);
-			ft_putstr_fd(tab[0], 2);
-			ft_putstr_fd("\n", 2);
-			return (-1);
-		}
-		else
-			return (0);
-	}
-	return (-1);
-}
-
 char	*find_path(char **path, char *cmd)
 {
 	char	*temp;
@@ -44,9 +27,11 @@ char	*check_path(char **env, char *cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/') != NULL)
 	{
-		if (access(cmd, F_OK) == 0)
+		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
-	}
+		else
+			return ("not found");
+	}	
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
@@ -100,35 +85,6 @@ char	**check_command(char **tab, t_var *var, t_exec *exec)
 	return (cmd);
 }
 
-// char	**check_command(char **tab, t_var *var, t_exec *exec)
-// {
-// 	int		j;
-// 	int 	i;
-// 	char	**cmd;
-
-	
-// 	i = 0;
-// 	j = var->cmd_count;
-// 	while (tab[var->cmd_count] && (ft_strcmp(tab[var->cmd_count], "|") != 0
-// 		&& ft_strcmp(tab[var->cmd_count], "<") != 0
-// 		&& ft_strcmp(tab[var->cmd_count], ">") != 0))
-// 		var->cmd_count++;
-// 	exec->input = check_input(tab, var);
-// 	exec->output = check_output(tab, var);
-// 	cmd = malloc(sizeof(char *) * (var->cmd_count - j + 1));
-// 	while (j < var->cmd_count)
-// 	{
-// 		cmd[i] = ft_strdup(tab[j]);
-// 		i++;
-// 		j++;
-// 	}
-// 	cmd[i] = NULL;
-// 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
-// 		var->cmd_count++;
-// 	var->cmd_count++;	
-// 	return (cmd);
-// }
-
 int	count_command(char **tab)
 {
 	int i;
@@ -166,6 +122,19 @@ char	**do_env(t_list *env)
 	return (nenv);
 }
 
+void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
+{
+	ft_putstr_fd(exec->cmd[0], 2);
+	if (exec->unset_path == 1)
+		ft_putstr_fd(": No such file or directory\n", 2);
+	else
+		ft_putstr_fd(": command not found\n", 2);
+	free_split(env);
+	ft_free_all(var);
+	// var->status = 127;
+	exit(127);
+}
+
 void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 {
 	if (cmd[0] == NULL)
@@ -187,7 +156,6 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 	return (NULL);
 }
 
-
 void	exec_all(t_var *var, t_exec *exec, char **env)
 {
 	void	(*builtins)(t_var *, char **);
@@ -196,13 +164,7 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 	if (builtins == NULL)
 	{
 		if (exec->path == NULL)
-		{
-			ft_putstr_fd(exec->cmd[0], 1);
-			ft_putstr_fd(": command not found\n", 1);
-			free_split(env);
-			ft_free_all(var);
-			exit(1);
-		}
+			ft_error_path_cmd(var, exec, env);
 		if (execve(exec->path, exec->cmd, env) == -1)
 			return (perror("error execve"), free_split(env), ft_free_all(var), exit (1));
 	}
@@ -324,25 +286,15 @@ void	exec_one(t_var *var, t_exec *exec)
 	pid = fork();
 	if (pid == 0)
 	{	
-		manage_signal(CHILD);
 		if (exec->path == NULL)
-		{
-			ft_putstr_fd(exec->cmd[0], 2);
-			if (exec->unset_path == 1)
-				ft_putstr_fd(": No such file or directory\n", 2);
-			else
-				ft_putstr_fd(": command not found\n", 2);
-			free_split(env);
-			ft_free_all(var);
-			exit(1);
-		}
+			ft_error_path_cmd(var, exec, env);
 		setup_dup2(exec);
 		if (execve(exec->path, exec->cmd, env) == -1)
 			return (free_split(env), perror(exec->cmd[0]),
 				ft_free_all(var), exit (1));
 	}
-	kill(pid, g_sig);
 	waitpid(pid, &var->status, 0);
+	var->status = var->status % 255;
 	free_split(env);
 	return ;
 }
@@ -350,10 +302,8 @@ void	exec_one(t_var *var, t_exec *exec)
 void	execution(t_var *var, t_exec *exec)
 {
 	void	(*builtins)(t_var *, char **);
-	int		i;
 	int		save;
-	
-	i = 0;
+
 	save = 0;
 	if (var->nbcmd == 1)
 	{

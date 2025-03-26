@@ -98,6 +98,7 @@ char	*ft_strncpy(char *str, int size);
 void	ft_echo(t_var *var, char **tab);
 void	ft_pwd(t_var *var, char **tab);
 void	ft_cd(t_var *var, char **tab);
+void	ft_dollar(t_var *var, char **tab);
 
 // unset
 size_t	var_name_len(char *tab);
@@ -114,16 +115,11 @@ int	check_shlv(t_var *var);
 void	update_env_pwd_and_old_(t_var *var);
 
 
-
 char	*check_export(t_var *var, char *str, int size);
 
-// void	signal_child(int sig);
-// void	signal_parent(int sig);
-void	ft_ctrl_c_parent(int sig);
-void	ft_ctrl_c_child(int sig);
+void	ft_ctrl_c(int sig);
 void	ft_ctrl_slash(int sig);
-void	manage_signal(int opt);
-// void	ft_ctrl_slash_parent(int sig);
+void	manage_signal();
 
 
 #endif

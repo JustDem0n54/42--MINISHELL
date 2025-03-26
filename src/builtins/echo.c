@@ -38,4 +38,5 @@ void	ft_echo(t_var *var, char **tab)
 	}
 	if (check != 1)
 		printf("\n");
+	var->status = 0;
 }

@@ -10,9 +10,6 @@ void	ft_error_var_env(char **tab, int i)
 
 int	first_check(t_var *var, char *tab)
 {
-	// if (ft_strncmp(tab, "PWD=", 4) == 0
-	// 	|| ft_strncmp(tab, "OLDPWD=", 7) == 0
-	// || ft_strncmp(tab, "_=", 2) == 0)
 	if (ft_strncmp(tab, "_=", 2) == 0)
 		return (0);
 	else
@@ -23,7 +20,7 @@ int	first_check(t_var *var, char *tab)
 			var->home = ft_strdup(tab);
 		}
 	}
-		return (1);	
+	return (1);	
 }
 
 int	check_var_env_added(t_var *var, char *s, size_t i)
@@ -34,21 +31,21 @@ int	check_var_env_added(t_var *var, char *s, size_t i)
 	while (var->env)
 	{
 		if (first_check(var, s) == 0)
-			return (var->env = temp, 1);
+			return (var->status = 0, var->env = temp, 1);
 		if (var_name_len((char *)var->env->content) == i
 			&& ft_strncmp((char *)var->env->content, s, i) == 0)
 		{
 			if (s[i] != '=')
-				return(var->env = temp, 1);
+				return(var->status = 0, var->env = temp, 1);
 			free (var->env->content);
 			var->env->content = ft_strdup(s);
-			return (var->env = temp,1);
+			return (var->status = 0, var->env = temp, 1);
 		}
 		else
 			var->env = var->env->next;
 	}
 	var->env = temp;
-	return (0);
+	return (var->status = 0, 0);
 }
 
 void	add_var_env(t_var *var, char **tab)
@@ -61,7 +58,10 @@ void	add_var_env(t_var *var, char **tab)
 	while (tab[i])
 	{
 		if (ft_isalpha(tab[i][0]) == 0 && tab[i][0] != '_')
+		{
+			var->status = 1;
 			ft_error_var_env(tab, i);
+		}
 		j = var_name_len(tab[i]) - 1;
 		if (check_var_env_added(var, tab[i], j + 1) == 0)
 			ft_lstadd_back(&var->env, ft_lstnew(ft_strdup(tab[i])));
