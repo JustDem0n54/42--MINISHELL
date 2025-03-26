@@ -1,9 +1,8 @@
 #include "../../minishell.h"
 
-int	check_input(char **cmd, int i)
+int	check_input(t_var *var, char **cmd, int i)
 {
 	int fd;
-
 	fd = -1;
 	while (cmd[i] && (ft_strcmp(cmd[i], "|") != 0))
 	{
@@ -19,7 +18,7 @@ int	check_input(char **cmd, int i)
 			}
 		}
 		else if (ft_strcmp(cmd[i], "<<") == 0)
-			fd = gest_heredoc(cmd[i + 1], i);
+			fd = gest_heredoc(var, cmd[i + 1], i);
 		i++;
 	}
 	return (fd);

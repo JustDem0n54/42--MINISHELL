@@ -19,6 +19,7 @@ int	main(int argc, char **argv, char **env)
 		manage_signal();
 		rl_catch_signals = 0;
 		line = readline("\033[1;33mBrioShell>\033[0m");
+		var->count_line++;
 		if (line == NULL)
 		{
 			free(line);

@@ -67,7 +67,7 @@ char	**check_command(char **tab, t_var *var, t_exec *exec)
 	int		i;
 
 	i = 0;
-	exec->input = check_input(tab, var->cmd_count);
+	exec->input = check_input(var, tab, var->cmd_count);
 	exec->output = check_output(tab, var->cmd_count);
 	cmd = malloc(sizeof(char *) * (count_element(tab, var->cmd_count) + 1));
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)

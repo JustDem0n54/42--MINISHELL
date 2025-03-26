@@ -44,6 +44,7 @@ typedef	struct s_var
 	int		cmd_count;
 	int		nbcmd;
 	int		status;
+	int		count_line;
 
 }	t_var;
 
@@ -74,14 +75,14 @@ char	**do_env(t_list *env);
 int		count_command(char **tab);
 char	*check_path(char **env, char *cmd);
 void	execution(t_var *var, t_exec *exec);
-int		gest_heredoc(char *eof, int i);
+int		gest_heredoc(t_var *var, char *eof, int i);
 
 // init_exec
 t_exec	*init_exec(t_var *var, char **tab);
 void	exec_add_back(t_exec **exec, t_exec *new);
 t_exec	*exec_last(t_exec *exec);
 t_exec	*ft_execnew(void);
-int		check_input(char **cmd, int i);
+int		check_input(t_var *var, char **cmd, int i);
 int		check_output(char **cmd, int i);
 
 // utils2

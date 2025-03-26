@@ -2,7 +2,12 @@
 
 void	ft_ctrl_c(int sig)
 {
-	g_sig = sig;
+	// g_sig = sig;
+	// if (g_sig == 1 && sig == SIGINT)
+	// {
+	// 	printf("^C");
+	// 	signal(SIGINT, SIG_DFL);
+	// }
 	if (sig == SIGINT)
 	{
 		if (waitpid(-1, NULL, WNOHANG) == -1)
@@ -20,7 +25,7 @@ void	ft_ctrl_c(int sig)
 
 void	ft_ctrl_slash(int sig)
 {
-	g_sig = sig;
+	(void) sig;
 	if (waitpid(-1, NULL, WNOHANG) == -1)
 		return;
 	else
