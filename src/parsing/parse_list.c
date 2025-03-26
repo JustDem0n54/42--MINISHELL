@@ -21,7 +21,7 @@ int	gest_token(char *str, int i, int j, t_list **line)
 {
 	char	*temp;
 
-	if (str[i - 1] != ' ' && str[i - 1] != str[i] && i > 0
+	if (i > 0 && str[i - 1] != ' ' && str[i - 1] != str[i]
 		&& ft_strchr("\"\'", str[i - 1]) == NULL)
 	{
 		temp = ft_substr(str, j, i - j);

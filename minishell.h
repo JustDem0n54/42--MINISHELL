@@ -74,6 +74,7 @@ char	**do_env(t_list *env);
 int		count_command(char **tab);
 char	*check_path(char **env, char *cmd);
 void	execution(t_var *var, t_exec *exec);
+int		gest_heredoc(char *eof, int i);
 
 // init_exec
 t_exec	*init_exec(t_var *var, char **tab);

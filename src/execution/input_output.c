@@ -1,7 +1,5 @@
 #include "../../minishell.h"
 
-
-
 int	check_input(char **cmd, int i)
 {
 	int fd;
@@ -20,6 +18,8 @@ int	check_input(char **cmd, int i)
 				fd = -2;
 			}
 		}
+		else if (ft_strcmp(cmd[i], "<<") == 0)
+			fd = gest_heredoc(cmd[i + 1], i);
 		i++;
 	}
 	return (fd);

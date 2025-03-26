@@ -50,7 +50,7 @@ int	count_element(char **tab, int i)
 	while (tab[i] && ft_strcmp(tab[i], "|") != 0)
 	{
 		if (ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0
-			|| ft_strcmp(tab[i], ">>") == 0)
+			|| ft_strcmp(tab[i], ">>") == 0 || ft_strcmp(tab[i], "<<") == 0)
 			i += 2;
 		else if (tab[i] && ft_strcmp(tab[i], "|") != 0)
 		{
@@ -74,7 +74,8 @@ char	**check_command(char **tab, t_var *var, t_exec *exec)
 	{
 		if (ft_strcmp(tab[var->cmd_count], "<") == 0
 			|| ft_strcmp(tab[var->cmd_count], ">") == 0
-			|| ft_strcmp(tab[var->cmd_count], ">>") == 0)
+			|| ft_strcmp(tab[var->cmd_count], ">>") == 0
+			|| ft_strcmp(tab[var->cmd_count], "<<") == 0)
 			var->cmd_count += 2;
 		else if (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
 		{
@@ -296,6 +297,7 @@ void	exec_one(t_var *var, t_exec *exec)
 				ft_free_all(var), exit (1));
 	}
 	waitpid(pid, &var->status, 0);
+	close(exec->input);
 	var->status = var->status % 255;
 	free_split(env);
 	return ;
