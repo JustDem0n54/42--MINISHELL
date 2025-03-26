@@ -41,7 +41,7 @@ void	manage_signal(int opt)
 	}
 	else if (opt == CHILD)
 	{
-		ft_putstr_fd("dans child", 1);
+		// ft_putstr_fd("dans child", 1);
 		signal(SIGQUIT, ft_ctrl_slash);
 		signal(SIGINT, ft_ctrl_c_child);
 	}

@@ -64,9 +64,10 @@ int	count_element(char **tab, int i)
 	count = 0;
 	while (tab[i] && ft_strcmp(tab[i], "|") != 0)
 	{
-		if (ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0)
+		if (ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0
+			|| ft_strcmp(tab[i], ">>") == 0)
 			i += 2;
-		if (tab[i] && ft_strcmp(tab[i], "|") != 0)
+		else if (tab[i] && ft_strcmp(tab[i], "|") != 0)
 		{
 			count++;
 			i++;
@@ -87,9 +88,10 @@ char	**check_command(char **tab, t_var *var, t_exec *exec)
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
 	{
 		if (ft_strcmp(tab[var->cmd_count], "<") == 0
-			|| ft_strcmp(tab[var->cmd_count], ">") == 0)
+			|| ft_strcmp(tab[var->cmd_count], ">") == 0
+			|| ft_strcmp(tab[var->cmd_count], ">>") == 0)
 			var->cmd_count += 2;
-		if (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
+		else if (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
 		{
 			cmd[i++] = ft_strdup(tab[var->cmd_count]);
 			var->cmd_count++;
@@ -357,15 +359,14 @@ void	execution(t_var *var, t_exec *exec)
 	save = 0;
 	if (var->nbcmd == 1)
 	{
-		if (exec->output == -1)
-			exec->output = 1;
-		if (exec->input == -1)
-			exec->input = 0;
 		builtins = ft_cmd(exec->cmd);
 		if (builtins == NULL)
 			exec_one(var, exec);
 		else
 		{
+			if (exec->input > 0)
+				close(exec->input);
+			exec->input = 0;
 			save = dup(1);
 			setup_dup2(exec);
 			builtins(var, exec->cmd);

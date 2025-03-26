@@ -39,7 +39,15 @@ int	check_output(char **cmd, int i)
 			{
 				ft_putstr_fd("Brioshell : no such file or directory: ", 2);
 				fd = -2;
-				break ;
+			}
+		}
+		else if (ft_strcmp(cmd[i], ">>") == 0)
+		{
+			fd = open(cmd[i + 1], O_CREAT | O_APPEND | O_WRONLY, 00644);
+			if (fd == -1)
+			{
+				ft_putstr_fd("Brioshell : no such file or directory: ", 2);
+				fd = -2;
 			}
 		}
 		i++;
