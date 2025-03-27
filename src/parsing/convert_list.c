@@ -150,10 +150,7 @@ char	**convert_parse(t_var *var, t_list *lst)
 		temp3 = check_quote(temp2, 0, 0);;
 		sortie[i] = temp3;
 		if (sortie[i] == NULL)
-		{
 			sortie[i] =	ft_strdup("");
-			// free(temp3);
-		}
 		free(temp2);
 		i++;
 		lst = lst->next;

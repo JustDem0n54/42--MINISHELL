@@ -71,13 +71,28 @@ void	ft_unset(t_var *var, char **tab);
 // execve
 void	(*ft_cmd(char **cmd))(t_var *var, char **tab);
 void	ft_exe(t_var *var, char **tab);
-char	**check_command(char **tab, t_var *var, t_exec *exec);
 void	exec_pid(t_var *var, char **tab);
-char	**do_env(t_list *env);
-int		count_command(char **tab);
-char	*check_path(char **env, char *cmd);
+char	**convert_env(t_list *env);
 void	execution(t_var *var, t_exec *exec);
 int		gest_heredoc(t_var *var, char *eof, int i);
+void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env);
+
+//setup_exec
+void	setup_dup2_and_close(t_exec *exec, int *fd);
+void	wait_all_pid(t_var *var, pid_t *pids);
+void	select_input(t_exec *exec, int i, int *prevfd);
+void	select_output(int *fd, t_exec *exec, int i, t_var *var);
+void	setup_exec(t_var *var, t_exec *exec);
+
+// exec_pipe
+void	exec_all(t_var *var, t_exec *exec, char **env);
+void	close_fd(int *fd, int prevfd, int i, t_exec *exec);
+void	do_pids(t_exec *exec, pid_t *pids, int *fd, t_var *var);
+
+// make_command
+int		count_command(char **tab);
+char	*check_path(char **env, char *cmd);
+char	**check_command(char **tab, t_var *var, t_exec *exec);
 
 // init_exec
 t_exec	*init_exec(t_var *var, char **tab);

@@ -40,20 +40,10 @@ void	exec_add_back(t_exec **exec, t_exec *new)
 	temp->next = new;
 }
 
-t_exec	*init_exec(t_var *var, char **tab)
+void	prepare_exec(t_exec *exec, char **env, char **tab, t_var *var)
 {
-	int		i;
-	char	**env;
-	t_exec	*exec;
 	t_exec	*temp;
 
-	var->cmd_count = 0;
-	var->nbcmd = count_command(tab);
-	i = -1;
-	env = do_env(var->env);
-	exec = ft_execnew();
-	while (++i < var->nbcmd)
-		exec_add_back(&exec, ft_execnew());
 	temp = exec;
 	while (temp->next)
 	{
@@ -69,5 +59,21 @@ t_exec	*init_exec(t_var *var, char **tab)
 		}
 		temp = temp->next;
 	}
+}
+
+t_exec	*init_exec(t_var *var, char **tab)
+{
+	int		i;
+	char	**env;
+	t_exec	*exec;
+
+	var->cmd_count = 0;
+	var->nbcmd = count_command(tab);
+	i = -1;
+	env = convert_env(var->env);
+	exec = ft_execnew();
+	while (++i < var->nbcmd)
+		exec_add_back(&exec, ft_execnew());
+	prepare_exec(exec, env, tab, var);
 	return (free_split(env), exec);
 }
