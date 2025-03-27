@@ -6,19 +6,17 @@ int	main(int argc, char **argv, char **env)
 {
 	char	*line;
 	t_var	*var;
-	(void) argc;
-	(void) argv;
 
-
+	(void)argc;
+	(void)argv;
 	var = NULL;
-
 	var = init_struct(var, env);
 	increase_shlvl(var);
 	while (1)
 	{
 		manage_signal();
 		rl_catch_signals = 0;
-		line = readline("\033[1;33mBrioShell>\033[0m");
+		line = readline("BrioShell>");
 		var->count_line++;
 		if (line == NULL)
 		{
@@ -34,7 +32,6 @@ int	main(int argc, char **argv, char **env)
 			{
 				var->data = convert_parse(var, var->parse);
 				var->exec = init_exec(var, var->data);
-	
 			}
 			execution(var, var->exec);
 			if (var->exec != NULL)

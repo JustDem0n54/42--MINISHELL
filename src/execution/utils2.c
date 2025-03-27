@@ -16,25 +16,11 @@ void	ft_lstadd_next(t_list **lst, t_list *new)
 	new->next = temp;
 }
 
-// void	print_lst(t_list *lst)
-// {
-// 	t_list	*temp;
-
-// 	temp = lst;
-// 	while (temp)
-// 	{
-// 		printf("%s$\n", (char *)temp->content);
-// 		temp = temp->next;
-// 	}
-// 	printf("fin de la liste\n");
-// 	return ;
-// }
-
 long int	ft_atol(char *str)
 {
 	long int	i;
 	long int	res;
-	int	n;
+	int			n;
 
 	res = 0;
 	n = 1;

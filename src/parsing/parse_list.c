@@ -4,7 +4,7 @@ int	gest_quote(char *str, int i, int j, t_list **line)
 {
 	char	quote;
 	char	*temp;
-	
+
 	quote = str[i];
 	i++;
 	while (str[i] != quote && str[i])
