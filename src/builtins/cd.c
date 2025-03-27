@@ -2,8 +2,8 @@
 
 void	error_unset(t_var *var, char **tab)
 {
-	if ( tab[1] && ft_strcmp(tab[1], "-") == 0)
-		return(var->status = 1, ft_putstr_fd(tab[0], 2),
+	if (tab[1] && ft_strcmp(tab[1], "-") == 0)
+		return (var->status = 1, ft_putstr_fd(tab[0], 2),
 			ft_putstr_fd(": OLDPWD not set\n", 2));
 	else if (!var->home)
 	{
@@ -56,7 +56,7 @@ void	cd_home(t_var *var, char **tab)
 		return ;
 	}
 	var->status = 0;
-	return ; /*perror ok ? man = STDERR The standard error shall be used only for diagnostic messages.*/
+	return ;
 }
 
 void	ft_cd(t_var *var, char **tab)
@@ -73,7 +73,7 @@ void	ft_cd(t_var *var, char **tab)
 		tab[1] = ft_strdup(var->oldpwd + 7);
 	}
 	if (chdir(tab[1]) != 0)
-		return (var->status = 1, ft_putstr_fd(tab[0], 2), 
+		return (var->status = 1, ft_putstr_fd(tab[0], 2),
 			ft_putstr_fd(": ", 2), perror(tab[1]));
 	if (var->oldpwd != NULL)
 		free (var->oldpwd);

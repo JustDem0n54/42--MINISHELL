@@ -3,7 +3,7 @@
 void	ft_free_exec(t_exec *exec)
 {
 	t_exec	*temp;
-	
+
 	if (exec == NULL)
 		return ;
 	while (exec)
@@ -69,16 +69,11 @@ void	ft_exit(t_var *var, char **tab)
 		return ;
 	}
 	else
-	{	
+	{
+		ft_free_all(var);
 		if (tab[1])
-		{
-			ft_free_all(var);
 			exit(ft_atol(tab[1]) % 256);
-		}
 		else
-		{
-			ft_free_all(var);
 			exit(EXIT_SUCCESS);
-		}
 	}
 }

@@ -2,13 +2,12 @@
 
 void	ft_ctrl_c(int sig)
 {
-	// g_sig = sig;
-	// if (g_sig == 1 && sig == SIGINT)
-	// {
-	// 	printf("^C");
-	// 	signal(SIGINT, SIG_DFL);
-	// }
-	if (sig == SIGINT)
+	if (g_sig == 1 && sig == SIGINT)
+	{
+		ft_putstr_fd("^C", 1);
+		rl_done = 1;
+	}
+	else if (sig == SIGINT && g_sig != 1)
 	{
 		if (waitpid(-1, NULL, WNOHANG) == -1)
 		{
@@ -20,14 +19,15 @@ void	ft_ctrl_c(int sig)
 		else
 			ft_putstr_fd("\n", 1);
 	}
-	return;
+	g_sig = SIGINT;
+	return ;
 }
 
 void	ft_ctrl_slash(int sig)
 {
 	(void) sig;
 	if (waitpid(-1, NULL, WNOHANG) == -1)
-		return;
+		return ;
 	else
 		ft_putstr_fd("Quit (core dumped)\n", 1);
 }
@@ -35,10 +35,10 @@ void	ft_ctrl_slash(int sig)
 void	ft_void(int sig)
 {
 	(void) sig;
-	return;
+	return ;
 }
 
-void	manage_signal()
+void	manage_signal(void)
 {
 	if (SIGQUIT)
 		signal(SIGQUIT, ft_ctrl_slash);
@@ -46,16 +46,4 @@ void	manage_signal()
 		signal(SIGINT, ft_ctrl_c);
 	if (SIGPIPE)
 		signal(SIGPIPE, ft_ctrl_c);
-	}
-// }
-
-
-// int	ft_ctrl_d_heredoc(int sig)
-// {
-// 	if (line == NULL)
-// 	{
-// 		ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2)
-// 		ft_putstr_fd(delimiter);
-// 		ft_putstr_fd("')", 2);
-// 	}
-// }
+}

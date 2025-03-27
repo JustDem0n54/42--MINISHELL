@@ -3,7 +3,7 @@
 void	ft_pwd(t_var *var, char **tab)
 {
 	char	*path;
-	
+
 	path = getcwd(NULL, 0);
 	if (ft_strcmp(tab[0], "pwd") == 0 && path != 0)
 		printf("%s\n", path);

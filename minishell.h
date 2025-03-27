@@ -37,6 +37,7 @@ typedef	struct s_var
 	t_list	*export;
 	t_list	*parse;
 	t_exec	*exec;
+	// t_list	*temp;
 	char	**data;
 	char	*pwd;
 	char	*oldpwd;
@@ -45,6 +46,7 @@ typedef	struct s_var
 	int		nbcmd;
 	int		status;
 	int		count_line;
+	// int		i;
 
 }	t_var;
 
@@ -120,8 +122,8 @@ void	update_env_pwd_and_old_(t_var *var);
 char	*check_export(t_var *var, char *str, int size);
 
 void	ft_ctrl_c(int sig);
+int		ft_ctrl_c_heredoc(int sig, char *line, int fd);
 void	ft_ctrl_slash(int sig);
 void	manage_signal();
-
 
 #endif

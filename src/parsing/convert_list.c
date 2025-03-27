@@ -64,7 +64,6 @@ char	*check_dollars(t_var *var, char *str, int i, int y)
 			if (temp != NULL)
 				cpy = ft_strjoin(temp, cpy);
 			i += 2;
-
 		}
 		else if (ft_isalpha(str[i + 1]) == 1 || str[i + 1] == '_')
 		{

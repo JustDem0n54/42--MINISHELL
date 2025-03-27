@@ -1,6 +1,5 @@
 #include "../../minishell.h"
 
-
 void	print_echo(t_var *var, char **tab, int i, int j)
 {
 	if (tab[i][j] == '~')

@@ -20,7 +20,7 @@ int	first_check(t_var *var, char *tab)
 			var->home = ft_strdup(tab);
 		}
 	}
-	return (1);	
+	return (1);
 }
 
 int	check_var_env_added(t_var *var, char *s, size_t i)
@@ -36,7 +36,7 @@ int	check_var_env_added(t_var *var, char *s, size_t i)
 			&& ft_strncmp((char *)var->env->content, s, i) == 0)
 		{
 			if (s[i] != '=')
-				return(var->status = 0, var->env = temp, 1);
+				return (var->status = 0, var->env = temp, 1);
 			free (var->env->content);
 			var->env->content = ft_strdup(s);
 			return (var->status = 0, var->env = temp, 1);

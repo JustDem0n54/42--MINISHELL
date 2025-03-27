@@ -28,7 +28,7 @@ void	check_var_env_unset(t_var *var, char *tab)
 
 int	unset_first(t_var *var, char *tab, t_list *temp, int len)
 {
-	int len_env;
+	int	len_env;
 
 	len_env = var_name_len((char *)var->env->content);
 	if (var->env && len_env == len && ft_strncmp(tab,
@@ -47,7 +47,7 @@ int	unset_first(t_var *var, char *tab, t_list *temp, int len)
 int	unset_between(t_var *var, char *tab, t_list *temp, int len)
 {
 	t_list	*temp2;
-	int len_env;
+	int		len_env;
 
 	len_env = var_name_len((char *)var->env->next->content);
 	check_var_env_unset(var, tab);
@@ -76,13 +76,11 @@ void	ft_unset(t_var *var, char **tab)
 
 	i = 1;
 	temp = var->env;
+	var->status = 0;
 	while (tab[i])
 	{
 		if (var_name_len(tab[i]) != ft_strlen(tab[i]))
-		{
-			var->status = 0;
 			return ;
-		}
 		if (unset_first(var, tab[i], temp, var_name_len(tab[i])) == 1)
 		{
 			while (var->env && var->env->next)
