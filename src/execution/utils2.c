@@ -20,7 +20,7 @@ long int	ft_atol(char *str)
 {
 	long int	i;
 	long int	res;
-	int	n;
+	int			n;
 
 	res = 0;
 	n = 1;

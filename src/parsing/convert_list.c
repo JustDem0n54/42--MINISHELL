@@ -1,15 +1,5 @@
 #include "../../minishell.h"
 
-// char	*check_export(char *str, int size)
-// {
-// 	char	*test;
-
-// 	test = ft_strdup("4");
-// 	if (str[size])
-// 		size++;
-// 	return (test);
-// }
-
 int	check_simple_quoke(char *str)
 {
 	int		i;
@@ -90,19 +80,11 @@ char	*check_dollars(t_var *var, char *str, int i, int y)
 				i++;
 			temp3 = ft_substr(str, y, i - y);
 			temp4 = cpy;
-			// cpy = ft_strnjoin(2, (char *[]){temp4, temp3}, "");
 			cpy = ft_strjoin(temp4, temp3);
 			free(temp3);
 			free(temp4);
 		}
-		// if (temp)
-		// 	free(temp);
-		// if (temp2)
-		// 	free(temp2);
-		// if (temp3)
-		// 	free(temp3);
 	}
-	// free(str);
 	return (cpy);
 }
 

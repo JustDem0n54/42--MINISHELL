@@ -2,7 +2,8 @@
 
 int	check_input(t_var *var, char **cmd, int i)
 {
-	int fd;
+	int	fd;
+
 	fd = -1;
 	while (cmd[i] && (ft_strcmp(cmd[i], "|") != 0))
 	{
@@ -26,7 +27,7 @@ int	check_input(t_var *var, char **cmd, int i)
 
 int	check_output_append(char **cmd, int i)
 {
-	int fd;
+	int	fd;
 
 	fd = open(cmd[i + 1], O_CREAT | O_APPEND | O_WRONLY, 00644);
 	if (fd == -1)
@@ -39,7 +40,7 @@ int	check_output_append(char **cmd, int i)
 
 int	check_output(char **cmd, int i)
 {
-	int fd;
+	int	fd;
 
 	fd = -1;
 	while (cmd[i] && (ft_strcmp(cmd[i], "|") != 0))
