@@ -85,6 +85,8 @@ void	execution(t_var *var, t_exec *exec)
 		{
 			if (exec->input > 0)
 				close(exec->input);
+			if (exec->output == -1)
+				exec->output = 1;
 			exec->input = 0;
 			save = dup(1);
 			setup_dup2(exec);
