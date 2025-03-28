@@ -1,43 +1,43 @@
 #include "../../minishell.h"
 
-int error_pipe(t_list *temp)
+int	error_pipe(t_list *temp)
 {
 	if (ft_strcmp((char *)temp->content, "|") == 0)
 	{
 		if (temp->next && ft_strcmp((char *)temp->next->content, "|") == 0)
-			return(ft_putstr_fd("Brioshell: syntax error"
-			" near unexpected token `|'\n", 2), 1);
+			return (ft_putstr_fd("Brioshell: syntax error"
+					" near unexpected token `|'\n", 2), 1);
 		if (temp->next == NULL)
-			return(ft_putstr_fd("Brioshell: syntax error"
-			" near unexpected token `|'\n", 2), 1);
+			return (ft_putstr_fd("Brioshell: syntax error"
+					" near unexpected token `|'\n", 2), 1);
 	}
 	return (0);
 }
 
-int error_infile(t_list *temp)
+int	error_infile(t_list *temp)
 {
 	if (ft_strcmp((char *)temp->content, "<") == 0)
 	{
 		if (temp->next && ft_strcmp((char *)temp->next->content, "<") == 0)
-			return(ft_putstr_fd("Brioshell: syntax error near"
-			" unexpected token `newline'\n", 2), 1);
+			return (ft_putstr_fd("Brioshell: syntax error near"
+					" unexpected token `newline'\n", 2), 1);
 		if (temp->next == NULL)
-			return(ft_putstr_fd("Brioshell: syntax error near"
-			" unexpected token `<'\n", 2), 1);
+			return (ft_putstr_fd("Brioshell: syntax error near"
+					" unexpected token `<'\n", 2), 1);
 	}
 	return (0);
 }
 
-int error_outfile(t_list *temp)
+int	error_outfile(t_list *temp)
 {
 	if (ft_strcmp((char *)temp->content, ">") == 0)
 	{
 		if (temp->next && ft_strcmp((char *)temp->next->content, ">") == 0)
-			return(ft_putstr_fd("Brioshell: syntax error near "
-			"unexpected token `newline'\n", 2), 1);
+			return (ft_putstr_fd("Brioshell: syntax error near "
+					"unexpected token `newline'\n", 2), 1);
 		if (temp->next == NULL)
-			return(ft_putstr_fd("Brioshell: syntax error near "
-			"unexpected token `>'\n", 2), 1);
+			return (ft_putstr_fd("Brioshell: syntax error near "
+					"unexpected token `>'\n", 2), 1);
 	}
 	return (0);
 }
