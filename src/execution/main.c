@@ -32,8 +32,8 @@ int	main(int argc, char **argv, char **env)
 			{
 				var->data = convert_parse(var, var->parse);
 				var->exec = init_exec(var, var->data);
+				execution(var, var->exec);
 			}
-			execution(var, var->exec);
 			if (var->exec != NULL)
 				ft_free_exec(var->exec);
 			free(line);
