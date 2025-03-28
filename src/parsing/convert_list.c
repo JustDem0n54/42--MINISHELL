@@ -22,70 +22,33 @@ int	check_simple_quoke(char *str)
 	return (1);
 }
 
-char	*check_dollars(t_var *var, char *str, int i, int y)
+char	*parse_all_str_for_dollar(t_var *var, char *str, int i, int y)
 {
 	char	*temp;
 	char	*temp2;
-	char	*temp3;
-	char	*temp4;
-	char	*cpy;
+	char	*newstr;
+	int		prev_i;
 
-	cpy = NULL;
 	temp = NULL;
 	temp2 = NULL;
-	temp3 = NULL;
-
-	while(str[i] != '$' && i < (int)ft_strlen(str) && str[i])
-		i++;
-	if (str[i] == 0 || check_simple_quoke(str) == 0)
-		return (ft_strdup(str));
-	if (str[i] == '$')
+	newstr = NULL;
+	prev_i = 0;
+	while ((size_t)i < ft_strlen(str))
 	{
-		if (i > 0)
-			temp = ft_substr(str, y, i - y);
-		if (ft_isdigit(str[i + 1]) == 1)
-		{
-			i += 2;
-			cpy = temp;
-		}
-		else if (str[i + 1] == '?')
-		{
-			cpy = ft_itoa(var->status);
-			if (temp != NULL)
-				cpy = ft_strjoin(temp, cpy);
-			i += 2;
-		}
-		else if (ft_isalpha(str[i + 1]) == 1 || str[i + 1] == '_')
-		{
-			i++;
-			y = i;
-			while (ft_isalnum(str[i]) == 1 || str[i] == '_')
-				i++;
-			temp2 = check_export(var, str + y, i - y);
-			if (temp2 == NULL)
-				cpy = temp;
-			else if (temp != NULL)
-			{
-				cpy = ft_strnjoin(2, (char *[]){temp, temp2}, "");
-				free(temp);
-				free(temp2);
-			}
-			else
-				cpy = temp2;
-		}
-		if (str[i] != 0 && str[i + 1] != 0)
-		{
-			y = i;
-			while (str[i])
-				i++;
-			temp3 = ft_substr(str, y, i - y);
-			temp4 = cpy;
-			cpy = ft_strjoin(temp4, temp3);
-			free(temp3);
-			free(temp4);
-		}
+		y = prev_i;
+		temp = check_dollars_parsing(var, str, &i, y);
+		if (temp2 != NULL)
+			newstr = ft_strjoin(temp2, temp);
+		if (temp2 != NULL)
+			free(temp2);
+		else
+			newstr = ft_strdup(temp);
+		temp2 = newstr;
+		prev_i = i + 1;
+		free(temp);
+		i++;
 	}
-	return (cpy);
+	return (newstr);
 }
 
 char	*check_quote(char *str, int i, int y)
@@ -115,28 +78,39 @@ char	*check_quote(char *str, int i, int y)
 	return (cpy);
 }
 
+char	*check_exit(char *temp2, char *temp3)
+{
+	free(temp2);
+	if (temp3 == NULL)
+		return (ft_strdup(""));
+	return (temp3);
+}
+
 char	**convert_parse(t_var *var, t_list *lst)
 {
 	char	*temp;
 	char	*temp2;
 	char	*temp3;
-	char	**sortie;
+	char	**exit;
 	int		i;
 
 	i = 0;
-	sortie = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
+	exit = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
 	while (lst)
 	{
 		temp = lst->content;
-		temp2 = check_dollars(var, temp, 0, 0);
-		temp3 = check_quote(temp2, 0, 0);;
-		sortie[i] = temp3;
-		if (sortie[i] == NULL)
-			sortie[i] =	ft_strdup("");
-		free(temp2);
+		temp2 = parse_all_str_for_dollar(var, temp, 0, 0);
+		temp3 = check_quote(temp2, 0, 0);
+		exit[i] = check_exit(temp2, temp3);
 		i++;
+		if (ft_strcmp(temp3, "<<") == 0)
+		{
+			exit[i] = ft_strdup((char *)lst->next->content);
+			i++;
+			lst = lst->next;
+		}
 		lst = lst->next;
 	}
-	sortie[i] = 0;
-	return(sortie);
+	exit[i] = 0;
+	return (exit);
 }

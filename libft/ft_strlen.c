@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*   By: edelanno <edelanno@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:08:47 by nrontard          #+#    #+#             */
-/*   Updated: 2024/11/14 10:01:45 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:23:10 by edelanno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
