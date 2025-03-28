@@ -13,12 +13,6 @@
 # include <termios.h>
 # include "libft/libft.h"
 
-typedef enum e_opt
-{
-	PARENT,
-	CHILD
-}	t_opt;
-
 extern int	g_sig;
 
 typedef struct s_exec
@@ -31,29 +25,42 @@ typedef struct s_exec
 	struct s_exec	*next;
 }	t_exec;
 
+typedef	struct s_heredoc
+{
+	char	*line;
+	char	*line2;
+	int		fd;
+	char	*file;
+	char	*n_eof;
+	int		i;
+}	t_heredoc;
+
 typedef	struct s_var
 {
-	t_list	*env;
-	t_list	*export;
-	t_list	*parse;
-	t_exec	*exec;
+	t_list		*env;
+	t_list		*export;
+	t_list		*parse;
+	t_exec		*exec;
+	t_heredoc	hd;
 	// t_list	*temp;
-	char	**data;
-	char	*pwd;
-	char	*oldpwd;
-	char	*home;
-	int		cmd_count;
-	int		nbcmd;
-	int		status;
-	int		count_line;
+	char		**data;
+	char		*pwd;
+	char		*oldpwd;
+	char		*home;
+	int			cmd_count;
+	int			nbcmd;
+	int			status;
+	int			count_line;
 	// int		i;
 
 }	t_var;
+
 
 // parsing
 char	**convert_parse(t_var *var, t_list *lst);
 t_list	*parsing_line(char *str);
 int		check_error_parsed(t_list *check);
+char	*check_dollars_parsing(t_var *var, char *str, int *i, int y);
 
 
 // init
@@ -94,6 +101,7 @@ int		count_command(char **tab);
 char	*check_path(char **env, char *cmd);
 char	**check_command(char **tab, t_var *var, t_exec *exec);
 
+
 // init_exec
 t_exec	*init_exec(t_var *var, char **tab);
 void	exec_add_back(t_exec **exec, t_exec *new);
@@ -104,7 +112,6 @@ int		check_output(char **cmd, int i);
 
 // utils2
 void		ft_lstadd_next(t_list **lst, t_list *new);
-void		print_lst(t_list *lst);
 long int	ft_atol(char *str);
 size_t		ft_strlenlongint(long n);
 char		*ft_litoa(long int nb);
@@ -128,7 +135,7 @@ void	ft_exit(t_var *var, char **tab);
 void	ft_free_all(t_var *var);
 void	ft_free_exec(t_exec *exec);
 
-int	check_shlv(t_var *var);
+int		check_shlv(t_var *var);
 
 // env
 void	update_env_pwd_and_old_(t_var *var);
@@ -136,9 +143,24 @@ void	update_env_pwd_and_old_(t_var *var);
 
 char	*check_export(t_var *var, char *str, int size);
 
+
 void	ft_ctrl_c(int sig);
 int		ft_ctrl_c_heredoc(int sig, char *line, int fd);
 void	ft_ctrl_slash(int sig);
 void	manage_signal();
+int		ft_check_ctrl_c_heredoc(void);
+void	ft_ctrl_d_heredoc(t_var *var, char *eof);
+
+char	*check_quote(char *str, int i, int y);
+
+void	all_dollar(char *str, int *i);
+char	*parse_dollar(t_var *var, char *str, int *i, int y);
+char	*return_str(char *str, char *cpy, int i, int y);
+char	*parse_all_str_for_dollar(t_var *var, char *str, int i, int y);
+char	*parse_dollar(t_var *var, char *str, int *i, int y);
+char	*check_return_value(t_var *var, char *temp);
+char	*check_dollars_heredoc(t_var *var, char *str, int *i, int y);
+char	*check_dollars_parsing(t_var *var, char *str, int *i, int y);
+int		check_simple_quoke(char *str);
 
 #endif

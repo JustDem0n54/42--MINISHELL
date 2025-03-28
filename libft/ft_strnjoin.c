@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnjoin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*   By: edelanno <edelanno@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 14:43:40 by nrontard          #+#    #+#             */
-/*   Updated: 2025/02/07 14:46:39 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/03/21 20:09:09 by edelanno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ char	*ft_strjoincpy(char **strs, char *result, char *sep, int size)
 		}
 		while (sep[k])
 			result[c++] = sep[k++];
+		// free(strs[i]);
 		i++;
 	}
 	return (result);
@@ -77,5 +78,6 @@ char	*ft_strnjoin(int size, char **strs, char *sep)
 	}
 	size_max = ft_strnjoinlen(size, strs, sep);
 	result = malloc((size_max + 1) * sizeof(char));
-	return (ft_strjoincpy(strs, result, sep, size));
+	result = ft_strjoincpy(strs, result, sep, size);
+	return (result);
 }

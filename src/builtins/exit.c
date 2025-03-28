@@ -47,19 +47,23 @@ void	ft_free_all(t_var *var)
 	rl_clear_history();
 }
 
+void	error_message_exit_two_arg(t_var *var, char **tab)
+{
+	ft_putstr_fd(tab[0], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(tab[1], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd("numeric argument required\n", 2);
+	ft_free_all(var);
+	var->status = 2;
+	exit(var->status);
+}
+
 void	ft_exit(t_var *var, char **tab)
 {
 	printf("exit\n");
 	if (tab[1] && ft_strcmp(ft_litoa(ft_atol(tab[1])), tab[1]) != 0)
-	{
-		ft_putstr_fd(tab[0], 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(tab[1], 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd("numeric argument required\n", 2);
-		ft_free_all(var);
-		exit(2);
-	}
+		error_message_exit_two_arg(var, tab);
 	else if (tab[1] && tab[2])
 	{
 		ft_putstr_fd(tab[0], 2);
