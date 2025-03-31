@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 14:36:14 by nrontard          #+#    #+#             */
-/*   Updated: 2025/02/13 14:57:58 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:06:39 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 void	ft_bzerognl(void *s, size_t n);
 void	*ft_callocgnl(size_t count, size_t size);
 int		ft_strchrgnl(char *str, int c);
-size_t	ft_strlengnl(char *s);
+size_t	ft_strlengn(char *s);
 char	*ft_strjoingnl(char *storage, char *buff, int size);
 char	*read_check(char *str, int fd, char *buff);
 char	*get_next_line(int fd);

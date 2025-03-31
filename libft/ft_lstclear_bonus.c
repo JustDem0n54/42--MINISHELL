@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edelanno <edelanno@student.42perpignan.    +#+  +:+       +#+        */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 17:54:50 by nrontard          #+#    #+#             */
-/*   Updated: 2025/03/05 18:35:50 by edelanno         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:05:33 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*tmp;
-	
+
 	if (lst == NULL)
 		return ;
 	while (*lst)

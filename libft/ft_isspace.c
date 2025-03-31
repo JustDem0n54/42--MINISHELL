@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_split.c                                       :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/25 12:03:27 by nrontard          #+#    #+#             */
-/*   Updated: 2025/03/31 18:05:04 by nrontard         ###   ########.fr       */
+/*   Created: 2025/03/31 17:40:37 by nrontard          #+#    #+#             */
+/*   Updated: 2025/03/31 18:03:41 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	free_split(char **str)
+int	ft_isspace(char c)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
+	if (c >= 8 && c <= 13)
+		return (1);
+	return (0);
 }

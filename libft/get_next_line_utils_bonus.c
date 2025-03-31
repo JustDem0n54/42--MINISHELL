@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:24:08 by nrontard          #+#    #+#             */
-/*   Updated: 2025/02/13 14:58:34 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:06:24 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_strchrgnl(char *str, int c)
 	return (0);
 }
 
-size_t	ft_strlengnl(char *s)
+size_t	ft_strlengn(char *s)
 {
 	size_t	i;
 
@@ -72,7 +72,7 @@ char	*ft_strjoingnl(char *storage, char *buff, int size)
 	int		j;
 
 	i = 0;
-	str = (char *)ft_callocgnl((ft_strlengnl(storage) + size + 1), sizeof(char));
+	str = (char *)ft_callocgnl((ft_strlengn(storage) + size + 1), sizeof(char));
 	if (str == NULL)
 		return (NULL);
 	if (storage != NULL)
@@ -89,6 +89,6 @@ char	*ft_strjoingnl(char *storage, char *buff, int size)
 		while (buff[++j])
 			str[i + j] = buff[j];
 	}
-	str[(ft_strlengnl(storage) + size)] = '\0';
+	str[(ft_strlengn(storage) + size)] = '\0';
 	return (str);
 }

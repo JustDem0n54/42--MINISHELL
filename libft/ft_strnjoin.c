@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnjoin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edelanno <edelanno@student.42perpignan.    +#+  +:+       +#+        */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 14:43:40 by nrontard          #+#    #+#             */
-/*   Updated: 2025/03/21 20:09:09 by edelanno         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:05:17 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ char	*ft_strjoincpy(char **strs, char *result, char *sep, int size)
 		}
 		while (sep[k])
 			result[c++] = sep[k++];
-		// free(strs[i]);
 		i++;
 	}
 	return (result);
