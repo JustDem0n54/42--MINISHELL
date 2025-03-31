@@ -2,12 +2,12 @@
 
 void	setup_dup2_and_close(t_exec *exec, int *fd)
 {
-	if (exec->input != 0)
+	if (exec->input > 0)
 	{
 		dup2(exec->input, STDIN_FILENO);
 		close(exec->input);
 	}
-	if (exec->output != 1)
+	if (exec->output > 1)
 	{
 		dup2(exec->output, STDOUT_FILENO);
 		close(exec->output);

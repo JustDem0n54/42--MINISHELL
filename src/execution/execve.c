@@ -5,15 +5,19 @@ void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
 	int	status;
 
 	status = 0;
-	if (access(exec->cmd[0], F_OK) == 0)
+	printf("commande 0%s\n", exec->cmd[0]);
+	if (exec->cmd[0] && access(exec->cmd[0], F_OK) == 0)
 		var->status = 126;
 	else
 		var->status = 127;
 	if (exec->path == NULL)
 	{
-		ft_putstr_fd(exec->cmd[0], 2);
-		if (ft_strcmp(exec->cmd[0], "") == 0)
-			ft_putstr_fd("'' ", 2);
+		if (exec->cmd[0] !=  NULL)
+		{
+			ft_putstr_fd(exec->cmd[0], 2);
+			if (ft_strcmp(exec->cmd[0], "") == 0)
+				ft_putstr_fd("'' ", 2);
+		}
 		ft_putstr_fd(": command not found\n", 2);
 	}
 	status = var->status;
@@ -69,7 +73,10 @@ void	exec_one(t_var *var, t_exec *exec)
 		if (exec->input == -2 || exec->output == -2)
 			return (ft_free_all(var), free_split(env), exit(1));
 		if (exec->path == NULL || ft_strcmp(exec->path, "not found") == 0)
+		{
+			setup_dup2(exec);
 			ft_error_path_cmd(var, exec, env);
+		}
 		setup_dup2(exec);
 		if (execve(exec->path, exec->cmd, env) == -1)
 		{
