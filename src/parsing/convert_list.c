@@ -58,6 +58,8 @@ char	*check_quote(char *str, int i, int y)
 
 	if (str == NULL)
 		return (NULL);
+	if (ft_strcmp(str, "\"\"") == 0 || ft_strcmp(str, "''") == 0)
+		return (ft_strdup(str));
 	cpy = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	while (i < (int)ft_strlen(str) && str[i])
 	{
@@ -103,7 +105,7 @@ char	**convert_parse(t_var *var, t_list *lst)
 		temp3 = check_quote(temp2, 0, 0);
 		exit[i] = check_exit(temp2, temp3);
 		i++;
-		if (ft_strcmp(temp3, "<<") == 0)
+		if (temp3 && ft_strcmp(temp3, "<<") == 0)
 		{
 			exit[i] = ft_strdup((char *)lst->next->content);
 			i++;

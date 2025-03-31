@@ -34,9 +34,6 @@ char	*return_str(char *str, char *cpy, int i, int y)
 
 void	all_dollar(char *str, int *i)
 {
-	int		start;
-
-	start = *i;
 	while (str[*i] && str[*i] == '$')
 	{
 		if (str[*i + 1] != '$')

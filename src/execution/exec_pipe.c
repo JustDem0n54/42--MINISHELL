@@ -3,6 +3,7 @@
 void	exec_all(t_var *var, t_exec *exec, char **env)
 {
 	void	(*builtins)(t_var *, char **);
+	int		status;
 
 	builtins = ft_cmd(exec->cmd);
 	if (builtins == NULL)
@@ -10,8 +11,11 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 		if (exec->path == NULL)
 			ft_error_path_cmd(var, exec, env);
 		if (execve(exec->path, exec->cmd, env) == -1)
+		{
+			status = 126;
 			return (perror("error execve"), free_split(env),
-				ft_free_all(var), exit (1));
+				ft_free_all(var), exit (status));
+		}
 	}
 	else
 	{
@@ -30,7 +34,7 @@ void	do_pids(t_exec *exec, pid_t *pids, int *fd, t_var *var)
 	setup_dup2_and_close(exec, fd);
 	free(pids);
 	if (exec->input == -2 || exec->output == -2)
-		exit(1);
+		return (ft_free_all(var), free_split(env), exit(1));
 	exec_all(var, exec, env);
 }
 
@@ -44,12 +48,12 @@ void	close_fd(int *fd, int prevfd, int i, t_exec *exec)
 	}
 	else if (i < 0)
 	{
-		if (prevfd != -1)
+		if (prevfd > -1)
 			close(prevfd);
 		close(fd[1]);
-		if (exec->input != 0)
+		if (exec->input > 0)
 			close(exec->input);
-		if (exec->output != 1)
+		if (exec->output > 1)
 			close(exec->output);
 	}
 }

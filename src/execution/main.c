@@ -2,6 +2,29 @@
 
 int	g_sig;
 
+void	exec_minishell(t_var *var, char *line)
+{
+	add_history(line);
+	var->parse = parsing_line(line);
+	if (check_error_parsed(var->parse) == 0)
+	{
+		var->data = convert_parse(var, var->parse);
+		var->exec = init_exec(var, var->data);
+		execution(var, var->exec);
+	}
+	if (var->exec != NULL)
+		ft_free_exec(var->exec);
+	free(line);
+	if (var->parse != NULL)
+		ft_lstclear(&(var->parse), free);
+	if (var->data != NULL)
+		free_split(var->data);
+	var->exec = NULL;
+	var->parse = NULL;
+	var->data = NULL;
+	g_sig = 0;
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	char	*line;
@@ -25,27 +48,7 @@ int	main(int argc, char **argv, char **env)
 			return (1);
 		}
 		if (line != NULL && ft_strcmp(line, "") != 0)
-		{
-			add_history(line);
-			var->parse = parsing_line(line);
-			if (check_error_parsed(var->parse) == 0)
-			{
-				var->data = convert_parse(var, var->parse);
-				var->exec = init_exec(var, var->data);
-				execution(var, var->exec);
-			}
-			if (var->exec != NULL)
-				ft_free_exec(var->exec);
-			free(line);
-			if (var->parse != NULL)
-				ft_lstclear(&(var->parse), free);
-			if (var->data != NULL)
-				free_split(var->data);
-			var->exec = NULL;
-			var->parse = NULL;
-			var->data = NULL;
-			g_sig = 0;
-		}
+			exec_minishell(var, line);
 	}
 	return (0);
 }

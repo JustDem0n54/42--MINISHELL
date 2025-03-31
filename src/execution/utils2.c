@@ -25,6 +25,9 @@ long int	ft_atol(char *str)
 	res = 0;
 	n = 1;
 	i = 0;
+	if (str == NULL)
+		return (0);
+	printf("%s\n", str);
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
 		i++;
 	if (str[i] == '-' || str[i] == '+')

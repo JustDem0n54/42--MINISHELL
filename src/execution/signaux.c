@@ -6,6 +6,7 @@ void	ft_ctrl_c(int sig)
 	{
 		ft_putstr_fd("^C", 1);
 		rl_done = 1;
+		g_sig = SIGINT;
 	}
 	else if (sig == SIGINT && g_sig != 1)
 	{
@@ -18,9 +19,8 @@ void	ft_ctrl_c(int sig)
 		}
 		else
 			ft_putstr_fd("\n", 1);
+		g_sig = SIGINT;
 	}
-	g_sig = SIGINT;
-	return ;
 }
 
 void	ft_ctrl_slash(int sig)
@@ -34,12 +34,11 @@ void	ft_ctrl_slash(int sig)
 
 void	manage_signal(void)
 {
-	if (SIGQUIT)
-		signal(SIGQUIT, ft_ctrl_slash);
+	signal(SIGPIPE, ft_ctrl_c);
 	if (SIGINT)
 		signal(SIGINT, ft_ctrl_c);
-	if (SIGPIPE)
-		signal(SIGPIPE, ft_ctrl_c);
+	if (SIGQUIT)
+		signal(SIGQUIT, ft_ctrl_slash);
 }
 
 int	ft_check_ctrl_c_heredoc(void)

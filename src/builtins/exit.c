@@ -47,42 +47,40 @@ void	ft_free_all(t_var *var)
 	rl_clear_history();
 }
 
-void	error_message_exit_two_arg(t_var *var, char **tab)
+void	error_message_exit_two_arg(t_var *var, char **tab, char *str)
 {
 	ft_putstr_fd(tab[0], 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd(tab[1], 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd("numeric argument required\n", 2);
-	ft_free_all(var);
 	var->status = 2;
-	exit(var->status);
+	ft_free_all(var);
+	free (str);
+	exit(2);
 }
 
 void	ft_exit(t_var *var, char **tab)
 {
+	long int	str_i;
+	char		*str;
+
 	printf("exit\n");
-	if (tab[1] && ft_strcmp(ft_litoa(ft_atol(tab[1])), tab[1]) != 0)
-		error_message_exit_two_arg(var, tab);
-	else if (tab[1] && tab[2])
+	if (tab[1])
 	{
-		ft_putstr_fd(tab[0], 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd("too many arguments\n", 2);
-		var->status = 127;
-		return ;
+		str_i = ft_atol(tab[1]);
+		str = ft_litoa(str_i);
 	}
+	if (tab[1] && ft_strcmp(str, tab[1]) != 0)
+		error_message_exit_two_arg(var, tab, str);
+	else if (tab[1] && tab[2])
+		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": ", 2), ft_putstr_fd("t"
+				"oo many arguments\n", 2), var->status = 127, free(str));
 	else
 	{
 		if (tab && tab[1])
-		{
-			ft_free_all(var);
-			exit(ft_atol(tab[1]) % 256);
-		}
+			return (ft_free_all(var), free(str), exit(str_i % 256));
 		else
-		{
-			ft_free_all(var);
-			exit(EXIT_SUCCESS);
-		}
+			return (ft_free_all(var), exit(EXIT_SUCCESS));
 	}
 }

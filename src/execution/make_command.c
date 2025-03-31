@@ -23,20 +23,21 @@ char	*check_path(char **env, char *cmd)
 	char	**path;
 	char	*temp;
 
-	if (cmd == NULL || env == NULL)
+	if (cmd == NULL || env == NULL || ft_strcmp(cmd, "") == 0
+		|| ft_strcmp(cmd, "") == 0)
 		return (NULL);
 	if (ft_strchr(cmd, '/') != NULL)
 	{
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
 		else
-			return ("not found");
+			return (perror(&cmd[0]), ft_strdup("not found"));
 	}
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
 	if (!env[i])
-		return ("not found");
+		return (perror(&cmd[0]), ft_strdup("not found"));
 	path = ft_split(env[i] + 5, ':');
 	temp = find_path(path, cmd);
 	return (free_split(path), temp);

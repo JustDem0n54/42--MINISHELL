@@ -2,14 +2,24 @@
 
 void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
 {
-	ft_putstr_fd(exec->cmd[0], 2);
-	if (exec->unset_path == 1)
-		ft_putstr_fd(": No such file or directory\n", 2);
+	int	status;
+
+	status = 0;
+	if (access(exec->cmd[0], F_OK) == 0)
+		var->status = 126;
 	else
+		var->status = 127;
+	if (exec->path == NULL)
+	{
+		ft_putstr_fd(exec->cmd[0], 2);
+		if (ft_strcmp(exec->cmd[0], "") == 0)
+			ft_putstr_fd("'' ", 2);
 		ft_putstr_fd(": command not found\n", 2);
+	}
+	status = var->status;
 	free_split(env);
 	ft_free_all(var);
-	exit(127);
+	exit(status);
 }
 
 void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
@@ -35,12 +45,12 @@ void	(*ft_cmd(char **cmd))(t_var *var, char **tab)
 
 void	setup_dup2(t_exec *exec)
 {
-	if (exec->input != 0)
+	if (exec->input > 0)
 	{
 		dup2(exec->input, STDIN_FILENO);
 		close(exec->input);
 	}
-	if (exec->output != 1)
+	if (exec->output > 1)
 	{
 		dup2(exec->output, STDOUT_FILENO);
 		close(exec->output);
@@ -56,15 +66,20 @@ void	exec_one(t_var *var, t_exec *exec)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (exec->path == NULL)
+		if (exec->input == -2 || exec->output == -2)
+			return (ft_free_all(var), free_split(env), exit(1));
+		if (exec->path == NULL || ft_strcmp(exec->path, "not found") == 0)
 			ft_error_path_cmd(var, exec, env);
 		setup_dup2(exec);
 		if (execve(exec->path, exec->cmd, env) == -1)
+		{
 			return (free_split(env), perror(exec->cmd[0]),
 				ft_free_all(var), exit (1));
+		}
 	}
 	waitpid(pid, &var->status, 0);
-	close(exec->input);
+	if (exec->input != -1)
+		close(exec->input);
 	var->status = var->status % 255;
 	free_split(env);
 	return ;

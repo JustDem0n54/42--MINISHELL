@@ -53,9 +53,8 @@ int	check_specificity(t_var *var, t_heredoc hd)
 		free (hd.line);
 		if (g_sig == SIGINT)
 		{
-			unlink(hd.file);
-			free (hd.file);
-			hd.fd = -1;
+			close (hd.fd);
+			hd.fd = open (hd.file, O_TRUNC| O_CREAT | O_RDONLY, 00644);
 		}
 		return (1);
 	}
@@ -68,8 +67,8 @@ void	end_heredoc(t_var *var, t_heredoc hd)
 	rl_event_hook = NULL;
 	var->count_line += hd.i;
 	close (var->hd.fd);
-	g_sig = 0;
 	var->hd.fd = open(var->hd.file, O_RDONLY);
+	g_sig = 0;
 	unlink(var->hd.file);
 }
 

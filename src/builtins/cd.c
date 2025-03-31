@@ -61,6 +61,8 @@ void	cd_home(t_var *var, char **tab)
 
 void	ft_cd(t_var *var, char **tab)
 {
+	char	*old_pwd;
+
 	if (tab[1] && tab[2])
 		return (var->status = 1, ft_putstr_fd(tab[0], 2),
 			ft_putstr_fd(": too many arguments\n", 2));
@@ -77,7 +79,9 @@ void	ft_cd(t_var *var, char **tab)
 			ft_putstr_fd(": ", 2), perror(tab[1]));
 	if (var->oldpwd != NULL)
 		free (var->oldpwd);
-	var->oldpwd = ft_strjoin("OLD", ft_strdup(var->pwd));
+	old_pwd = ft_strdup(var->pwd);
+	var->oldpwd = ft_strjoin("OLD", old_pwd);
+	free (old_pwd);
 	ft_pwd(var, tab);
 	update_env_pwd_and_old_(var);
 	var->status = 0;
