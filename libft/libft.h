@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edelanno <edelanno@student.42perpignan.    +#+  +:+       +#+        */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 11:11:49 by nrontard          #+#    #+#             */
-/*   Updated: 2025/03/05 14:28:04 by edelanno         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:04:06 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int		ft_strnjoinlen(int size, char **strs, char *sep);
 char	*ft_strnjoin(int size, char **strs, char *sep);
 char	*ft_strjoincpy(char **strs, char *result, char *sep, int size);
 void	free_split(char **str);
+int		ft_isspace(char c);
 
 typedef struct s_list
 {

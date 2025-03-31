@@ -50,6 +50,7 @@ typedef struct s_var
 	int			nbcmd;
 	int			status;
 	int			count_line;
+	int			save_fd;
 }	t_var;
 
 char		**convert_parse(t_var *var, t_list *lst);

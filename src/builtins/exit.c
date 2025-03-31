@@ -55,6 +55,7 @@ void	error_message_exit_two_arg(t_var *var, char **tab, char *str)
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd("numeric argument required\n", 2);
 	var->status = 2;
+	close(var->save_fd);
 	ft_free_all(var);
 	free (str);
 	exit(2);
@@ -79,8 +80,10 @@ void	ft_exit(t_var *var, char **tab)
 	else
 	{
 		if (tab && tab[1])
-			return (ft_free_all(var), free(str), exit(str_i % 256));
+			return (close(var->save_fd),
+				ft_free_all(var), free(str), exit(str_i % 256));
 		else
-			return (ft_free_all(var), exit(EXIT_SUCCESS));
+			return (close(var->save_fd),
+				ft_free_all(var), exit(EXIT_SUCCESS));
 	}
 }

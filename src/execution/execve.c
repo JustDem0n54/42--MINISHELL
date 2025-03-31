@@ -88,9 +88,8 @@ void	exec_one(t_var *var, t_exec *exec)
 void	execution(t_var *var, t_exec *exec)
 {
 	void	(*builtins)(t_var *, char **);
-	int		save;
 
-	save = 0;
+	var->save_fd = 0;
 	if (var->nbcmd == 1)
 	{
 		builtins = ft_cmd(exec->cmd);
@@ -103,11 +102,11 @@ void	execution(t_var *var, t_exec *exec)
 			if (exec->output == -1)
 				exec->output = 1;
 			exec->input = 0;
-			save = dup(1);
+			var->save_fd = dup(1);
 			setup_dup2(exec);
 			builtins(var, exec->cmd);
-			dup2(save, 1);
-			close(save);
+			dup2(var->save_fd, 1);
+			close(var->save_fd);
 		}
 		return ;
 	}

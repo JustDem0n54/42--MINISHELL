@@ -9,7 +9,8 @@ int	gest_quote(char *str, int i, int j, t_list **line)
 	i++;
 	while (str[i] != quote && str[i])
 		i++;
-	while (str[i + 1] != ' ' && ft_strchr("<>|", str[i + 1]) == NULL && str[i])
+	while (ft_isspace(str[i + 1] == 0)
+		&& ft_strchr("<>|", str[i + 1]) == NULL && str[i])
 		i++;
 	temp = ft_substr(str, j, i - j + 1);
 	ft_lstadd_back(line, ft_lstnew(temp));
@@ -38,7 +39,7 @@ int	gest_token(char *str, int i, int j, t_list **line)
 
 void	parse_useless(char *str, int *i, int *j)
 {
-	while (*i < (int)ft_strlen(str) && str[*i] == ' ' && str[*i])
+	while (*i < (int)ft_strlen(str) && ft_isspace(str[*i]) == 1 && str[*i])
 		(*i)++;
 	*j = *i;
 	while (*i < (int)ft_strlen(str) && str[*i]
