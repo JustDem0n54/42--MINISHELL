@@ -1,5 +1,18 @@
 #include "../../minishell.h"
 
+size_t	var_name_len(char *tab)
+{
+	size_t	j;
+
+	j = 0;
+	while (tab[j] && tab[j + 1] && tab[j + 1] != '='
+		&& (ft_isalnum(tab[j]) == 1 || tab[j] == '_'))
+		j++;
+	if (ft_isalnum(tab[j]) == 1 || tab[j] == '_')
+		j++;
+	return (j);
+}
+
 void	print_declare_x(t_var *var)
 {
 	char	*stock;

@@ -49,8 +49,7 @@ void	ft_free_all(t_var *var)
 
 void	error_message_exit_two_arg(t_var *var, char **tab, char *str)
 {
-	ft_putstr_fd(tab[0], 2);
-	ft_putstr_fd(": ", 2);
+	err_brioshell(tab[0]);
 	ft_putstr_fd(tab[1], 2);
 	ft_putstr_fd(": ", 2);
 	ft_putstr_fd("numeric argument required\n", 2);
@@ -75,8 +74,8 @@ void	ft_exit(t_var *var, char **tab)
 	if (tab[1] && ft_strcmp(str, tab[1]) != 0)
 		error_message_exit_two_arg(var, tab, str);
 	else if (tab[1] && tab[2])
-		return (ft_putstr_fd(tab[0], 2), ft_putstr_fd(": ", 2), ft_putstr_fd("t"
-				"oo many arguments\n", 2), var->status = 127, free(str));
+		return (err_brioshell(tab[0]), ft_putstr_fd(": ", 2), ft_putstr_fd("too"
+				" many arguments\n", 2), var->status = 127, free(str));
 	else
 	{
 		if (tab && tab[1])

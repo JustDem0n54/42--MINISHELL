@@ -39,5 +39,3 @@ t_var	*init_struct(t_var *var, char **env)
 	var->env = init_env(var, env);
 	return (var);
 }
-
-// gerer env -i : PAS PATH 

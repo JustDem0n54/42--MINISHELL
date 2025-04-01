@@ -53,7 +53,7 @@ void	ft_ctrl_d_heredoc(t_var *var, char *eof)
 	char	*nb_line;
 
 	nb_line = ft_itoa(var->count_line);
-	ft_putstr_fd("warning: here-document delimited at line ", 2);
+	ft_putstr_fd("Brioshell: warning: here-document delimited at line ", 2);
 	ft_putstr_fd(nb_line, 2);
 	ft_putstr_fd(" by end-of-file (wanted `", 2);
 	ft_putstr_fd(eof, 1);

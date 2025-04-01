@@ -1,5 +1,11 @@
 #include "../../minishell.h"
 
+void	err_brioshell(char *tab)
+{
+	ft_putstr_fd("Brioshell: ", 2);
+	ft_putstr_fd(tab, 2);
+}
+
 void	ft_lstadd_next(t_list **lst, t_list *new)
 {
 	t_list	*temp;
@@ -27,7 +33,6 @@ long int	ft_atol(char *str)
 	i = 0;
 	if (str == NULL)
 		return (0);
-	printf("%s\n", str);
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
 		i++;
 	if (str[i] == '-' || str[i] == '+')

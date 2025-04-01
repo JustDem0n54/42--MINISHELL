@@ -25,6 +25,7 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 	void	(*builtins)(t_var *, char **);
 	int		status;
 
+	status = 0;
 	builtins = ft_cmd(exec->cmd);
 	if (builtins == NULL)
 	{
@@ -32,19 +33,18 @@ void	exec_all(t_var *var, t_exec *exec, char **env)
 			ft_error_path_cmd(var, exec, env);
 		if (execve(exec->path, exec->cmd, env) == -1)
 		{
-			status = 126;
-			// close(exec->input);
 			return (perror("error execve"), free_split(env),
-				ft_free_all(var), exit (status));
+				ft_free_all(var), exit(126));
 		}
 	}
 	else
 	{
 		builtins(var, exec->cmd);
+		status = var->status;
 		free_split(env);
 		ft_free_all(var);
 	}
-	exit(0);
+	exit(status);
 }
 
 void	do_pids(t_exec *exec, pid_t *pids, int *fd, t_var *var)
@@ -67,6 +67,8 @@ char	**convert_env(t_list *env)
 	int		i;
 
 	i = 0;
+	if (env == NULL)
+		return (NULL);
 	nenv = malloc(sizeof(char *) * (ft_lstsize(env) + 1));
 	temp = env;
 	while (temp)

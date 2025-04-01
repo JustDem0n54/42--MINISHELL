@@ -5,7 +5,6 @@ void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
 	int	status;
 
 	status = 0;
-	printf("commande 0%s\n", exec->cmd[0]);
 	if (exec->cmd[0] && access(exec->cmd[0], F_OK) == 0)
 		var->status = 126;
 	else
@@ -14,6 +13,7 @@ void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
 	{
 		if (exec->cmd[0] !=  NULL)
 		{
+			// err_brioshell(exec->cmd[0]);
 			ft_putstr_fd(exec->cmd[0], 2);
 			if (ft_strcmp(exec->cmd[0], "") == 0)
 				ft_putstr_fd("'' ", 2);

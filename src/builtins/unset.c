@@ -1,26 +1,17 @@
 #include "../../minishell.h"
 
-size_t	var_name_len(char *tab)
-{
-	size_t	j;
-
-	j = 0;
-	while (tab[j] && tab[j + 1] && tab[j + 1] != '='
-		&& (ft_isalnum(tab[j]) == 1 || tab[j] == '_'))
-		j++;
-	return (j + 1);
-}
-
 void	check_var_env_unset(t_var *var, char *tab)
 {
 	if (strncmp(tab, "HOME", ft_strlen(tab)) == 0)
 	{
-		free (var->home);
+		if (var->home)
+			free (var->home);
 		var->home = NULL;
 	}
 	else if (strncmp(tab, "OLDPWD", ft_strlen(tab)) == 0)
 	{
-		free (var->oldpwd);
+		if (var->oldpwd != NULL)
+			free (var->oldpwd);
 		var->oldpwd = NULL;
 	}
 	return ;
@@ -39,6 +30,7 @@ int	unset_first(t_var *var, char *tab, t_list *temp, int len)
 		free (var->env->content);
 		free (var->env);
 		var->env = temp;
+		printf("%s\n", (char*)var->env->content);
 		return (0);
 	}
 	return (1);
@@ -69,6 +61,18 @@ int	unset_between(t_var *var, char *tab, t_list *temp, int len)
 	return (1);
 }
 
+void	unset_next(t_var *var, char *tab, t_list *temp)
+{
+	while (var->env && var->env->next)
+	{
+		if (unset_between(var, tab, temp, var_name_len(tab)) == 0)
+			break ;
+		else
+			var->env = var->env->next;
+	}
+	var->env = temp;
+}	
+
 void	ft_unset(t_var *var, char **tab)
 {
 	t_list	*temp;
@@ -76,24 +80,16 @@ void	ft_unset(t_var *var, char **tab)
 
 	i = 1;
 	temp = var->env;
-	var->status = 0;
 	while (tab[i])
 	{
 		if (var_name_len(tab[i]) != ft_strlen(tab[i]))
 			return ;
-		if (unset_first(var, tab[i], temp, var_name_len(tab[i])) == 1)
-		{
-			while (var->env && var->env->next)
-			{
-				if (unset_between(var, tab[i], temp, var_name_len(tab[i])) == 0)
-					break ;
-				else
-					var->env = var->env->next;
-			}
-		}
-		var->env = temp;
+		if (unset_first(var, tab[i], temp, var_name_len(tab[i])) == 0)
+			temp = var->env;
+		else
+			unset_next(var, tab[i], temp);
 		i++;
 	}
-	var->status = 0;
 	var->env = temp;
+	var->status = 0;
 }
