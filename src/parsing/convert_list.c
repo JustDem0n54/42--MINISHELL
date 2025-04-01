@@ -105,7 +105,7 @@ char	**convert_parse(t_var *var, t_list *lst)
 		temp3 = check_quote(temp2, 0, 0);
 		exit[i] = check_exit(temp2, temp3);
 		i++;
-		if (temp3 && ft_strcmp(temp3, "<<") == 0)
+		if (temp3 && ft_strcmp(temp3, "<<") == 0 && lst->next)
 		{
 			exit[i] = ft_strdup((char *)lst->next->content);
 			i++;

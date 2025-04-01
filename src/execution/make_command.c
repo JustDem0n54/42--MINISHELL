@@ -68,8 +68,8 @@ int	count_element(char **tab, int i)
 	count = 0;
 	while (tab[i] && ft_strcmp(tab[i], "|") != 0)
 	{
-		if (ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0
-			|| ft_strcmp(tab[i], ">>") == 0 || ft_strcmp(tab[i], "<<") == 0)
+		if ((ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0
+			|| ft_strcmp(tab[i], ">>") == 0 || ft_strcmp(tab[i], "<<") == 0) && tab[i + 1])
 			i += 2;
 		else if (tab[i] && ft_strcmp(tab[i], "|") != 0)
 		{
@@ -91,10 +91,10 @@ char	**check_command(char **tab, t_var *var, t_exec *exec)
 	cmd = malloc(sizeof(char *) * (count_element(tab, var->cmd_count) + 1));
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
 	{
-		if (ft_strcmp(tab[var->cmd_count], "<") == 0
+		if ((ft_strcmp(tab[var->cmd_count], "<") == 0
 			|| ft_strcmp(tab[var->cmd_count], ">") == 0
 			|| ft_strcmp(tab[var->cmd_count], ">>") == 0
-			|| ft_strcmp(tab[var->cmd_count], "<<") == 0)
+			|| ft_strcmp(tab[var->cmd_count], "<<") == 0) && tab[i + 1])
 			var->cmd_count += 2;
 		else if (tab[var->cmd_count]
 			&& ft_strcmp(tab[var->cmd_count], "|") != 0)
