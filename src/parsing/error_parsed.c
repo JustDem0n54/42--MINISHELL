@@ -67,7 +67,6 @@ int	check_error_parsed(t_list *check)
 	temp = check;
 	while (temp)
 	{
-		printf("%s   m\n", (char*)temp->content);
 		if (error_pipe(temp) == 1)
 			return (1);
 		if (error_infile_outfile(temp) == 1)
