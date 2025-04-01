@@ -3,17 +3,17 @@
 void	error_unset(t_var *var, char **tab)
 {
 	if (tab[1] && ft_strcmp(tab[1], "-") == 0)
-		return (var->status = 1, ft_putstr_fd(tab[0], 2),
+		return (var->status = 1, err_brioshell(tab[0]),
 			ft_putstr_fd(": OLDPWD not set\n", 2));
 	else if (!var->home)
 	{
-		ft_putstr_fd(tab[0], 2);
+		err_brioshell(tab[0]);
 		if (tab[1])
 		{
-			ft_putstr_fd(": ", 2);
 			ft_putstr_fd(tab[1], 2);
+			ft_putstr_fd(": ", 2);
 		}
-		ft_putstr_fd(": HOME not set\n", 2);
+		ft_putstr_fd("HOME not set\n", 2);
 	}
 	var->status = 1;
 	return ;
@@ -48,7 +48,7 @@ void	cd_home(t_var *var, char **tab)
 		return (error_unset(var, tab));
 	if (chdir(var->home + 5) != 0)
 	{
-		ft_putstr_fd(tab[0], 2);
+		err_brioshell(tab[0]);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(var->home + 5, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
@@ -64,7 +64,7 @@ void	ft_cd(t_var *var, char **tab)
 	char	*old_pwd;
 
 	if (tab[1] && tab[2])
-		return (var->status = 1, ft_putstr_fd(tab[0], 2),
+		return (var->status = 1, err_brioshell(tab[0]),
 			ft_putstr_fd(": too many arguments\n", 2));
 	if (!tab[1] || ft_strcmp(tab[1], "~") == 0)
 		return (cd_home(var, tab));
@@ -75,7 +75,7 @@ void	ft_cd(t_var *var, char **tab)
 		tab[1] = ft_strdup(var->oldpwd + 7);
 	}
 	if (chdir(tab[1]) != 0)
-		return (var->status = 1, ft_putstr_fd(tab[0], 2),
+		return (var->status = 1, err_brioshell(tab[0]),
 			ft_putstr_fd(": ", 2), perror(tab[1]));
 	if (var->oldpwd != NULL)
 		free (var->oldpwd);
@@ -85,5 +85,4 @@ void	ft_cd(t_var *var, char **tab)
 	ft_pwd(var, tab);
 	update_env_pwd_and_old_(var);
 	var->status = 0;
-	return ;
 }
