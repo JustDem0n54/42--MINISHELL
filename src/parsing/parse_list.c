@@ -22,7 +22,7 @@ int	gest_token(char *str, int i, int j, t_list **line)
 {
 	char	*temp;
 
-	if (i > 0 && str[i - 1] != ' ' && str[i - 1] != str[i]
+	if (i > 0 && (ft_isspace(str[i - 1]) == 0) && str[i - 1] != str[i]
 		&& ft_strchr("\"\'", str[i - 1]) == NULL)
 	{
 		temp = ft_substr(str, j, i - j);
@@ -39,7 +39,7 @@ int	gest_token(char *str, int i, int j, t_list **line)
 
 void	parse_useless(char *str, int *i, int *j)
 {
-	while (*i < (int)ft_strlen(str) && ft_isspace(str[*i]) == 1 && str[*i])
+	while (*i < (int)ft_strlen(str) && ft_isspace(str[*i]) && str[*i])
 		(*i)++;
 	*j = *i;
 	while (*i < (int)ft_strlen(str) && str[*i]
@@ -60,7 +60,7 @@ t_list	*parsing_line(char *str)
 	while (i < (int)ft_strlen(str) && str[i])
 	{
 		parse_useless(str, &i, &j);
-		if (str[i] == ' ' || (str[i] == 0 && str[i - 1] != ' '))
+		if (ft_isspace(str[i]) || (str[i] == 0 && ft_isspace(str[i - 1]) == 0))
 		{
 			temp = ft_substr(str, j, i - j);
 			ft_lstadd_back(&line, ft_lstnew(temp));

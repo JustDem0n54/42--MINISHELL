@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 17:40:37 by nrontard          #+#    #+#             */
-/*   Updated: 2025/03/31 18:03:41 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/04/01 13:49:45 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_isspace(char c)
 {
-	if (c >= 8 && c <= 13)
+	if ((c >= 8 && c <= 13) || c == ' ')
 		return (1);
 	return (0);
 }
