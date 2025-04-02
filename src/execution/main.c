@@ -6,6 +6,8 @@ void	exec_minishell(t_var *var, char *line)
 {
 	add_history(line);
 	var->parse = parsing_line(line);
+	if (var->parse == NULL)
+		return ;
 	if (check_error_parsed(var->parse) == 0)
 	{
 		var->data = convert_parse(var, var->parse);

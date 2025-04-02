@@ -9,6 +9,8 @@ int	gest_quote(char *str, int i, int j, t_list **line)
 	i++;
 	while (str[i] != quote && str[i])
 		i++;
+	if (str[i] == 0)
+		return(ft_putstr_fd("Need to close quote.\n", 1), -1);
 	while (ft_isspace(str[i + 1] == 0)
 		&& ft_strchr("<>|", str[i + 1]) == NULL && str[i])
 		i++;
@@ -55,10 +57,10 @@ t_list	*parsing_line(char *str)
 	char	*temp;
 
 	i = 0;
-	j = 0;
 	line = NULL;
 	while (i < (int)ft_strlen(str) && str[i])
 	{
+		j = i;
 		parse_useless(str, &i, &j);
 		if (ft_isspace(str[i]) || (str[i] == 0 && ft_isspace(str[i - 1]) == 0))
 		{
@@ -70,7 +72,8 @@ t_list	*parsing_line(char *str)
 			i = gest_quote(str, i, j, &line);
 		else if (str[i] && ft_strchr("<|>", str[i]))
 			i = gest_token(str, i, j, &line);
-		j = i;
+		if (i == -1)
+			return (ft_lstclear(&line, free), NULL);
 	}
 	return (line);
 }
