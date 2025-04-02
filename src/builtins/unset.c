@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:43:23 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:43:24 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	check_var_env_unset(t_var *var, char *tab)
@@ -30,7 +42,7 @@ int	unset_first(t_var *var, char *tab, t_list *temp, int len)
 		free (var->env->content);
 		free (var->env);
 		var->env = temp;
-		printf("%s\n", (char*)var->env->content);
+		printf("%s\n", (char *)var->env->content);
 		return (0);
 	}
 	return (1);
@@ -71,7 +83,7 @@ void	unset_next(t_var *var, char *tab, t_list *temp)
 			var->env = var->env->next;
 	}
 	var->env = temp;
-}	
+}
 
 void	ft_unset(t_var *var, char **tab)
 {

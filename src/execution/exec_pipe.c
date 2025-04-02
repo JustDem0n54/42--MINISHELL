@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_pipe.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:43:29 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:43:30 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	close_fd(int *fd, int prevfd, int i, t_exec *exec)
@@ -58,7 +70,6 @@ void	do_pids(t_exec *exec, pid_t *pids, int *fd, t_var *var)
 		return (ft_free_all(var), free_split(env), exit(1));
 	exec_all(var, exec, env);
 }
-
 
 char	**convert_env(t_list *env)
 {

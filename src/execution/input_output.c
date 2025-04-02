@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input_output.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:43:41 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:43:42 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 int	check_input(t_var *var, char **cmd, int i)
@@ -11,7 +23,7 @@ int	check_input(t_var *var, char **cmd, int i)
 		{
 			fd = open(cmd[i + 1], O_RDONLY);
 			if (fd == -1)
-			{	
+			{
 				ft_putstr_fd("Brioshell: ", 2);
 				perror(cmd[i + 1]);
 				fd = -2;

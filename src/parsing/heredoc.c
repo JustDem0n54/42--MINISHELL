@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:44:17 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:44:18 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 char	*parse_all_str_heredoc(t_var *var, char *str, int i, int y)
@@ -53,8 +65,8 @@ int	check_specificity(t_var *var, t_heredoc hd)
 		free (hd.line);
 		if (g_sig == SIGINT)
 		{
-			close (hd.fd);
-			hd.fd = open (hd.file, O_TRUNC| O_CREAT | O_RDONLY, 00644);
+			close(hd.fd);
+			hd.fd = open(hd.file, O_TRUNC | O_CREAT | O_RDONLY, 00644);
 		}
 		return (1);
 	}
@@ -63,10 +75,10 @@ int	check_specificity(t_var *var, t_heredoc hd)
 
 void	end_heredoc(t_var *var, t_heredoc hd)
 {
-	free (var->hd.n_eof);
+	free(var->hd.n_eof);
 	rl_event_hook = NULL;
 	var->count_line += hd.i;
-	close (var->hd.fd);
+	close(var->hd.fd);
 	var->hd.fd = open(var->hd.file, O_RDONLY);
 	g_sig = 0;
 	unlink(var->hd.file);

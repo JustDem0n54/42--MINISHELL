@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_add.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:43:14 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:43:15 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	ft_error_var_env(t_var *var, char **tab, int i)
@@ -33,8 +45,8 @@ int	check_var_env_added(t_var *var, char *s, size_t i)
 	if (first_check(var, s) == 0)
 		return (var->status = 0, var->env = temp, 1);
 	if (ft_strchr(s, '=') != NULL && var_name_len(s) != (ft_strlen(s)
-		- ft_strlen(ft_strchr(s, '='))))
-			return (var->status = 1, var->env = temp, 1);
+			- ft_strlen(ft_strchr(s, '='))))
+		return (var->status = 1, var->env = temp, 1);
 	while (var->env)
 	{
 		if (var_name_len((char *)var->env->content) == i
@@ -63,7 +75,8 @@ void	add_var_env(t_var *var, char **tab)
 	while (tab[i])
 	{
 		j = var_name_len(tab[i]) - 1;
-		if (ft_strcmp(tab[i], "") != 0 && (ft_isalpha(tab[i][0]) == 0 && tab[i][0] != '_'))
+		if (ft_strcmp(tab[i], "") != 0
+			&& (ft_isalpha(tab[i][0]) == 0 && tab[i][0] != '_'))
 			ft_error_var_env(var, tab, i);
 		else if (check_var_env_added(var, tab[i], j + 1) == 0)
 		{

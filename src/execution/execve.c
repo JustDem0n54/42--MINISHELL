@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execve.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:43:32 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:43:33 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
@@ -11,7 +23,7 @@ void	ft_error_path_cmd(t_var *var, t_exec *exec, char **env)
 		var->status = 127;
 	if (exec->path == NULL)
 	{
-		if (exec->cmd[0] !=  NULL)
+		if (exec->cmd[0] != NULL)
 		{
 			ft_putstr_fd(exec->cmd[0], 2);
 			if (ft_strcmp(exec->cmd[0], "") == 0)

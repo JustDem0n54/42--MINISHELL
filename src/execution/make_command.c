@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   make_command.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 13:43:46 by nrontard          #+#    #+#             */
+/*   Updated: 2025/04/02 13:43:47 by nrontard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 char	*find_path(char **path, char *cmd)
@@ -69,7 +81,8 @@ int	count_element(char **tab, int i)
 	while (tab[i] && ft_strcmp(tab[i], "|") != 0)
 	{
 		if ((ft_strcmp(tab[i], "<") == 0 || ft_strcmp(tab[i], ">") == 0
-			|| ft_strcmp(tab[i], ">>") == 0 || ft_strcmp(tab[i], "<<") == 0) && tab[i + 1])
+				|| ft_strcmp(tab[i], ">>") == 0
+				|| ft_strcmp(tab[i], "<<") == 0) && tab[i + 1])
 			i += 2;
 		else if (tab[i] && ft_strcmp(tab[i], "|") != 0)
 		{
@@ -92,9 +105,9 @@ char	**check_command(char **tab, t_var *var, t_exec *exec)
 	while (tab[var->cmd_count] && ft_strcmp(tab[var->cmd_count], "|") != 0)
 	{
 		if ((ft_strcmp(tab[var->cmd_count], "<") == 0
-			|| ft_strcmp(tab[var->cmd_count], ">") == 0
-			|| ft_strcmp(tab[var->cmd_count], ">>") == 0
-			|| ft_strcmp(tab[var->cmd_count], "<<") == 0) && tab[i + 1])
+				|| ft_strcmp(tab[var->cmd_count], ">") == 0
+				|| ft_strcmp(tab[var->cmd_count], ">>") == 0
+				|| ft_strcmp(tab[var->cmd_count], "<<") == 0) && tab[i + 1])
 			var->cmd_count += 2;
 		else if (tab[var->cmd_count]
 			&& ft_strcmp(tab[var->cmd_count], "|") != 0)
