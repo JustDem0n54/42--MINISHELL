@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:43:46 by nrontard          #+#    #+#             */
-/*   Updated: 2025/04/02 13:43:47 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/04/02 14:00:24 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ char	*check_path(char **env, char *cmd)
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
 	if (!env[i])
-		return (perror(&cmd[0]), ft_strdup("not found"));
+		return (err_brioshell(cmd), ft_putstr_fd(": No such file or"
+			" directory\n", 2), ft_strdup("not found"));
 	path = ft_split(env[i] + 5, ':');
 	temp = find_path(path, cmd);
 	return (free_split(path), temp);
