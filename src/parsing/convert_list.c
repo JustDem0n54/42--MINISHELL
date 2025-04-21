@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:44:10 by nrontard          #+#    #+#             */
-/*   Updated: 2025/04/02 15:56:52 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/04/21 14:15:37 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ char	**convert_parse(t_var *var, t_list *lst)
 {
 	char	*temp;
 	char	*temp2;
-	char	*temp3;
 	char	**exit;
 	int		i;
 
@@ -114,10 +113,9 @@ char	**convert_parse(t_var *var, t_list *lst)
 	{
 		temp = lst->content;
 		temp2 = parse_all_str_for_dollar(var, temp, 0, 0);
-		temp3 = check_quote(temp2, 0, 0);
-		exit[i] = check_exit(temp2, temp3);
+		exit[i] = temp2;
 		i++;
-		if (temp3 && ft_strcmp(temp3, "<<") == 0 && lst->next)
+		if (temp2 && ft_strcmp(temp2, "<<") == 0 && lst->next)
 		{
 			exit[i] = ft_strdup((char *)lst->next->content);
 			i++;
