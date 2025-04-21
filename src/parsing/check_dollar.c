@@ -6,7 +6,7 @@
 /*   By: nrontard <nrontard@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 13:44:01 by nrontard          #+#    #+#             */
-/*   Updated: 2025/04/02 13:44:02 by nrontard         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:55:59 by nrontard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,10 @@ char	*check_dollars_parsing(t_var *var, char *str, int *i, int y)
 	while (str[*i] && str[*i] != '$' && *i < (int)ft_strlen(str))
 		*i = *i + 1;
 	if (str[*i] == 0 || check_simple_quoke(str) == 0)
+	{
+		*i = *i + ft_strlen(str);
 		return (ft_strdup(str + init_i));
+	}
 	if (str[*i] == '$')
 	{
 		all_dollar(str, i);
